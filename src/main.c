@@ -32,6 +32,7 @@
 // *****************************************************************************
 // Section: UART3 Receive Callback (Telit to ESP32 debug echo)
 // *****************************************************************************
+
 void telit_rx_callback(UART_EVENT event, uintptr_t context) {
     if (event == UART_EVENT_READ_THRESHOLD_REACHED) {
         uint8_t buffer[64];
@@ -49,13 +50,17 @@ void telit_rx_callback(UART_EVENT event, uintptr_t context) {
 // *****************************************************************************
 
 int main(void) {
+
+    /* ????????? Layer?1+2 ????????
+       ? clocks, GPIO, UARTs, EVIC ?
+       ?????????????????????????? */
     /* Initialize all modules */
     SYS_Initialize(NULL);
 
     // === UART test = One-time UART startup messages  ===
     UART1_Write((uint8_t *) "Hello ESP32!\r\n", 14);
     UART3_Write((uint8_t *) "AT\r\n", 4);
-    
+
     //===  Register UART3 receive callback for Telit responses === interrupt-based notification =====
     UART3_ReadCallbackRegister(telit_rx_callback, 0);
     UART3_ReadThresholdSet(1);
@@ -77,7 +82,7 @@ int main(void) {
             UART1_Write(rxData, rxLen);
          //
         }
-        */
+         */
 
     }
 
