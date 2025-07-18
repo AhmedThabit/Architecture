@@ -26,8 +26,32 @@
 #include <stdbool.h>                    // Defines true
 #include <stdlib.h>                     // Defines EXIT_FAILURE
 #include "definitions.h"                // SYS function prototypes
+#include "peripheral/tmr1/plib_tmr1.h"    // MCC/PLIB?generated Timer1 API
+
+// 1) Global tick counter for Protothreads
+volatile uint32_t msTicks = 0;
 
 
+// 2) Your Timer1 ?ISR? callback: just bump msTicks
+static void Timer1Handler(uint32_t status, uintptr_t context)
+{
+    (void)status;   // unused
+    (void)context;  // unused
+    msTicks++;
+}
+
+// 3) Initialize & start Timer1 with your callback
+void BSP_Timer1_Init(void)
+{
+    // plib_tmr1.c?s init already set TCKPS=1:8 and PR1=5999 ? 1?ms @ PBCLK=48?MHz
+    TMR1_Initialize();
+
+    // tell PLIB to call us on every interrupt
+    TMR1_CallbackRegister(Timer1Handler, (uintptr_t)NULL);
+
+    // fire up the timer
+    TMR1_Start();
+}
 
 // *****************************************************************************
 // Section: UART3 Receive Callback (Telit to ESP32 debug echo)
@@ -56,6 +80,8 @@ int main(void) {
        ?????????????????????????? */
     /* Initialize all modules */
     SYS_Initialize(NULL);
+    
+    BSP_Timer1_Init();        // the 1?ms SysTick for Protothreads
 
     // === UART test = One-time UART startup messages  ===
     UART1_Write((uint8_t *) "Hello ESP32!\r\n", 14);
