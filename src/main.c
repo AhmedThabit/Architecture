@@ -54,6 +54,7 @@ int main(void) {
 
     // === UART test = One-time UART startup messages  ===
     UART1_Write((uint8_t *) "Hello ESP32!\r\n", 14);
+    UART1_Write((uint8_t *) "Hello ESP32!\r\n", 14);
     UART3_Write((uint8_t *) "AT\r\n", 4);
     
     //===  Register UART3 receive callback for Telit responses === interrupt-based notification =====
@@ -75,6 +76,7 @@ int main(void) {
         if (rxLen > 0)
         {
             UART1_Write(rxData, rxLen);
+         //
         }
         */
 
