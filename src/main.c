@@ -27,6 +27,10 @@
 #include <stdlib.h>                     // Defines EXIT_FAILURE
 #include "definitions.h"                // SYS function prototypes
 #include "peripheral/tmr1/plib_tmr1.h"    // MCC/PLIB?generated Timer1 API
+#include "../../pt.h"
+#include "lc.h"
+#include "lc-switch.h"
+
 
 // 1) Global tick counter for Protothreads
 volatile uint32_t msTicks = 0;
