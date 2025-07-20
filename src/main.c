@@ -87,6 +87,8 @@ int main(void) {
     SYS_Initialize(NULL);
     
     BSP_Timer1_Init();        // the 1?ms SysTick for Protothreads
+    
+    
 
     // === UART test = One-time UART startup messages  ===
     UART1_Write((uint8_t *) "Hello ESP32!\r\n", 14);
@@ -101,6 +103,13 @@ int main(void) {
     while (true) {
         /* Maintain state machines of all polled MPLAB Harmony modules. */
         SYS_Tasks();
+        
+        // Run each Protothread once per loop
+        SensorThread(&ptSensor);
+        TelitThread(&ptTelit);
+        Esp32Thread(&ptEsp32);
+        EthThread(&ptEth);
+        CliThread(&ptCLI);
 
         // === (Optional) Polling-based UART3 RX ? avoid redundancy ===
         // This can conflict with interrupt-based read.

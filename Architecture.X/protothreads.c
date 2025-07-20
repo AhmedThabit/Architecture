@@ -14,7 +14,7 @@
 extern volatile uint32_t msTicks;
 
 // One pt struct per thread
-static struct pt ptSensor, ptTelit, ptEsp32, ptEth, ptCLI;
+struct pt ptSensor, ptTelit, ptEsp32, ptEth, ptCLI;
 
 void Protothreads_Init(void)
 {
