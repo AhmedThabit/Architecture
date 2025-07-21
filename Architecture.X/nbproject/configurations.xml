@@ -93,8 +93,8 @@
         <itemPath>../src/bsp.h</itemPath>
         <itemPath>../src/esp32.c</itemPath>
         <itemPath>../src/esp32.h</itemPath>
-        <itemPath>../src/lwipif.h</itemPath>
-        <itemPath>../src/lwipif.c</itemPath>
+        <itemPath>../src/w5500if.c</itemPath>
+        <itemPath>../src/w5500if.h</itemPath>
       </logicalFolder>
       <itemPath>../src/main.c</itemPath>
       <itemPath>protothreads.c</itemPath>
