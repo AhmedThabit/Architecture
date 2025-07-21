@@ -53,32 +53,12 @@
 #include "lc.h"
 #include "lc-switch.h"
 #include "../Architecture.X/protothreads.h"
+#include "bsp.h"
 
 
-// 1) Global tick counter for Protothreads
-volatile uint32_t msTicks = 0;
 
 
-// 2) Your Timer1 ?ISR? callback: just bump msTicks
-static void Timer1Handler(uint32_t status, uintptr_t context)
-{
-    (void)status;   // unused
-    (void)context;  // unused
-    msTicks++;
-}
 
-// 3) Initialize & start Timer1 with your callback
-void BSP_Timer1_Init(void)
-{
-    // plib_tmr1.c?s init already set TCKPS=1:8 and PR1=5999 ? 1?ms @ PBCLK=48?MHz
-    TMR1_Initialize();
-
-    // tell PLIB to call us on every interrupt
-    TMR1_CallbackRegister(Timer1Handler, (uintptr_t)NULL);
-
-    // fire up the timer
-    TMR1_Start();
-}
 
 // *****************************************************************************
 // Section: UART3 Receive Callback (Telit to ESP32 debug echo)
@@ -102,36 +82,55 @@ void telit_rx_callback(UART_EVENT event, uintptr_t context) {
 
 int main(void) {
 
+//    INTERRUPT_GlobalInterruptDisable();
     /* ????????? Layer?1+2 ????????
        ? clocks, GPIO, UARTs, EVIC ?
        ?????????????????????????? */
     /* Initialize all modules */
     SYS_Initialize(NULL);
+
+    
+    /* ?????????? Layer?1 Helpers ??????????
+       ? 1?ms SysTick for Protothreads   ?
+       ???????????????????????????????????? */
     
     BSP_Timer1_Init();        // the 1?ms SysTick for Protothreads
     
+     /* ?????????? Layer?4 Middleware ???????
+       ? Telit UART3 setup & parser hook ?
+       ???????????????????????????????????? */
+    BSP_UART3_Init();
+    Telit_Init();
     
+    Protothreads_Init();       // Layer?3 scheduler
+    
+//    INTERRUPT_GlobalInterruptEnable();
+
 
     // === UART test = One-time UART startup messages  ===
     UART1_Write((uint8_t *) "Hello ESP32!\r\n", 14);
     UART3_Write((uint8_t *) "AT\r\n", 4);
 
-    //===  Register UART3 receive callback for Telit responses === interrupt-based notification =====
-    UART3_ReadCallbackRegister(telit_rx_callback, 0);
-    UART3_ReadThresholdSet(1);
-    UART3_ReadNotificationEnable(true, true); // persistent notification
+//    //===  Register UART3 receive callback for Telit responses === interrupt-based notification =====
+//    UART3_ReadCallbackRegister(telit_rx_callback, 0);
+//    UART3_ReadThresholdSet(1);
+//    UART3_ReadNotificationEnable(true, true); // persistent notification
+//    
+//    BSP_UART3_Init();          // register the Telit UART3 callback
 
 
     while (true) {
         /* Maintain state machines of all polled MPLAB Harmony modules. */
         SYS_Tasks();
-        
+         
         // Run each Protothread once per loop
         SensorThread(&ptSensor);
         TelitThread(&ptTelit);
         Esp32Thread(&ptEsp32);
         EthThread(&ptEth);
         CliThread(&ptCLI);
+        
+        
 
         // === (Optional) Polling-based UART3 RX ? avoid redundancy ===
         // This can conflict with interrupt-based read.
