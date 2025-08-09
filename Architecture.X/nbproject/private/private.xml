@@ -3,11 +3,22 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/bsp.h</file>
             <file>file:/C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/config/default/initialization.c</file>
             <file>file:/C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/main.c</file>
-            <file>file:/C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/Architecture.X/protothreads.h</file>
-            <file>file:/C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/Architecture.X/protothreads.c</file>
+            <file>file:/C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/w5500if.c</file>
+            <file>file:/C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/esp32.c</file>
+            <file>file:/C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/config/default/peripheral/uart/plib_uart1.c</file>
+            <file>file:/C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/bsp.c</file>
             <file>file:/C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/layers_docments.c</file>
+            <file>file:/C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/telit.h</file>
+            <file>file:/C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/config/default/definitions.h</file>
+            <file>file:/C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/esp32.h</file>
+            <file>file:/C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/telit.c</file>
+            <file>file:/C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/pt.h</file>
+            <file>file:/C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/Architecture.X/protothreads.h</file>
+            <file>file:/C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/w5500if.h</file>
+            <file>file:/C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/Architecture.X/protothreads.c</file>
         </group>
     </open-files>
 </project-private>

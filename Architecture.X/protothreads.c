@@ -67,6 +67,10 @@ PT_THREAD( Esp32Thread(struct pt *pt) )
 //        PT_WAIT_UNTIL(pt, esp32DataReady());
         uint8_t buf[128];
         int len = UART1_Read(buf, sizeof(buf));
+         // === UART test = One-time UART startup messages  ===
+    UART1_Write((uint8_t *) "PT Hello ESP32!\r\n", 14);
+    UART3_Write((uint8_t *) "PT AT\r\n", 4);
+
 //        handleEsp32(buf, len);
     }
 

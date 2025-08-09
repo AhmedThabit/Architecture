@@ -72,6 +72,36 @@ void telit_rx_callback(UART_EVENT event, uintptr_t context) {
     }
 }
 
+void UART1_SendChar(char c) {
+    while (U1STAbits.UTXBF);
+    U1TXREG = c;
+}
+
+void UART1_WriteString(const char *str) {
+    while (*str) UART1_SendChar(*str++);
+}
+
+////test
+
+
+#define LED_On() (LATASET = (1UL<<15))
+#define LED_Off() (LATACLR = (1UL<<15))
+
+#define LED_LED1_TRIS        TRISAbits.TRISA15
+#define LED_LED1_LAT         LATAbits.LATA15
+
+
+#define LED_ON  1
+#define LED_OFF 0
+
+#define INPUT  1
+#define OUTPUT 0
+
+/////test
+
+
+
+
 
 
 // *****************************************************************************
@@ -82,27 +112,42 @@ void telit_rx_callback(UART_EVENT event, uintptr_t context) {
 
 int main(void) {
 
+//    working led
+//     LED_LED1_TRIS = OUTPUT ;
+//     LED_LED1_LAT = LED_ON ;
+    
+    //Notworked 
+    //UART1_Write((uint8_t *) "Hello SSSSS!\r\n", 14);
+    
 //    INTERRUPT_GlobalInterruptDisable();
     /* ????????? Layer?1+2 ????????
        ? clocks, GPIO, UARTs, EVIC ?
        ?????????????????????????? */
     /* Initialize all modules */
     SYS_Initialize(NULL);
-
     
+    
+    
+    // === UART test = One-time UART startup messages  ===
+    UART1_Write((uint8_t *) "Hello ESP32!\r\n", 14);
+    UART3_Write((uint8_t *) "AT\r\n", 4);
+    UART1_WriteString("Sending NOooSMS...\r\n");
+
+    UART1_WriteString("TSSSSending SMS...\r\n");
     /* ?????????? Layer?1 Helpers ??????????
        ? 1?ms SysTick for Protothreads   ?
        ???????????????????????????????????? */
     
-    BSP_Timer1_Init();        // the 1?ms SysTick for Protothreads
+//    BSP_Timer1_Init();        // the 1?ms SysTick for Protothreads
     
      /* ?????????? Layer?4 Middleware ???????
        ? Telit UART3 setup & parser hook ?
        ???????????????????????????????????? */
-    BSP_UART3_Init();
-    Telit_Init();
-    
-    Protothreads_Init();       // Layer?3 scheduler
+//    
+//    
+//    BSP_UART3_Init();
+//    Telit_Init();
+//    Protothreads_Init();       // Layer?3 scheduler
     
 //    INTERRUPT_GlobalInterruptEnable();
 
@@ -121,14 +166,18 @@ int main(void) {
 
     while (true) {
         /* Maintain state machines of all polled MPLAB Harmony modules. */
+         UART1_WriteString("Sending NOooSMS...\r\n");
+        
         SYS_Tasks();
+        
+        UART1_WriteString("Sending NOooSMS...\r\n");
          
         // Run each Protothread once per loop
-        SensorThread(&ptSensor);
-        TelitThread(&ptTelit);
-        Esp32Thread(&ptEsp32);
-        EthThread(&ptEth);
-        CliThread(&ptCLI);
+//        SensorThread(&ptSensor);
+//        TelitThread(&ptTelit);
+//        Esp32Thread(&ptEsp32);
+//        EthThread(&ptEth);
+//        CliThread(&ptCLI);
         
         
 

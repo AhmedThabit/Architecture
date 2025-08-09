@@ -15,26 +15,26 @@
 
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
-*
-* Subject to your compliance with these terms, you may use Microchip software
-* and any derivatives exclusively with Microchip products. It is your
-* responsibility to comply with third party license terms applicable to your
-* use of third party software (including open source software) that may
-* accompany Microchip software.
-*
-* THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER
-* EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED
-* WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A
-* PARTICULAR PURPOSE.
-*
-* IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE,
-* INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND
-* WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS
-* BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE
-* FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
-* ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
-* THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
+ * Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+ *
+ * Subject to your compliance with these terms, you may use Microchip software
+ * and any derivatives exclusively with Microchip products. It is your
+ * responsibility to comply with third party license terms applicable to your
+ * use of third party software (including open source software) that may
+ * accompany Microchip software.
+ *
+ * THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER
+ * EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED
+ * WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A
+ * PARTICULAR PURPOSE.
+ *
+ * IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE,
+ * INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND
+ * WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS
+ * BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE
+ * FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
+ * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
+ * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
  *******************************************************************************/
 // DOM-IGNORE-END
 
@@ -135,6 +135,22 @@
 // *****************************************************************************
 // *****************************************************************************
 
+#define LED_On() (LATASET = (1UL<<15))
+#define LED_Off() (LATACLR = (1UL<<15))
+
+#define LED_LED1_TRIS        TRISAbits.TRISA15
+#define LED_LED1_LAT         LATAbits.LATA15
+
+
+#define LED_ON  1
+#define LED_OFF 0
+
+#define INPUT  1
+#define OUTPUT 0
+
+
+
+
 /* MISRAC 2012 deviation block end */
 
 /*******************************************************************************
@@ -147,36 +163,75 @@
   Remarks:
  */
 
-void SYS_Initialize ( void* data )
-{
+void SYS_Initialize(void* data) {
 
     /* MISRAC 2012 deviation block start */
     /* MISRA C-2012 Rule 2.2 deviated in this file.  Deviation record ID -  H3_MISRAC_2012_R_2_2_DR_1 */
 
     /* Start out with interrupts disabled before configuring any modules */
-    (void)__builtin_disable_interrupts();
+    (void) __builtin_disable_interrupts();
 
-  
+//    working LED
+//    LED_LED1_TRIS = OUTPUT;
+//    LED_LED1_LAT = LED_ON;
+
     CLK_Initialize();
 
+    //Notwoking
+//       // 1) Ensure digital mode
+//    ANSELACLR = (1u << 15); // clear ANSA15 -> digital
+//
+//    // 2) Make it output
+//    TRISACLR = (1u << 15); // 0 = output (atomic)
+//
+//    // 3) Drive the latch
+//    LATASET = (1u << 15); // set = 1 (atomic)
+//    // If your LED is active-low, use LATACLR instead:
+//    LATACLR = (1u << 15);
+//
+//
+//    //Not working
+//    LED_LED1_TRIS = OUTPUT;
+//    LED_LED1_LAT = LED_ON;
 
-	GPIO_Initialize();
+    GPIO_Initialize();
+//LATA = 0x8000; /* LED ON worked here*/
+    
 
-	UART3_Initialize();
+   LATA = 0x8000; /* LED ON */
 
-	UART1_Initialize();
+    UART1_Initialize();
+    
+    
+//   UART1_WriteString("GPIOSending NOooSMS...\r\n");
 
-	UART2_Initialize();
-
+    UART2_Initialize();
+    UART3_Initialize();
+    
+    
+    
+     UART1_WriteString("PDMSending NOooSMS...\r\n");
+    
+    
+    
     TMR1_Initialize();
+    
+    
 
-	SPI1_Initialize();
+    
+    UART1_WriteString("Sending NOooSMS...\r\n");
+    
+//    LED_LED1_TRIS = OUTPUT;
+//    LED_LED1_LAT = LED_ON;
+    
+
+    SPI1_Initialize();
 
 
     EVIC_Initialize();
 
-	/* Enable global interrupts */
-    (void)__builtin_enable_interrupts();
+    /* Enable global interrupts */
+    (void) __builtin_enable_interrupts();
 
 
 
@@ -185,4 +240,4 @@ void SYS_Initialize ( void* data )
 
 /*******************************************************************************
  End of File
-*/
+ */
