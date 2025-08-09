@@ -10,7 +10,6 @@
 #include <stddef.h>                     // Defines NULL
 #include <stdbool.h>                    // Defines true
 #include <stdlib.h>                     // Defines EXIT_FAILURE
-#include "definitions.h"                // SYS function prototypes
 
 
 
@@ -49,7 +48,12 @@ PT_THREAD(SensorThread(struct pt *pt)) {
         //        PT_WAIT_UNTIL(pt, HAL_ADC_ConversionComplete());
         //        uint16_t val = HAL_ADC_GetResult();
         //        processSensor(val);                // your handler
+        
+        
+        
+        
         UART1_WriteString11("Sensor!\n\r");
+        
         PT_WAIT_UNTIL(pt, UART1_TransmitComplete());
 
         PT_WAIT_UNTIL(pt, (msTicks - t0) >= 1000);

@@ -112,74 +112,73 @@ void UART1_WriteString(const char *str) {
 
 int main(void) {
 
-//    working led
-//     LED_LED1_TRIS = OUTPUT ;
-//     LED_LED1_LAT = LED_ON ;
-    
-    //Notworked 
-    //UART1_Write((uint8_t *) "Hello SSSSS!\r\n", 14);
-    
-//    INTERRUPT_GlobalInterruptDisable();
-    /* ????????? Layer?1+2 ????????
-       ? clocks, GPIO, UARTs, EVIC ?
-       ?????????????????????????? */
-    /* Initialize all modules */
+    //    working led
+    //     LED_LED1_TRIS = OUTPUT ;
+    //     LED_LED1_LAT = LED_ON ;
+
+    //    INTERRUPT_GlobalInterruptDisable();
+
+    /**
+     * @brief Initialize low-level hardware (Layers 1?2).
+     * Sets up system clocks, GPIO, UART peripherals, and EVIC interrupts.
+     * Call once at startup before higher-layer drivers.
+     */
     SYS_Initialize(NULL);
-    
-    
-    
+
+
+
     // === UART test = One-time UART startup messages  ===
     UART1_Write((uint8_t *) "1 Hello ESP32!\r\n", 16);
     UART3_Write((uint8_t *) "AT\r\n", 4);
     UART1_WriteString("2 Sending NOooSMS...\r\n");
-
     UART1_WriteString("3 TSSSSending SMS...\r\n");
-    /* ?????????? Layer?1 Helpers ??????????
-       ? 1?ms SysTick for Protothreads   ?
-       ???????????????????????????????????? */
-    
-    BSP_Timer1_Init();        // the 1?ms SysTick for Protothreads
-    
-     /* ?????????? Layer?4 Middleware ???????
-       ? Telit UART3 setup & parser hook ?
-       ???????????????????????????????????? */
-//    
-//    
+
+    /**
+     * @brief Layer 1 helpers.
+     * Provides a 1 ms system tick (Timer1) used by Protothreads.
+     */
+    BSP_Timer1_Init(); // the 1?ms SysTick for Protothreads
+
+    /* Layer 4 middleware
+     * - Initialize UART3 for Telit modem
+     * - Attach/register parser callback
+     */
     BSP_UART3_Init();
-//    Telit_Init();
-    Protothreads_Init();       // Layer?3 scheduler
-    
-//    INTERRUPT_GlobalInterruptEnable();
+
+    /** Layer 3: Protothreads scheduler initialization */
+    Protothreads_Init(); 
+
+    (void) __builtin_enable_interrupts();
 
 
     // === UART test = One-time UART startup messages  ===
     UART1_Write((uint8_t *) "4 Hello ESP32!\r\n", 14);
     UART3_Write((uint8_t *) "AT\r\n", 4);
 
-//    //===  Register UART3 receive callback for Telit responses === interrupt-based notification =====
-//    UART3_ReadCallbackRegister(telit_rx_callback, 0);
-//    UART3_ReadThresholdSet(1);
-//    UART3_ReadNotificationEnable(true, true); // persistent notification
-//    
-//    BSP_UART3_Init();          // register the Telit UART3 callback
+    //    //===  Register UART3 receive callback for Telit responses === interrupt-based notification =====
+    //    UART3_ReadCallbackRegister(telit_rx_callback, 0);
+    //    UART3_ReadThresholdSet(1);
+    //    UART3_ReadNotificationEnable(true, true); // persistent notification
+    //    
+    //    BSP_UART3_Init();          // register the Telit UART3 callback
 
 
     while (true) {
         /* Maintain state machines of all polled MPLAB Harmony modules. */
-//         UART1_WriteString("bSending NOooSMS...\r\n");
-        
+        //         UART1_WriteString("bSending NOooSMS...\r\n");
+
         SYS_Tasks();
-        
-//        UART1_WriteString("ASending NOooSMS...\r\n");
-         
+
+        //        UART1_WriteString("ASending NOooSMS...\r\n");
+
         // Run each Protothread once per loop
         SensorThread(&ptSensor);
         TelitThread(&ptTelit);
         Esp32Thread(&ptEsp32);
         EthThread(&ptEth);
         CliThread(&ptCLI);
-        
-        
+
+
 
         // === (Optional) Polling-based UART3 RX ? avoid redundancy ===
         // This can conflict with interrupt-based read.
