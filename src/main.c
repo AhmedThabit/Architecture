@@ -163,11 +163,11 @@ int main(void) {
         SYS_Tasks();
 
         // Cooperatively run each Protothread once per loop
-        SensorThread(&ptSensor);
-        TelitThread(&ptTelit);
+//        SensorThread(&ptSensor);
+//        TelitThread(&ptTelit);
         Esp32Thread(&ptEsp32);
-        EthThread(&ptEth);
-        CliThread(&ptCLI);
+//        EthThread(&ptEth);
+//        CliThread(&ptCLI);
 
     }
 
