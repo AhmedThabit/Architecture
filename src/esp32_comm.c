@@ -9,7 +9,7 @@
 #include "peripheral/uart/plib_uart1.h"
 #include "esp32_comm.h"
 
-#define ESP32_ASCII_TEST 1   // 1 = allow RealTerm ASCII testing; 0 = binary only
+#define ESP32_ASCII_TEST 0   // 1 = allow RealTerm ASCII testing; 0 = binary only
 
 // ================== CONFIG ==================
 #ifndef ESP32_ASCII_TEST
