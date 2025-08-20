@@ -214,6 +214,7 @@ static void handle_ascii_line(const char* line) {
 
 /* ================== Public poll ================== */
 void ESP32_Poll(void) {
+ UART1_Write((uint8_t*)"BIN\n", 4);   // remove after confirming   
 #if ESP32_ASCII_TEST
     // ASCII test mode: collect UART1 into lines and handle
     uint8_t buf[64];

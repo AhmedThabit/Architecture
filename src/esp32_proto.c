@@ -251,7 +251,8 @@ void Esp_HandleFrame(const uint8_t* payload, size_t len) {
 
     // Fill status and send
     rsp[1] = status;
-#if 0  // <- disable framed ACK while testing with RealTerm
-    ESP32_SendFrame(rsp, ri);
-#endif
+    ESP32_SendFrame(rsp, ri);   // enable
+//#if 0  // <- disable framed ACK while testing with RealTerm
+//    ESP32_SendFrame(rsp, ri);
+//#endif
 }

@@ -19,7 +19,7 @@ extern bool ESP32_TakeRxFlag(void); // if you added it; else just call ESP32_Pol
 extern volatile uint32_t msTicks;
 
 // One pt struct per thread
-struct pt ptSensor, ptTelit, ptEsp32, ptEth, ptCLI;
+struct pt ptSensor, ptTelit, ptEsp32, ptEth, ptCLI, ptEspTxTest;
 
 void UART1_SendChar11(char c) {
     while (U1STAbits.UTXBF);
@@ -43,8 +43,11 @@ void Protothreads_Init(void) {
     PT_INIT(&ptSensor);
     PT_INIT(&ptTelit);
     PT_INIT(&ptEsp32);
+    PT_INIT(&ptEspTxTest);
     PT_INIT(&ptEth);
     PT_INIT(&ptCLI);
+    
+
 }
 
 /* ????????? SensorThread ????????? */
@@ -94,6 +97,18 @@ PT_THREAD(TelitThread(struct pt *pt)) {
     PT_END(pt);
 }
 
+PT_THREAD(Esp32TxTestThread(struct pt *pt))
+{
+    static uint32_t t0;
+    PT_BEGIN(pt);
+    while (1) {
+        t0 = msTicks;
+        const uint8_t payload[] = "PIC32 HELLO";
+        ESP32_SendFrame(payload, sizeof(payload)-1);
+        PT_WAIT_UNTIL(pt, (uint32_t)(msTicks - t0) >= 2000);
+    }
+    PT_END(pt);
+}
 
 
 

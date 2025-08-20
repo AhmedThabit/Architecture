@@ -128,6 +128,7 @@ int main(void) {
     // main.c
     ESP32_UartInit(); // call after SYS_Initialize
 
+
     // === UART test = One-time UART startup messages  ===
     UART1_Write((uint8_t *) "1 Hello ESP32!\r\n", 16);
     UART3_Write((uint8_t *) "AT\r\n", 4);
@@ -163,11 +164,13 @@ int main(void) {
         SYS_Tasks();
 
         // Cooperatively run each Protothread once per loop
-//        SensorThread(&ptSensor);
-//        TelitThread(&ptTelit);
+        //        SensorThread(&ptSensor);
+        //        TelitThread(&ptTelit);
         Esp32Thread(&ptEsp32);
-//        EthThread(&ptEth);
-//        CliThread(&ptCLI);
+        Esp32TxTestThread(&ptEspTxTest);
+
+        //        EthThread(&ptEth);
+        //        CliThread(&ptCLI);
 
     }
 
