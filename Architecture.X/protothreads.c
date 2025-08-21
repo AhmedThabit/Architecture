@@ -1,6 +1,3 @@
-
-
-
 #include <stdint.h>       // for uint32_t
 #include "../../pt.h"
 #include "../Architecture.X/protothreads.h"
@@ -12,6 +9,10 @@
 #include <stdlib.h>                     // Defines EXIT_FAILURE
 #include <string.h>
 #include "esp32_proto.h"
+
+#define UART1_DEBUG 0
+#define UART1_THREAD 0
+
 
 extern bool ESP32_TakeRxFlag(void); // if you added it; else just call ESP32_Poll()
 
@@ -46,7 +47,7 @@ void Protothreads_Init(void) {
     PT_INIT(&ptEspTxTest);
     PT_INIT(&ptEth);
     PT_INIT(&ptCLI);
-    
+
 
 }
 
@@ -65,7 +66,10 @@ PT_THREAD(SensorThread(struct pt *pt)) {
 
 
 
+#if UART1_THREAD
         UART1_WriteString11("Sensor!\n\r");
+#endif
+
 
         PT_WAIT_UNTIL(pt, UART1_TransmitComplete());
 
@@ -87,7 +91,11 @@ PT_THREAD(TelitThread(struct pt *pt)) {
         //        uint8_t buf[128];
         //        int len = UART3_Read(buf, sizeof(buf));
         //        handleTelitResponse(buf, len);
+
+#if UART1_THREAD
         UART1_WriteString11("Telit!\n\r");
+#endif
+
         UART3_WriteString33("AT\r\n");
         PT_WAIT_UNTIL(pt, UART1_TransmitComplete());
         PT_WAIT_UNTIL(pt, (msTicks - t0) >= 1000);
@@ -97,23 +105,19 @@ PT_THREAD(TelitThread(struct pt *pt)) {
     PT_END(pt);
 }
 
-PT_THREAD(Esp32TxTestThread(struct pt *pt))
-{
+PT_THREAD(Esp32TxTestThread(struct pt *pt)) {
     static uint32_t t0;
     PT_BEGIN(pt);
     while (1) {
         t0 = msTicks;
         const uint8_t payload[] = "PIC32 HELLO";
-        ESP32_SendFrame(payload, sizeof(payload)-1);
-        PT_WAIT_UNTIL(pt, (uint32_t)(msTicks - t0) >= 2000);
+        ESP32_SendFrame(payload, sizeof (payload) - 1);
+        PT_WAIT_UNTIL(pt, (uint32_t) (msTicks - t0) >= 2000);
     }
     PT_END(pt);
 }
 
-
-
-PT_THREAD(Esp32Thread(struct pt *pt))
-{
+PT_THREAD(Esp32Thread(struct pt *pt)) {
     PT_BEGIN(pt);
 
     // Do this ONCE (or move both calls to main() right after SYS_Initialize)
@@ -179,7 +183,11 @@ PT_THREAD(EthThread(struct pt *pt)) {
     while (1) {
         t0 = msTicks;
         //        ETH_PeriodicTasks();    // e.g. lwIP timers or packet handling
+
+#if UART1_THREAD
         UART1_WriteString11("EtherNet!\n\r");
+#endif
+
         PT_WAIT_UNTIL(pt, UART1_TransmitComplete());
         PT_WAIT_UNTIL(pt, (msTicks - t0) >= 1000);
         //        PT_YIELD(pt); // give other threads a chance
@@ -195,7 +203,11 @@ PT_THREAD(CliThread(struct pt *pt)) {
 
     while (1) {
         t0 = msTicks;
+
+#if UART1_THREAD
         UART1_WriteString11("Cli!\n\r");
+#endif
+
         PT_WAIT_UNTIL(pt, UART1_TransmitComplete());
 
 
