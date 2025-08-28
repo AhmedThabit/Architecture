@@ -199,63 +199,30 @@ void Esp_HandleFrame(const uint8_t* payload, size_t len) {
             }
             break;
 
-        case OPC_GET:
-        {
-            // Parse TLVs in request: each tag is a "want" (length may be 0)
-            while (rem >= 2) {
-                uint8_t tag = q[0];
-                uint8_t l = q[1];
-                if (rem < (size_t) (2 + l)) {
-                    status = ST_BAD_TLV;
-                    break;
-                }
-                // Build reply TLV(s)
-                if (!tlv_get_reply(tag, rsp, sizeof (rsp), &ri)) {
-                    status = ST_BAD_LEN;
-                    break;
-                }
-                q += 2 + l;
-                rem -= 2 + l;
-            }
-            if (rem != 0 && status == ST_OK) status = ST_BAD_TLV;
-            break;
-        }
-
         case OPC_SET:
         {
-            uint8_t led_seen = 0;
-            uint8_t led_v = 0;
-
-            // Apply each TLV in request
+            uint8_t last_led = 0xFF;
             while (rem >= 2) {
-                uint8_t tag = q[0];
                 uint8_t l = q[1];
                 if (rem < (size_t) (2 + l)) {
                     status = ST_BAD_TLV;
                     break;
                 }
+
+                if (q[0] == T_LED_STATE && l == 1) last_led = q[2];
 
                 uint8_t st_each = ST_OK;
                 bool ok = tlv_apply(q, 2 + l, &st_each);
-                if (!ok && status == ST_OK) status = st_each; // remember first error
-
-                // If LED TLV present, remember the value (0/1)
-                if (tag == T_LED_STATE && l == 1) {
-                    led_seen = 1;
-                    led_v = q[2] ? 1u : 0u;
-                }
+                if (!ok && status == ST_OK) status = st_each;
 
                 q += 2 + l;
                 rem -= 2 + l;
             }
-            if (rem != 0 && status == ST_OK) status = ST_BAD_TLV;
-
-            // ACK TLV (A0): put LED value if it was set; otherwise 1=OK, 0=error
-            uint8_t ack = led_seen ? led_v : ((status == ST_OK) ? 1u : 0u);
-            (void) put_tlv(rsp, sizeof (rsp), &ri, 0xA0, &ack, 1);
-
+            if (status == ST_OK && last_led != 0xFF)
+                put_tlv(rsp, sizeof rsp, &ri, 0xA0, &last_led, 1);
             break;
         }
+
 
 
         default:
