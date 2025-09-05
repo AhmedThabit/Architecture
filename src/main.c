@@ -175,7 +175,7 @@ int main(void) {
 
         // Cooperatively run each Protothread once per loop
         //        SensorThread(&ptSensor);
-        //        TelitThread(&ptTelit);
+        TelitThread(&ptTelit);
         Esp32Thread(&ptEsp32);
         //Esp32TxTestThread(&ptEspTxTest);
 
