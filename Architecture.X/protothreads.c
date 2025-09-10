@@ -9,10 +9,21 @@
 #include <stdlib.h>                     // Defines EXIT_FAILURE
 #include <string.h>
 #include "esp32_proto.h"
+#include <stdio.h>
 
 #define UART1_DEBUG 0
 #define UART1_THREAD 0
 
+
+/* --- Config --- */
+#define SMS_NUMBER   "+201121844048"       /* <-- change me */
+#define SMS_TEXT     "Hello from PIC32 via UART3 ?\r\n"
+#define SMS_PERIOD_MS   10000UL             /* 10 seconds */
+#define AT_TIMEOUT(ms)  (ms)
+
+/* --- Minimal RX accumulator for token waits --- */
+static char     g_rx_acc[512];
+static uint16_t g_rx_len;
 
 extern bool ESP32_TakeRxFlag(void); // if you added it; else just call ESP32_Poll()
 
@@ -35,10 +46,60 @@ void UART3_WriteString33(const char* str) {
     UART3_Write((void*) str, strlen(str));
 }
 
-void UART3_WriteChar(char c) {
+void UART3_WriteChar33(char c) {
     while (U3STAbits.UTXBF); // Wait if TX buffer is full
     U3TXREG = c;
 }
+
+// ------------- uart 3 --- sms
+/* Append any pending UART3 RX bytes into the accumulator */
+static void rx_accumulate(void) {
+    uint8_t tmp[128];
+    int n;
+    while ((n = UART3_Read(tmp, sizeof(tmp))) > 0) {
+        if (g_rx_len + n >= sizeof(g_rx_acc))
+            g_rx_len = 0; /* simple overflow recovery */
+        memcpy(&g_rx_acc[g_rx_len], tmp, (size_t)n);
+        g_rx_len += (uint16_t)n;
+        g_rx_acc[g_rx_len] = '\0';
+    }
+}
+
+/* Start a new wait window */
+//static void rx_wait_begin(uint32_t *t0) {
+//    g_rx_len = 0;
+//    g_rx_acc[0] = '\0';
+//    *t0 = msTicks;
+//}
+
+/* Return true when either token found OR timeout elapsed.
+   Set *found=true only if token found. */
+//static bool rx_wait_token(const char *tok, uint32_t t0, uint32_t timeout_ms, bool *found) {
+//    rx_accumulate();
+//    if (strstr(g_rx_acc, tok)) { *found = true;  return true; }
+//    if (msTicks - t0 >= timeout_ms)            { *found = false; return true; }
+//    return false;
+//}
+
+/* Same as above but succeeds if ANY of the tokens is seen; returns which index via *which (-1 on timeout) */
+//static bool rx_wait_any(const char *const toks[], int ntoks, uint32_t t0, uint32_t timeout_ms, int *which) {
+//    rx_accumulate();
+//    for (int i = 0; i < ntoks; i++) {
+//        if (strstr(g_rx_acc, toks[i])) { *which = i; return true; }
+//    }
+//    if (msTicks - t0 >= timeout_ms) { *which = -1; return true; }
+//    return false;
+//}
+
+/* Send Ctrl+Z */
+static inline void uart3_ctrl_z(void) {
+// end the SMS body:
+UART3_WriteChar33((char)0x1A);   // DO NOT send CR/LF after this
+
+}
+
+
+//-------------end uart 3 ---- sms
 
 void Protothreads_Init(void) {
     PT_INIT(&ptSensor);
@@ -82,9 +143,11 @@ PT_THREAD(SensorThread(struct pt *pt)) {
 
 /* ????????? TelitThread ?????????? */
 PT_THREAD(TelitThread(struct pt *pt)) {
-    static uint32_t t0;
+    static uint32_t t0,t1;
     PT_BEGIN(pt);
-
+    t1 = msTicks;
+    PT_WAIT_UNTIL(pt, (msTicks - t1) >= 10000);   // 10,000 ms
+    
     while (1) {
         t0 = msTicks;
         //        PT_WAIT_UNTIL(pt, telitDataReady());
@@ -96,9 +159,33 @@ PT_THREAD(TelitThread(struct pt *pt)) {
         UART1_WriteString11("Telit!\n\r");
 #endif
 
+        PT_WAIT_UNTIL(pt, (msTicks - t0) >= 10000);
         UART3_WriteString33("AT\r\n");
-        PT_WAIT_UNTIL(pt, UART1_TransmitComplete());
-        PT_WAIT_UNTIL(pt, (msTicks - t0) >= 1000);
+        
+        PT_WAIT_UNTIL(pt, (msTicks - t0) >= 10020);
+        
+        
+        UART3_WriteString33("AT+CMGF=1\r\n");
+        
+        PT_WAIT_UNTIL(pt, (msTicks - t0) >= 10070);
+        
+        /* 1) Issue CMGS with the destination number */
+        {
+            char cmd[64];
+            snprintf(cmd, sizeof(cmd), "AT+CMGS=\"%s\"\r\n", SMS_NUMBER);
+            UART3_WriteString33(cmd);
+        }
+        
+        PT_WAIT_UNTIL(pt, (msTicks - t0) >= 10270);
+        
+        UART3_WriteString33(SMS_TEXT);
+        
+        PT_WAIT_UNTIL(pt, (msTicks - t0) >= 10470);
+        
+        uart3_ctrl_z();
+        
+        //PT_WAIT_UNTIL(pt, UART1_TransmitComplete());
+        PT_WAIT_UNTIL(pt, (msTicks - t0) >= 11000);
 
     }
 
