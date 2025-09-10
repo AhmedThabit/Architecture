@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?> 
 <project>                                  
-  <executable name="dist/default/production/Architecture.X.production.elf">                 
+  <executable name="dist/default/debug/Architecture.X.debug.elf">                 
     <memory name="program">                 
       <units>bytes</units>                 
       <length>267408</length>                 
-      <used>18520</used>                     
-      <free>248888</free>                     
+      <used>18472</used>                     
+      <free>248936</free>                     
     </memory>                              
     <memory name="data">              
       <units>bytes</units>                 
-      <length>32768</length>                 
-      <used>4040</used>                     
-      <free>28728</free>                     
+      <length>33280</length>                 
+      <used>5064</used>                     
+      <free>28216</free>                     
     </memory>                              
   </executable>                            
 </project>                                 
