@@ -160,7 +160,7 @@ PT_THREAD(TelitThread(struct pt *pt)) {
     static int which;
 
     PT_BEGIN(pt);
-
+    PT_WAIT_UNTIL(pt, msTicks >= 10001);
     /* One-time: put the modem into SMS text mode */
     /* "AT" -> expect OK */
     UART3_WriteString33("AT\r\n");
@@ -173,7 +173,8 @@ PT_THREAD(TelitThread(struct pt *pt)) {
     rx_wait_begin(&t0);
 
     PT_WAIT_UNTIL(pt, rx_wait_any((const char*[]) {
-        "OK", "ERROR"}, 2, t0, AT_TIMEOUT(2000), &which));
+        "OK", "ERROR"
+    }, 2, t0, AT_TIMEOUT(2000), &which));
 
     last_send = msTicks;
 
@@ -186,7 +187,8 @@ PT_THREAD(TelitThread(struct pt *pt)) {
         rx_wait_begin(&t0);
 
         PT_WAIT_UNTIL(pt, rx_wait_any((const char*[]) {
-            "OK", "ERROR"}, 2, t0, AT_TIMEOUT(1000), &which));
+            "OK", "ERROR"
+        }, 2, t0, AT_TIMEOUT(1000), &which));
 #if UART1_THREAD
         PT_WAIT_UNTIL(pt, UART1_TransmitComplete());
 #endif
@@ -194,10 +196,15 @@ PT_THREAD(TelitThread(struct pt *pt)) {
         /* Wait until 10s elapsed since last SMS */
         PT_WAIT_UNTIL(pt, (msTicks - last_send) >= SMS_PERIOD_MS);
 
-        /* ======= SEND ONE SMS ======= */
-
+        /* ======= SEND ONE SMS =======888 */
+        int x=0;
         /* 1) Issue CMGS with the destination number */
         {
+            UART3_WriteString33("AT\r\n");
+            rx_wait_begin(&t0);
+            PT_WAIT_UNTIL(pt, rx_wait_any((const char*[]) {
+                "OK", "ERROR"
+            }, 2, t0, AT_TIMEOUT(1000), &which));
             char cmd[64];
             snprintf(cmd, sizeof (cmd), "AT+CMGS=\"%s\"\r\n", SMS_NUMBER);
             UART3_WriteString33(cmd);
@@ -207,7 +214,8 @@ PT_THREAD(TelitThread(struct pt *pt)) {
         rx_wait_begin(&t0);
 
         PT_WAIT_UNTIL(pt, rx_wait_any((const char*[]) {
-            ">", "CONNECT", "ERROR"}, 3, t0, AT_TIMEOUT(8000), &which));
+            ">", "CONNECT", "ERROR"
+        }, 3, t0, AT_TIMEOUT(8000), &which));
         if (which == 2) {
             /* ERROR: skip this cycle, try again next period */
             last_send = msTicks;
