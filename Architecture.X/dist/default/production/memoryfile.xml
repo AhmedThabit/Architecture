@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<project>                                  
+  <executable name="dist/default/production/Architecture.X.production.elf">                 
+    <memory name="program">                 
+      <units>bytes</units>                 
+      <length>267408</length>                 
+      <used>24052</used>                     
+      <free>243356</free>                     
+    </memory>                              
+    <memory name="data">              
+      <units>bytes</units>                 
+      <length>32768</length>                 
+      <used>4524</used>                     
+      <free>28244</free>                     
+    </memory>                              
+  </executable>                            
+</project>                                 
