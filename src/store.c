@@ -34,18 +34,31 @@ void Cfg_Load(void)
 {
     Flash_Init();
 
+    /* Initialise g_cfg to defaults.  This sets g_cfg.version to the current
+     * firmware version (0x00010100) before we validate the header.  Without
+     * this, g_cfg.version is zero on power?up and the version check fails.   */
+    Cfg_Defaults();
+
     CfgHeader hdr;
     Flash_Read(CFG_FLASH_ADDR, (uint8_t*)&hdr, sizeof(hdr));
-    if (hdr.magic != CFG_MAGIC || hdr.length != sizeof(DeviceCfg) || hdr.version != g_cfg.version) {
-        Cfg_Defaults();
-        return;
+
+    /* Reject the stored config if the magic, length or version don?t match.   */
+    if (hdr.magic != CFG_MAGIC ||
+        hdr.length != sizeof(DeviceCfg) ||
+        hdr.version != g_cfg.version) {
+        return;  // leave defaults
     }
-    Flash_Read(CFG_FLASH_ADDR + sizeof(CfgHeader), (uint8_t*)&g_cfg, sizeof(g_cfg));
+
+    /* Load the config from flash and verify its CRC.  If the CRC fails,
+     * fall back to defaults. */
+    Flash_Read(CFG_FLASH_ADDR + sizeof(CfgHeader),
+               (uint8_t*)&g_cfg, sizeof(g_cfg));
     uint32_t calc = Flash_CRC32(&g_cfg, sizeof(g_cfg));
     if (calc != hdr.crc) {
         Cfg_Defaults();
     }
 }
+
 
 void Cfg_Save(void)
 {
