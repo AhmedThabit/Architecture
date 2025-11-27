@@ -11,7 +11,8 @@
 #include "store.h"         // or wherever phonebook_* is declared
 // extern time base (from your Timer1 tick)
 extern volatile uint32_t msTicks;
-extern DeviceCfg g_cfg;    // if you need it for other things
+extern DeviceCfg g_cfg; // if you need it for other things
+
 /* -------------------- Protocol definitions -------------------- */
 enum {
     OPC_GET = 0x01,
@@ -118,36 +119,35 @@ enum {
 extern void handle_sms_enable_cmd(uint8_t flag); // implemented in protothreads.c
 extern uint8_t sms_get_enabled(void);
 
-void send_phonebook_list(void)
-{
+void send_phonebook_list(void) {
     uint8_t rsp[320];
     size_t idx = 0;
 
     // Reply opcode: reply to OPC_SET (0x02) -> 0x82
     rsp[idx++] = OPC_SET | 0x80;
-    rsp[idx++] = ST_OK;    // status placeholder
+    rsp[idx++] = ST_OK; // status placeholder
 
     for (uint8_t slot = 0; slot < 16; slot++) {
         const char *num = phonebook_get_number(slot);
         if (num && num[0] != '\0') {
             size_t len = strlen(num);
             // TLV: tag(1) + len(1) + slot(1) + number(len)
-            if (idx + 2 + 1 + len > sizeof(rsp))
+            if (idx + 2 + 1 + len > sizeof (rsp))
                 break;
 
-            rsp[idx++] = T_PHONEBOOK_SET;      // 0x40
-            rsp[idx++] = (uint8_t)(1 + len);   // length = slot + digits
-            rsp[idx++] = slot;                 // slot index (0..15)
+            rsp[idx++] = T_PHONEBOOK_SET; // 0x40
+            rsp[idx++] = (uint8_t) (1 + len); // length = slot + digits
+            rsp[idx++] = slot; // slot index (0..15)
             memcpy(&rsp[idx], num, len);
             idx += len;
         }
     }
     // NOW add the default slot TLV here
     uint8_t def = phonebook_get_default();
-    if (def < 16 && idx + 3 <= sizeof(rsp)) {
-        rsp[idx++] = T_PHONEBOOK_DEF;  // 0x42
-        rsp[idx++] = 1;                // length = 1 byte
-        rsp[idx++] = def;              // default index
+    if (def < 16 && idx + 3 <= sizeof (rsp)) {
+        rsp[idx++] = T_PHONEBOOK_DEF; // 0x42
+        rsp[idx++] = 1; // length = 1 byte
+        rsp[idx++] = def; // default index
     }
 
     // Send all TLVs together
@@ -391,6 +391,13 @@ void Esp_HandleFrame(const uint8_t* payload, size_t len) {
                 }
                 break;
             }
+
+            // Skip SUB_PHONEBOOK (0x22) if present
+//            if (rem >= 1 && q[0] == 0x22) {
+//                q++;
+//                rem--;
+//            }
+
             // Legacy SET: treat TLVs directly
             uint8_t last_led = 0xFF;
             uint8_t last_sms = 0xFF;
