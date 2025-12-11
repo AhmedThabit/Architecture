@@ -112,6 +112,22 @@ static void uart3_write_hex(uint8_t byte) {
     UART3_WriteString33(out);
 }
 
+void test_phonebook_direct(void) {
+    UART3_WriteString33("=== test_phonebook_direct() ===\r\n");
+
+    // Optionally call Cfg_Load() once at init, not here if already done
+    // Cfg_Load();
+
+    phonebook_set_number(0, "1234");
+    phonebook_set_default(0);
+
+    UART3_WriteString33("After phonebook_set_number + set_default\r\n");
+
+    // Now see what send_phonebook_list() sends
+    send_phonebook_list();
+}
+
+
 void test_flash_raw(void) {
     //UART3_WriteString33("before Flash init\r\n");
     Flash_Init();
@@ -176,8 +192,17 @@ int main(void) {
     // main.c
     ESP32_UartInit(); // call after SYS_Initialize
     Flash_Init();
+    PhonebookFlash_Init(); 
+    
     Cfg_Load(); // load config from external flash
 
+    
+    
+    //test_phonebook_direct();
+    
+    
+    
+    
     // === UART test = One-time UART startup messages  ===
     //    UART1_Write((uint8_t *) "1 Hello ESP32!\r\n", 16);
     //    UART3_Write((uint8_t *) "AT\r\n", 4);
@@ -198,12 +223,12 @@ int main(void) {
 
 
     // somewhere in main loop (once after ESP32_UartInit)
-    static bool test_out_once = false;
-    if (!test_out_once) {
-        const uint8_t ping[] = {0x81, 0x00, 0x01, 0x04, 'P', 'I', 'N', 'G'}; // ROP=0x81, STATUS=OK, TLV tag=1, len=4, "PING"
-        ESP32_SendFrame(ping, sizeof ping);
-        test_out_once = true;
-    }
+//    static bool test_out_once = false;
+//    if (!test_out_once) {
+//        const uint8_t ping[] = {0x81, 0x00, 0x01, 0x04, 'P', 'I', 'N', 'G'}; // ROP=0x81, STATUS=OK, TLV tag=1, len=4, "PING"
+//        ESP32_SendFrame(ping, sizeof ping);
+//        test_out_once = true;
+//    }
 
 
     /** Layer 3: Protothreads scheduler initialization */
@@ -256,7 +281,7 @@ int main(void) {
             //        UART3_WriteString33("T-est AT\r\n");
             //        f=f+1;
             //        }
-            TelitThread(&ptTelit);
+        //    TelitThread(&ptTelit);
             Esp32Thread(&ptEsp32);
     
             //        Esp32TxTestThread(&ptEspTxTest);

@@ -3,7 +3,9 @@
 #include "flash_w25q32.h"
 #include "phonebook_flash.h"
 
-#define PB_BASE_ADDR  0x00000000u   // first sector of flash
+//#define PB_BASE_ADDR  0x00000000u   // first sector of flash
+#define PB_BASE_ADDR  0x00010000u   // next sector (example)
+
 
 typedef struct
 {

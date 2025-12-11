@@ -8,6 +8,15 @@
 #define CFG_FLASH_ADDR    0x00000000u
 #define CFG_MAGIC         0x43464731u  // 'CFG1' in ASCII
 
+void UART3_WriteString33(const char *str); // forward declaration
+
+static void uart3_write_hex(uint8_t byte) {
+    const char hex[] = "0123456789ABCDEF";
+    char out[3] = {hex[byte >> 4], hex[byte & 0x0F], 0};
+    UART3_WriteString33(out);
+}
+
+
 typedef struct {
     uint32_t magic;
     uint32_t length;
@@ -82,34 +91,248 @@ int Cfg_Validate(void)
     Flash_Read(CFG_FLASH_ADDR + sizeof(CfgHeader), (uint8_t*)&tmp, sizeof(tmp));
     return (Flash_CRC32(&tmp, sizeof(tmp)) == hdr.crc) ? 0 : -1;
 }
+//
+//const char* phonebook_get_number(uint8_t slot) {
+//    return (slot < 16 && g_cfg.phonebook.numbers[slot][0] != '\0')
+//           ? g_cfg.phonebook.numbers[slot]
+//           : NULL;
+//}
+//
+//void phonebook_set_number(uint8_t slot, const char* num) {
+//    if (slot < 16 && num) {
+//        strncpy(g_cfg.phonebook.numbers[slot], num, 23);
+//        g_cfg.phonebook.numbers[slot][23] = '\0';
+//        Cfg_Save();    // persist to flash
+//    }
+//}
+//
+//void phonebook_delete_number(uint8_t slot) {
+//    if (slot < 16) {
+//        g_cfg.phonebook.numbers[slot][0] = '\0';
+//        Cfg_Save();
+//    }
+//}
+//
+//void phonebook_set_default(uint8_t slot) {
+//    if (slot < 16) {
+//        g_cfg.phonebook.default_index = slot;
+//        Cfg_Save();
+//    }
+//}
+//uint8_t phonebook_get_default(void) {
+//    return g_cfg.phonebook.default_index;
+//}
 
+
+#include "phonebook_flash.h"   // add this include at top
+
+// NOTE: PB_MAX_LEN is defined in phonebook_flash.h
+
+// We use phonebook_flash.c as the backend. This avoids g_cfg layout issues.
+
+// Small static buffer for one number; safe because send_phonebook_list()
+// copies the string immediately into its reply buffer.
+// store.c
+
+// Return pointer to a static buffer containing the number, or NULL if empty.
 const char* phonebook_get_number(uint8_t slot) {
-    return (slot < 16 && g_cfg.phonebook.numbers[slot][0] != '\0')
-           ? g_cfg.phonebook.numbers[slot]
-           : NULL;
+    static char buf[PB_MAX_LEN];
+
+    UART3_WriteString33("phonebook_get_number(slot=");
+    uart3_write_hex(slot);
+    UART3_WriteString33(") [flash]\r\n");
+
+    if (slot >= PB_SLOT_COUNT) {
+        UART3_WriteString33(" -> invalid slot, returns NULL\r\n");
+        return NULL;
+    }
+
+    if (!PhonebookFlash_GetNumber(slot, buf, sizeof(buf))) {
+        UART3_WriteString33(" -> PhonebookFlash_GetNumber FAILED, returns NULL\r\n");
+        return NULL;
+    }
+
+    if (buf[0] == '\0') {
+        UART3_WriteString33(" -> empty string, returns NULL\r\n");
+        return NULL;
+    }
+
+    UART3_WriteString33(" -> returns \"");
+    for (int i = 0; buf[i] && i < PB_MAX_LEN; ++i) {
+        UART3_WriteString33((char[]){buf[i], 0});
+    }
+    UART3_WriteString33("\"\r\n");
+
+    return buf;
 }
 
 void phonebook_set_number(uint8_t slot, const char* num) {
-    if (slot < 16 && num) {
-        strncpy(g_cfg.phonebook.numbers[slot], num, 23);
-        g_cfg.phonebook.numbers[slot][23] = '\0';
-        Cfg_Save();    // persist to flash
+    UART3_WriteString33("phonebook_set_number(slot=");
+    uart3_write_hex(slot);
+    UART3_WriteString33(", num=\"");
+    if (num) {
+        for (const char* p = num; *p; ++p) {
+            UART3_WriteString33((char[]){*p, 0});
+        }
     }
-}
+    UART3_WriteString33("\") [flash]\r\n");
 
-void phonebook_delete_number(uint8_t slot) {
-    if (slot < 16) {
-        g_cfg.phonebook.numbers[slot][0] = '\0';
-        Cfg_Save();
+    if (!PhonebookFlash_SetNumber(slot, num)) {
+        UART3_WriteString33(" PhonebookFlash_SetNumber FAILED\r\n");
+    } else {
+        UART3_WriteString33(" PhonebookFlash_SetNumber OK\r\n");
     }
 }
 
 void phonebook_set_default(uint8_t slot) {
-    if (slot < 16) {
-        g_cfg.phonebook.default_index = slot;
-        Cfg_Save();
+    UART3_WriteString33("phonebook_set_default(slot=");
+    uart3_write_hex(slot);
+    UART3_WriteString33(") [flash]\r\n");
+
+    if (!PhonebookFlash_SetDefault(slot)) {
+        UART3_WriteString33(" PhonebookFlash_SetDefault FAILED\r\n");
+    } else {
+        UART3_WriteString33(" PhonebookFlash_SetDefault OK\r\n");
     }
 }
+
 uint8_t phonebook_get_default(void) {
-    return g_cfg.phonebook.default_index;
+    uint8_t def = PhonebookFlash_GetDefault();
+    UART3_WriteString33("phonebook_get_default() [flash] -> ");
+    uart3_write_hex(def);
+    UART3_WriteString33("\r\n");
+    return def;
 }
+
+
+
+// Small static buffer for one number; safe because send_phonebook_list()
+// copies the string immediately into its reply buffer.
+
+//const char* phonebook_get_number(uint8_t slot) {
+//    UART3_WriteString33("phonebook_get_number(slot=");
+//    uart3_write_hex(slot);
+//    UART3_WriteString33(")\r\n");
+//
+//    if (slot < 16 && g_cfg.phonebook.numbers[slot][0] != '\0') {
+//        UART3_WriteString33(" -> returns \"");
+//        for (int i = 0; i < 23 && g_cfg.phonebook.numbers[slot][i]; ++i) {
+//            UART3_WriteString33((char[]){g_cfg.phonebook.numbers[slot][i], 0});
+//        }
+//        UART3_WriteString33("\"\r\n");
+//        return g_cfg.phonebook.numbers[slot];
+//    } else {
+//        UART3_WriteString33(" -> returns NULL (empty)\r\n");
+//        return NULL;
+//    }
+//}
+
+
+
+//const char* phonebook_get_number(uint8_t slot) {
+//    static char buf[PB_MAX_LEN];
+//
+//    if (PhonebookFlash_GetNumber(slot, buf, sizeof(buf))) {
+//        if (buf[0] != '\0') {
+//            return buf;
+//        }
+//    }
+//    return NULL;
+//}
+
+//void phonebook_set_number(uint8_t slot, const char* num) {
+//    
+//    
+//    
+//    
+//    // This uses the same Flash_Erase/Write/CRC mechanism as your working test
+//    PhonebookFlash_SetNumber(slot, num);
+//}
+
+//void phonebook_set_number(uint8_t slot, const char* num) {
+//    UART3_WriteString33("phonebook_set_number(slot=");
+//    uart3_write_hex(slot);
+//    UART3_WriteString33(", num=\"");
+//    if (num) {
+//        for (const char* p = num; *p; ++p) {
+//            UART3_WriteString33((char[]){*p, 0});
+//        }
+//    }
+//    UART3_WriteString33("\")\r\n");
+//
+//    if (slot < 16 && num) {
+//        strncpy(g_cfg.phonebook.numbers[slot], num, 23);
+//        g_cfg.phonebook.numbers[slot][23] = '\0';
+//
+//        UART3_WriteString33("g_cfg.phonebook.numbers[slot] now=\"");
+//        for (int i = 0; i < 23 && g_cfg.phonebook.numbers[slot][i]; ++i) {
+//            UART3_WriteString33((char[]){g_cfg.phonebook.numbers[slot][i], 0});
+//        }
+//        UART3_WriteString33("\"\r\n");
+//
+//        Cfg_Save();    // persist to flash
+//        UART3_WriteString33("Cfg_Save() called\r\n");
+//    } else {
+//        UART3_WriteString33("phonebook_set_number: invalid slot or NULL num\r\n");
+//    }
+//}
+
+
+//
+//void phonebook_delete_number(uint8_t slot) {
+//    //PhonebookFlash_ClearNumber(slot);   // if you don?t have this, we can add it
+//}
+
+//void phonebook_set_default(uint8_t slot) {
+//    PhonebookFlash_SetDefault(slot);
+//}
+
+//void phonebook_set_default(uint8_t slot) {
+//    UART3_WriteString33("phonebook_set_default(slot=");
+//    uart3_write_hex(slot);
+//    UART3_WriteString33(")\r\n");
+//
+//    if (slot < 16) {
+//        g_cfg.phonebook.default_index = slot;
+//        Cfg_Save();
+//        UART3_WriteString33("default_index updated and Cfg_Save() called\r\n");
+//    } else {
+//        UART3_WriteString33("phonebook_set_default: invalid slot\r\n");
+//    }
+//}
+//
+//uint8_t phonebook_get_default(void) {
+//    UART3_WriteString33("phonebook_get_default() -> ");
+//    uart3_write_hex(g_cfg.phonebook.default_index);
+//    UART3_WriteString33("\r\n");
+//    return g_cfg.phonebook.default_index;
+//}
+
+
+
+//uint8_t phonebook_get_default(void) {
+//    return PhonebookFlash_GetDefault();
+//}
+
+
+//void phonebook_set_default(uint8_t slot) {
+//    UART3_WriteString33("phonebook_set_default(slot=");
+//    uart3_write_hex(slot);
+//    UART3_WriteString33(")\r\n");
+//
+//    if (slot < 16) {
+//        g_cfg.phonebook.default_index = slot;
+//        Cfg_Save();
+//        UART3_WriteString33("default_index updated and Cfg_Save() called\r\n");
+//    } else {
+//        UART3_WriteString33("phonebook_set_default: invalid slot\r\n");
+//    }
+//}
+
+//uint8_t phonebook_get_default(void) {
+//    UART3_WriteString33("phonebook_get_default() -> ");
+//    uart3_write_hex(g_cfg.phonebook.default_index);
+//    UART3_WriteString33("\r\n");
+//    return g_cfg.phonebook.default_index;
+//}
+
