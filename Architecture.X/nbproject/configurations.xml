@@ -55,6 +55,9 @@
       <itemPath>../src/proto.h</itemPath>
       <itemPath>../src/schema.h</itemPath>
       <itemPath>../src/phonebook_flash.h</itemPath>
+      <itemPath>../src/ff.h</itemPath>
+      <itemPath>../src/sd_spi_lowlevel.h</itemPath>
+      <itemPath>../src/integer.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -128,10 +131,18 @@
         <itemPath>../src/esp32.h</itemPath>
         <itemPath>../src/w5500if.c</itemPath>
         <itemPath>../src/w5500if.h</itemPath>
+        <itemPath>../src/sd_spi_lowlevel.c</itemPath>
+      </logicalFolder>
+      <logicalFolder name="sdcard" displayName="sdcard" projectFiles="true">
+        <itemPath>../src/diskio.h</itemPath>
+        <itemPath>../src/ffconf.h</itemPath>
+        <itemPath>../src/diskio.c</itemPath>
+        <itemPath>../src/sd_card.c</itemPath>
       </logicalFolder>
       <itemPath>../src/main.c</itemPath>
       <itemPath>protothreads.c</itemPath>
       <itemPath>../src/handlers.c</itemPath>
+      <itemPath>../src/ff.c</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
