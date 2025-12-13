@@ -63,23 +63,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
-
-#define LED_On() (LATASET = (1UL<<15))
-#define LED_Off() (LATACLR = (1UL<<15))
-
-#define LED_LED1_TRIS        TRISAbits.TRISA15
-#define LED_LED1_LAT         LATAbits.LATA15
-
-
-#define LED_ON  1
-#define LED_OFF 0
-
-#define INPUT  1
-#define OUTPUT 0
-
-
 // *****************************************************************************
-
 /* Function:
     void CLK_Initialize( void )
 
@@ -98,7 +82,8 @@
     function of the 'configuration bits' to configure the system oscillators.
  */
 
-void CLK_Initialize(void) {
+void CLK_Initialize( void )
+{
     /* unlock system for clock configuration */
     SYSKEY = 0x00000000U;
     SYSKEY = 0xAA996655U;
@@ -117,17 +102,12 @@ void CLK_Initialize(void) {
      * Switching to SPLL is done here after appropriate setting of SPLLCON register.
      * This is done to ensure we don't end-up changing PLL setting when it is ON. */
     
-//    PMD5CLR = 0x01070600; // re-enable USB, I2C1/2/3, SPI2/3
-//// or per-module:
-//PMD5CLR = (1u<<24) | (1u<<18) | (1u<<17) | (1u<<16) | (1u<<10) | (1u<<9);
-
-
     /* Configure SPLL */
     /* DIV_2, MUL_12, PLLSRC= FRC */
     SPLLCON =  0x10080;; //0x1050080;
 
     /* Now switch to the PLL source */
-    OSCCON = OSCCON | 0x00000101U; //NOSC = SPLL, initiate clock switch (OSWEN = 1)
+    OSCCON = OSCCON | 0x00000101U;    //NOSC = SPLL, initiate clock switch (OSWEN = 1)
 
     /* Wait for PLL to be ready and clock switching operation to complete */
     uint32_t status = CLKSTATbits.SPLLRDY;
@@ -144,37 +124,6 @@ void CLK_Initialize(void) {
 
 
 
-    //
-    //        while (OSCCONbits.OSWEN != 0U) {
-    //            // Optionally: wait for SPLL lock if needed
-    //            while (!(CLKSTATbits.SPLLRDY && CLKSTATbits.SPDIVRDY));
-    //        }
-
-    //working    
-    //    LED_LED1_TRIS = OUTPUT;
-    //    LED_LED1_LAT = LED_ON;
-
     /* Lock system since done with clock configuration */
     SYSKEY = 0x33333333U;
-
-
-    // Make RA15 digital, set as output, drive LED ON (active-high assumed)
-
-    // 1) Ensure digital mode
-    ANSELACLR = (1u << 15); // clear ANSA15 -> digital
-
-    // 2) Make it output
-    TRISACLR = (1u << 15); // 0 = output (atomic)
-
-    // 3) Drive the latch
-//    LATASET = (1u << 15); // set = 1 (atomic)
-    // If your LED is active-low, use LATACLR instead:
-//     LATACLR = (1u << 15);
-
-
-    // working
-//    LED_LED1_TRIS = OUTPUT;
-    LED_LED1_LAT = LED_OFF;
-
-
 }

@@ -51,17 +51,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=../src/layers_docments.c ../src/config/default/peripheral/clk/plib_clk.c ../src/config/default/peripheral/evic/plib_evic.c ../src/config/default/peripheral/gpio/plib_gpio.c ../src/config/default/peripheral/spi/spi_master/plib_spi1_master.c ../src/config/default/peripheral/spi/spi_master/plib_spi3_master.c ../src/config/default/peripheral/tmr1/plib_tmr1.c ../src/config/default/peripheral/uart/plib_uart3.c ../src/config/default/peripheral/uart/plib_uart1.c ../src/config/default/peripheral/uart/plib_uart2.c ../src/config/default/stdio/xc32_monitor.c ../src/config/default/initialization.c ../src/config/default/interrupts.c ../src/config/default/exceptions.c ../src/store.c ../src/esp32_comm.c ../src/esp32_proto.c ../src/io_monitor.c ../src/alarm_mgr.c ../src/gsm_le910.c ../src/sms_service.c ../src/flash_w25q32.c ../src/storage.c ../src/phonebook_flash.c ../src/telit.c ../src/bsp.c ../src/esp32.c ../src/w5500if.c ../src/main.c protothreads.c ../src/handlers.c ../src/ff.c ../src/sd_spi_lowlevel.c ../src/diskio.c ../src/sd_card.c
+SOURCEFILES_QUOTED_IF_SPACED=../src/layers_docments.c ../src/config/default/peripheral/clk/plib_clk.c ../src/config/default/peripheral/evic/plib_evic.c ../src/config/default/peripheral/gpio/plib_gpio.c ../src/config/default/peripheral/spi/spi_master/plib_spi1_master.c ../src/config/default/peripheral/spi/spi_master/plib_spi3_master.c ../src/config/default/peripheral/tmr1/plib_tmr1.c ../src/config/default/peripheral/uart/plib_uart3.c ../src/config/default/peripheral/uart/plib_uart1.c ../src/config/default/peripheral/uart/plib_uart2.c ../src/config/default/stdio/xc32_monitor.c ../src/config/default/initialization.c ../src/config/default/interrupts.c ../src/config/default/exceptions.c ../src/store.c ../src/esp32_comm.c ../src/esp32_proto.c ../src/io_monitor.c ../src/alarm_mgr.c ../src/gsm_le910.c ../src/sms_service.c ../src/flash_w25q32.c ../src/storage.c ../src/phonebook_flash.c ../src/telit.c ../src/bsp.c ../src/esp32.c ../src/w5500if.c ../src/sd_spi_lowlevel.c ../src/main.c protothreads.c ../src/handlers.c ../src/config/default/driver/sdspi/src/drv_sdspi_file_system.c ../src/config/default/driver/sdspi/src/drv_sdspi.c ../src/config/default/system/fs/fat_fs/file_system/ffunicode.c ../src/config/default/tasks.c ../src/config/default/system/fs/fat_fs/file_system/ff.c ../src/config/default/system/fs/fat_fs/hardware_access/diskio.c ../src/config/default/system/fs/src/sys_fs_fat_interface.c ../src/config/default/system/fs/src/sys_fs_media_manager.c ../src/config/default/driver/sdspi/src/drv_sdspi_plib_interface.c ../src/config/default/system/fs/src/sys_fs.c ../src/config/default/system/dma/sys_dma.c ../src/config/default/system/time/src/sys_time.c ../src/config/default/system/int/src/sys_int.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/_ext/1360937237/layers_docments.o ${OBJECTDIR}/_ext/60165520/plib_clk.o ${OBJECTDIR}/_ext/1865200349/plib_evic.o ${OBJECTDIR}/_ext/1865254177/plib_gpio.o ${OBJECTDIR}/_ext/298189674/plib_spi1_master.o ${OBJECTDIR}/_ext/298189674/plib_spi3_master.o ${OBJECTDIR}/_ext/1865638794/plib_tmr1.o ${OBJECTDIR}/_ext/1865657120/plib_uart3.o ${OBJECTDIR}/_ext/1865657120/plib_uart1.o ${OBJECTDIR}/_ext/1865657120/plib_uart2.o ${OBJECTDIR}/_ext/163028504/xc32_monitor.o ${OBJECTDIR}/_ext/1171490990/initialization.o ${OBJECTDIR}/_ext/1171490990/interrupts.o ${OBJECTDIR}/_ext/1171490990/exceptions.o ${OBJECTDIR}/_ext/1360937237/store.o ${OBJECTDIR}/_ext/1360937237/esp32_comm.o ${OBJECTDIR}/_ext/1360937237/esp32_proto.o ${OBJECTDIR}/_ext/1360937237/io_monitor.o ${OBJECTDIR}/_ext/1360937237/alarm_mgr.o ${OBJECTDIR}/_ext/1360937237/gsm_le910.o ${OBJECTDIR}/_ext/1360937237/sms_service.o ${OBJECTDIR}/_ext/1360937237/flash_w25q32.o ${OBJECTDIR}/_ext/1360937237/storage.o ${OBJECTDIR}/_ext/1360937237/phonebook_flash.o ${OBJECTDIR}/_ext/1360937237/telit.o ${OBJECTDIR}/_ext/1360937237/bsp.o ${OBJECTDIR}/_ext/1360937237/esp32.o ${OBJECTDIR}/_ext/1360937237/w5500if.o ${OBJECTDIR}/_ext/1360937237/main.o ${OBJECTDIR}/protothreads.o ${OBJECTDIR}/_ext/1360937237/handlers.o ${OBJECTDIR}/_ext/1360937237/ff.o ${OBJECTDIR}/_ext/1360937237/sd_spi_lowlevel.o ${OBJECTDIR}/_ext/1360937237/diskio.o ${OBJECTDIR}/_ext/1360937237/sd_card.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/_ext/1360937237/layers_docments.o.d ${OBJECTDIR}/_ext/60165520/plib_clk.o.d ${OBJECTDIR}/_ext/1865200349/plib_evic.o.d ${OBJECTDIR}/_ext/1865254177/plib_gpio.o.d ${OBJECTDIR}/_ext/298189674/plib_spi1_master.o.d ${OBJECTDIR}/_ext/298189674/plib_spi3_master.o.d ${OBJECTDIR}/_ext/1865638794/plib_tmr1.o.d ${OBJECTDIR}/_ext/1865657120/plib_uart3.o.d ${OBJECTDIR}/_ext/1865657120/plib_uart1.o.d ${OBJECTDIR}/_ext/1865657120/plib_uart2.o.d ${OBJECTDIR}/_ext/163028504/xc32_monitor.o.d ${OBJECTDIR}/_ext/1171490990/initialization.o.d ${OBJECTDIR}/_ext/1171490990/interrupts.o.d ${OBJECTDIR}/_ext/1171490990/exceptions.o.d ${OBJECTDIR}/_ext/1360937237/store.o.d ${OBJECTDIR}/_ext/1360937237/esp32_comm.o.d ${OBJECTDIR}/_ext/1360937237/esp32_proto.o.d ${OBJECTDIR}/_ext/1360937237/io_monitor.o.d ${OBJECTDIR}/_ext/1360937237/alarm_mgr.o.d ${OBJECTDIR}/_ext/1360937237/gsm_le910.o.d ${OBJECTDIR}/_ext/1360937237/sms_service.o.d ${OBJECTDIR}/_ext/1360937237/flash_w25q32.o.d ${OBJECTDIR}/_ext/1360937237/storage.o.d ${OBJECTDIR}/_ext/1360937237/phonebook_flash.o.d ${OBJECTDIR}/_ext/1360937237/telit.o.d ${OBJECTDIR}/_ext/1360937237/bsp.o.d ${OBJECTDIR}/_ext/1360937237/esp32.o.d ${OBJECTDIR}/_ext/1360937237/w5500if.o.d ${OBJECTDIR}/_ext/1360937237/main.o.d ${OBJECTDIR}/protothreads.o.d ${OBJECTDIR}/_ext/1360937237/handlers.o.d ${OBJECTDIR}/_ext/1360937237/ff.o.d ${OBJECTDIR}/_ext/1360937237/sd_spi_lowlevel.o.d ${OBJECTDIR}/_ext/1360937237/diskio.o.d ${OBJECTDIR}/_ext/1360937237/sd_card.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/_ext/1360937237/layers_docments.o ${OBJECTDIR}/_ext/60165520/plib_clk.o ${OBJECTDIR}/_ext/1865200349/plib_evic.o ${OBJECTDIR}/_ext/1865254177/plib_gpio.o ${OBJECTDIR}/_ext/298189674/plib_spi1_master.o ${OBJECTDIR}/_ext/298189674/plib_spi3_master.o ${OBJECTDIR}/_ext/1865638794/plib_tmr1.o ${OBJECTDIR}/_ext/1865657120/plib_uart3.o ${OBJECTDIR}/_ext/1865657120/plib_uart1.o ${OBJECTDIR}/_ext/1865657120/plib_uart2.o ${OBJECTDIR}/_ext/163028504/xc32_monitor.o ${OBJECTDIR}/_ext/1171490990/initialization.o ${OBJECTDIR}/_ext/1171490990/interrupts.o ${OBJECTDIR}/_ext/1171490990/exceptions.o ${OBJECTDIR}/_ext/1360937237/store.o ${OBJECTDIR}/_ext/1360937237/esp32_comm.o ${OBJECTDIR}/_ext/1360937237/esp32_proto.o ${OBJECTDIR}/_ext/1360937237/io_monitor.o ${OBJECTDIR}/_ext/1360937237/alarm_mgr.o ${OBJECTDIR}/_ext/1360937237/gsm_le910.o ${OBJECTDIR}/_ext/1360937237/sms_service.o ${OBJECTDIR}/_ext/1360937237/flash_w25q32.o ${OBJECTDIR}/_ext/1360937237/storage.o ${OBJECTDIR}/_ext/1360937237/phonebook_flash.o ${OBJECTDIR}/_ext/1360937237/telit.o ${OBJECTDIR}/_ext/1360937237/bsp.o ${OBJECTDIR}/_ext/1360937237/esp32.o ${OBJECTDIR}/_ext/1360937237/w5500if.o ${OBJECTDIR}/_ext/1360937237/sd_spi_lowlevel.o ${OBJECTDIR}/_ext/1360937237/main.o ${OBJECTDIR}/protothreads.o ${OBJECTDIR}/_ext/1360937237/handlers.o ${OBJECTDIR}/_ext/1100529066/drv_sdspi_file_system.o ${OBJECTDIR}/_ext/1100529066/drv_sdspi.o ${OBJECTDIR}/_ext/411819097/ffunicode.o ${OBJECTDIR}/_ext/1171490990/tasks.o ${OBJECTDIR}/_ext/411819097/ff.o ${OBJECTDIR}/_ext/565198302/diskio.o ${OBJECTDIR}/_ext/1269487135/sys_fs_fat_interface.o ${OBJECTDIR}/_ext/1269487135/sys_fs_media_manager.o ${OBJECTDIR}/_ext/1100529066/drv_sdspi_plib_interface.o ${OBJECTDIR}/_ext/1269487135/sys_fs.o ${OBJECTDIR}/_ext/14461671/sys_dma.o ${OBJECTDIR}/_ext/101884895/sys_time.o ${OBJECTDIR}/_ext/1881668453/sys_int.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/_ext/1360937237/layers_docments.o.d ${OBJECTDIR}/_ext/60165520/plib_clk.o.d ${OBJECTDIR}/_ext/1865200349/plib_evic.o.d ${OBJECTDIR}/_ext/1865254177/plib_gpio.o.d ${OBJECTDIR}/_ext/298189674/plib_spi1_master.o.d ${OBJECTDIR}/_ext/298189674/plib_spi3_master.o.d ${OBJECTDIR}/_ext/1865638794/plib_tmr1.o.d ${OBJECTDIR}/_ext/1865657120/plib_uart3.o.d ${OBJECTDIR}/_ext/1865657120/plib_uart1.o.d ${OBJECTDIR}/_ext/1865657120/plib_uart2.o.d ${OBJECTDIR}/_ext/163028504/xc32_monitor.o.d ${OBJECTDIR}/_ext/1171490990/initialization.o.d ${OBJECTDIR}/_ext/1171490990/interrupts.o.d ${OBJECTDIR}/_ext/1171490990/exceptions.o.d ${OBJECTDIR}/_ext/1360937237/store.o.d ${OBJECTDIR}/_ext/1360937237/esp32_comm.o.d ${OBJECTDIR}/_ext/1360937237/esp32_proto.o.d ${OBJECTDIR}/_ext/1360937237/io_monitor.o.d ${OBJECTDIR}/_ext/1360937237/alarm_mgr.o.d ${OBJECTDIR}/_ext/1360937237/gsm_le910.o.d ${OBJECTDIR}/_ext/1360937237/sms_service.o.d ${OBJECTDIR}/_ext/1360937237/flash_w25q32.o.d ${OBJECTDIR}/_ext/1360937237/storage.o.d ${OBJECTDIR}/_ext/1360937237/phonebook_flash.o.d ${OBJECTDIR}/_ext/1360937237/telit.o.d ${OBJECTDIR}/_ext/1360937237/bsp.o.d ${OBJECTDIR}/_ext/1360937237/esp32.o.d ${OBJECTDIR}/_ext/1360937237/w5500if.o.d ${OBJECTDIR}/_ext/1360937237/sd_spi_lowlevel.o.d ${OBJECTDIR}/_ext/1360937237/main.o.d ${OBJECTDIR}/protothreads.o.d ${OBJECTDIR}/_ext/1360937237/handlers.o.d ${OBJECTDIR}/_ext/1100529066/drv_sdspi_file_system.o.d ${OBJECTDIR}/_ext/1100529066/drv_sdspi.o.d ${OBJECTDIR}/_ext/411819097/ffunicode.o.d ${OBJECTDIR}/_ext/1171490990/tasks.o.d ${OBJECTDIR}/_ext/411819097/ff.o.d ${OBJECTDIR}/_ext/565198302/diskio.o.d ${OBJECTDIR}/_ext/1269487135/sys_fs_fat_interface.o.d ${OBJECTDIR}/_ext/1269487135/sys_fs_media_manager.o.d ${OBJECTDIR}/_ext/1100529066/drv_sdspi_plib_interface.o.d ${OBJECTDIR}/_ext/1269487135/sys_fs.o.d ${OBJECTDIR}/_ext/14461671/sys_dma.o.d ${OBJECTDIR}/_ext/101884895/sys_time.o.d ${OBJECTDIR}/_ext/1881668453/sys_int.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/_ext/1360937237/layers_docments.o ${OBJECTDIR}/_ext/60165520/plib_clk.o ${OBJECTDIR}/_ext/1865200349/plib_evic.o ${OBJECTDIR}/_ext/1865254177/plib_gpio.o ${OBJECTDIR}/_ext/298189674/plib_spi1_master.o ${OBJECTDIR}/_ext/298189674/plib_spi3_master.o ${OBJECTDIR}/_ext/1865638794/plib_tmr1.o ${OBJECTDIR}/_ext/1865657120/plib_uart3.o ${OBJECTDIR}/_ext/1865657120/plib_uart1.o ${OBJECTDIR}/_ext/1865657120/plib_uart2.o ${OBJECTDIR}/_ext/163028504/xc32_monitor.o ${OBJECTDIR}/_ext/1171490990/initialization.o ${OBJECTDIR}/_ext/1171490990/interrupts.o ${OBJECTDIR}/_ext/1171490990/exceptions.o ${OBJECTDIR}/_ext/1360937237/store.o ${OBJECTDIR}/_ext/1360937237/esp32_comm.o ${OBJECTDIR}/_ext/1360937237/esp32_proto.o ${OBJECTDIR}/_ext/1360937237/io_monitor.o ${OBJECTDIR}/_ext/1360937237/alarm_mgr.o ${OBJECTDIR}/_ext/1360937237/gsm_le910.o ${OBJECTDIR}/_ext/1360937237/sms_service.o ${OBJECTDIR}/_ext/1360937237/flash_w25q32.o ${OBJECTDIR}/_ext/1360937237/storage.o ${OBJECTDIR}/_ext/1360937237/phonebook_flash.o ${OBJECTDIR}/_ext/1360937237/telit.o ${OBJECTDIR}/_ext/1360937237/bsp.o ${OBJECTDIR}/_ext/1360937237/esp32.o ${OBJECTDIR}/_ext/1360937237/w5500if.o ${OBJECTDIR}/_ext/1360937237/main.o ${OBJECTDIR}/protothreads.o ${OBJECTDIR}/_ext/1360937237/handlers.o ${OBJECTDIR}/_ext/1360937237/ff.o ${OBJECTDIR}/_ext/1360937237/sd_spi_lowlevel.o ${OBJECTDIR}/_ext/1360937237/diskio.o ${OBJECTDIR}/_ext/1360937237/sd_card.o
+OBJECTFILES=${OBJECTDIR}/_ext/1360937237/layers_docments.o ${OBJECTDIR}/_ext/60165520/plib_clk.o ${OBJECTDIR}/_ext/1865200349/plib_evic.o ${OBJECTDIR}/_ext/1865254177/plib_gpio.o ${OBJECTDIR}/_ext/298189674/plib_spi1_master.o ${OBJECTDIR}/_ext/298189674/plib_spi3_master.o ${OBJECTDIR}/_ext/1865638794/plib_tmr1.o ${OBJECTDIR}/_ext/1865657120/plib_uart3.o ${OBJECTDIR}/_ext/1865657120/plib_uart1.o ${OBJECTDIR}/_ext/1865657120/plib_uart2.o ${OBJECTDIR}/_ext/163028504/xc32_monitor.o ${OBJECTDIR}/_ext/1171490990/initialization.o ${OBJECTDIR}/_ext/1171490990/interrupts.o ${OBJECTDIR}/_ext/1171490990/exceptions.o ${OBJECTDIR}/_ext/1360937237/store.o ${OBJECTDIR}/_ext/1360937237/esp32_comm.o ${OBJECTDIR}/_ext/1360937237/esp32_proto.o ${OBJECTDIR}/_ext/1360937237/io_monitor.o ${OBJECTDIR}/_ext/1360937237/alarm_mgr.o ${OBJECTDIR}/_ext/1360937237/gsm_le910.o ${OBJECTDIR}/_ext/1360937237/sms_service.o ${OBJECTDIR}/_ext/1360937237/flash_w25q32.o ${OBJECTDIR}/_ext/1360937237/storage.o ${OBJECTDIR}/_ext/1360937237/phonebook_flash.o ${OBJECTDIR}/_ext/1360937237/telit.o ${OBJECTDIR}/_ext/1360937237/bsp.o ${OBJECTDIR}/_ext/1360937237/esp32.o ${OBJECTDIR}/_ext/1360937237/w5500if.o ${OBJECTDIR}/_ext/1360937237/sd_spi_lowlevel.o ${OBJECTDIR}/_ext/1360937237/main.o ${OBJECTDIR}/protothreads.o ${OBJECTDIR}/_ext/1360937237/handlers.o ${OBJECTDIR}/_ext/1100529066/drv_sdspi_file_system.o ${OBJECTDIR}/_ext/1100529066/drv_sdspi.o ${OBJECTDIR}/_ext/411819097/ffunicode.o ${OBJECTDIR}/_ext/1171490990/tasks.o ${OBJECTDIR}/_ext/411819097/ff.o ${OBJECTDIR}/_ext/565198302/diskio.o ${OBJECTDIR}/_ext/1269487135/sys_fs_fat_interface.o ${OBJECTDIR}/_ext/1269487135/sys_fs_media_manager.o ${OBJECTDIR}/_ext/1100529066/drv_sdspi_plib_interface.o ${OBJECTDIR}/_ext/1269487135/sys_fs.o ${OBJECTDIR}/_ext/14461671/sys_dma.o ${OBJECTDIR}/_ext/101884895/sys_time.o ${OBJECTDIR}/_ext/1881668453/sys_int.o
 
 # Source Files
-SOURCEFILES=../src/layers_docments.c ../src/config/default/peripheral/clk/plib_clk.c ../src/config/default/peripheral/evic/plib_evic.c ../src/config/default/peripheral/gpio/plib_gpio.c ../src/config/default/peripheral/spi/spi_master/plib_spi1_master.c ../src/config/default/peripheral/spi/spi_master/plib_spi3_master.c ../src/config/default/peripheral/tmr1/plib_tmr1.c ../src/config/default/peripheral/uart/plib_uart3.c ../src/config/default/peripheral/uart/plib_uart1.c ../src/config/default/peripheral/uart/plib_uart2.c ../src/config/default/stdio/xc32_monitor.c ../src/config/default/initialization.c ../src/config/default/interrupts.c ../src/config/default/exceptions.c ../src/store.c ../src/esp32_comm.c ../src/esp32_proto.c ../src/io_monitor.c ../src/alarm_mgr.c ../src/gsm_le910.c ../src/sms_service.c ../src/flash_w25q32.c ../src/storage.c ../src/phonebook_flash.c ../src/telit.c ../src/bsp.c ../src/esp32.c ../src/w5500if.c ../src/main.c protothreads.c ../src/handlers.c ../src/ff.c ../src/sd_spi_lowlevel.c ../src/diskio.c ../src/sd_card.c
+SOURCEFILES=../src/layers_docments.c ../src/config/default/peripheral/clk/plib_clk.c ../src/config/default/peripheral/evic/plib_evic.c ../src/config/default/peripheral/gpio/plib_gpio.c ../src/config/default/peripheral/spi/spi_master/plib_spi1_master.c ../src/config/default/peripheral/spi/spi_master/plib_spi3_master.c ../src/config/default/peripheral/tmr1/plib_tmr1.c ../src/config/default/peripheral/uart/plib_uart3.c ../src/config/default/peripheral/uart/plib_uart1.c ../src/config/default/peripheral/uart/plib_uart2.c ../src/config/default/stdio/xc32_monitor.c ../src/config/default/initialization.c ../src/config/default/interrupts.c ../src/config/default/exceptions.c ../src/store.c ../src/esp32_comm.c ../src/esp32_proto.c ../src/io_monitor.c ../src/alarm_mgr.c ../src/gsm_le910.c ../src/sms_service.c ../src/flash_w25q32.c ../src/storage.c ../src/phonebook_flash.c ../src/telit.c ../src/bsp.c ../src/esp32.c ../src/w5500if.c ../src/sd_spi_lowlevel.c ../src/main.c protothreads.c ../src/handlers.c ../src/config/default/driver/sdspi/src/drv_sdspi_file_system.c ../src/config/default/driver/sdspi/src/drv_sdspi.c ../src/config/default/system/fs/fat_fs/file_system/ffunicode.c ../src/config/default/tasks.c ../src/config/default/system/fs/fat_fs/file_system/ff.c ../src/config/default/system/fs/fat_fs/hardware_access/diskio.c ../src/config/default/system/fs/src/sys_fs_fat_interface.c ../src/config/default/system/fs/src/sys_fs_media_manager.c ../src/config/default/driver/sdspi/src/drv_sdspi_plib_interface.c ../src/config/default/system/fs/src/sys_fs.c ../src/config/default/system/dma/sys_dma.c ../src/config/default/system/time/src/sys_time.c ../src/config/default/system/int/src/sys_int.c
 
 
 
@@ -101,426 +101,546 @@ endif
 # ------------------------------------------------------------------------------------
 # Rules for buildStep: compile
 ifeq ($(TYPE_IMAGE), DEBUG_RUN)
-${OBJECTDIR}/_ext/1360937237/layers_docments.o: ../src/layers_docments.c  .generated_files/flags/default/f92be70ada240b557f4f6b24fe7b04b367ed3481 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1360937237/layers_docments.o: ../src/layers_docments.c  .generated_files/flags/default/1f79f921d080fa26bf7c31e2894619dba689a680 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/layers_docments.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/layers_docments.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/layers_docments.o.d" -o ${OBJECTDIR}/_ext/1360937237/layers_docments.o ../src/layers_docments.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/layers_docments.o.d" -o ${OBJECTDIR}/_ext/1360937237/layers_docments.o ../src/layers_docments.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/60165520/plib_clk.o: ../src/config/default/peripheral/clk/plib_clk.c  .generated_files/flags/default/83a0c487055c33eed1645aa7efb92112cfee0136 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/60165520/plib_clk.o: ../src/config/default/peripheral/clk/plib_clk.c  .generated_files/flags/default/584cb09c104e0d58f3a31f43331d012e90519849 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/60165520" 
 	@${RM} ${OBJECTDIR}/_ext/60165520/plib_clk.o.d 
 	@${RM} ${OBJECTDIR}/_ext/60165520/plib_clk.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/60165520/plib_clk.o.d" -o ${OBJECTDIR}/_ext/60165520/plib_clk.o ../src/config/default/peripheral/clk/plib_clk.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/60165520/plib_clk.o.d" -o ${OBJECTDIR}/_ext/60165520/plib_clk.o ../src/config/default/peripheral/clk/plib_clk.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1865200349/plib_evic.o: ../src/config/default/peripheral/evic/plib_evic.c  .generated_files/flags/default/732e5418c25ce8238d72fedbea3ee3ad28d66848 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1865200349/plib_evic.o: ../src/config/default/peripheral/evic/plib_evic.c  .generated_files/flags/default/ebb2f7c97dcb05883d906ca696d77b6a75deefda .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1865200349" 
 	@${RM} ${OBJECTDIR}/_ext/1865200349/plib_evic.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1865200349/plib_evic.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1865200349/plib_evic.o.d" -o ${OBJECTDIR}/_ext/1865200349/plib_evic.o ../src/config/default/peripheral/evic/plib_evic.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1865200349/plib_evic.o.d" -o ${OBJECTDIR}/_ext/1865200349/plib_evic.o ../src/config/default/peripheral/evic/plib_evic.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1865254177/plib_gpio.o: ../src/config/default/peripheral/gpio/plib_gpio.c  .generated_files/flags/default/bc38c37259a1ab2df9f60aeca151c58df7920778 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1865254177/plib_gpio.o: ../src/config/default/peripheral/gpio/plib_gpio.c  .generated_files/flags/default/396b107cf85033ab8dc480771ec720975e39ed41 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1865254177" 
 	@${RM} ${OBJECTDIR}/_ext/1865254177/plib_gpio.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1865254177/plib_gpio.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1865254177/plib_gpio.o.d" -o ${OBJECTDIR}/_ext/1865254177/plib_gpio.o ../src/config/default/peripheral/gpio/plib_gpio.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1865254177/plib_gpio.o.d" -o ${OBJECTDIR}/_ext/1865254177/plib_gpio.o ../src/config/default/peripheral/gpio/plib_gpio.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/298189674/plib_spi1_master.o: ../src/config/default/peripheral/spi/spi_master/plib_spi1_master.c  .generated_files/flags/default/3b84035b2e0c42fccee7ecc4ece100792e255313 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/298189674/plib_spi1_master.o: ../src/config/default/peripheral/spi/spi_master/plib_spi1_master.c  .generated_files/flags/default/73ed30e3d49cf84f5e6763f6558c6c1bc77fb49e .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/298189674" 
 	@${RM} ${OBJECTDIR}/_ext/298189674/plib_spi1_master.o.d 
 	@${RM} ${OBJECTDIR}/_ext/298189674/plib_spi1_master.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/298189674/plib_spi1_master.o.d" -o ${OBJECTDIR}/_ext/298189674/plib_spi1_master.o ../src/config/default/peripheral/spi/spi_master/plib_spi1_master.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/298189674/plib_spi1_master.o.d" -o ${OBJECTDIR}/_ext/298189674/plib_spi1_master.o ../src/config/default/peripheral/spi/spi_master/plib_spi1_master.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/298189674/plib_spi3_master.o: ../src/config/default/peripheral/spi/spi_master/plib_spi3_master.c  .generated_files/flags/default/6d0fe905a60720f014f9480ba0efe066981b699c .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/298189674/plib_spi3_master.o: ../src/config/default/peripheral/spi/spi_master/plib_spi3_master.c  .generated_files/flags/default/b3c11114d0387c06cb18394c80c1d49c036272df .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/298189674" 
 	@${RM} ${OBJECTDIR}/_ext/298189674/plib_spi3_master.o.d 
 	@${RM} ${OBJECTDIR}/_ext/298189674/plib_spi3_master.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/298189674/plib_spi3_master.o.d" -o ${OBJECTDIR}/_ext/298189674/plib_spi3_master.o ../src/config/default/peripheral/spi/spi_master/plib_spi3_master.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/298189674/plib_spi3_master.o.d" -o ${OBJECTDIR}/_ext/298189674/plib_spi3_master.o ../src/config/default/peripheral/spi/spi_master/plib_spi3_master.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1865638794/plib_tmr1.o: ../src/config/default/peripheral/tmr1/plib_tmr1.c  .generated_files/flags/default/72c24115f2417109e37f960216621f752deabf02 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1865638794/plib_tmr1.o: ../src/config/default/peripheral/tmr1/plib_tmr1.c  .generated_files/flags/default/78c0877a7e1b08019be3a73799586f790b4f9d41 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1865638794" 
 	@${RM} ${OBJECTDIR}/_ext/1865638794/plib_tmr1.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1865638794/plib_tmr1.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1865638794/plib_tmr1.o.d" -o ${OBJECTDIR}/_ext/1865638794/plib_tmr1.o ../src/config/default/peripheral/tmr1/plib_tmr1.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1865638794/plib_tmr1.o.d" -o ${OBJECTDIR}/_ext/1865638794/plib_tmr1.o ../src/config/default/peripheral/tmr1/plib_tmr1.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1865657120/plib_uart3.o: ../src/config/default/peripheral/uart/plib_uart3.c  .generated_files/flags/default/35638a4e300bd845f1d744ee03fd04aa0de1fa59 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1865657120/plib_uart3.o: ../src/config/default/peripheral/uart/plib_uart3.c  .generated_files/flags/default/eccadbe5ad479fb5f3d335826c5f7a52f5280d3f .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1865657120" 
 	@${RM} ${OBJECTDIR}/_ext/1865657120/plib_uart3.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1865657120/plib_uart3.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1865657120/plib_uart3.o.d" -o ${OBJECTDIR}/_ext/1865657120/plib_uart3.o ../src/config/default/peripheral/uart/plib_uart3.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1865657120/plib_uart3.o.d" -o ${OBJECTDIR}/_ext/1865657120/plib_uart3.o ../src/config/default/peripheral/uart/plib_uart3.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1865657120/plib_uart1.o: ../src/config/default/peripheral/uart/plib_uart1.c  .generated_files/flags/default/2803f208fb4a3ffc9eb4953b30dce95ea50defd4 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1865657120/plib_uart1.o: ../src/config/default/peripheral/uart/plib_uart1.c  .generated_files/flags/default/92b4288177d4e10ac5c0a519bd8024aab41b7103 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1865657120" 
 	@${RM} ${OBJECTDIR}/_ext/1865657120/plib_uart1.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1865657120/plib_uart1.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1865657120/plib_uart1.o.d" -o ${OBJECTDIR}/_ext/1865657120/plib_uart1.o ../src/config/default/peripheral/uart/plib_uart1.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1865657120/plib_uart1.o.d" -o ${OBJECTDIR}/_ext/1865657120/plib_uart1.o ../src/config/default/peripheral/uart/plib_uart1.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1865657120/plib_uart2.o: ../src/config/default/peripheral/uart/plib_uart2.c  .generated_files/flags/default/2a4491baf7261deef738ffa64e407ab668b9efb5 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1865657120/plib_uart2.o: ../src/config/default/peripheral/uart/plib_uart2.c  .generated_files/flags/default/8c8ec55a2357f41087136c5663cea6ea6ff4f91f .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1865657120" 
 	@${RM} ${OBJECTDIR}/_ext/1865657120/plib_uart2.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1865657120/plib_uart2.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1865657120/plib_uart2.o.d" -o ${OBJECTDIR}/_ext/1865657120/plib_uart2.o ../src/config/default/peripheral/uart/plib_uart2.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1865657120/plib_uart2.o.d" -o ${OBJECTDIR}/_ext/1865657120/plib_uart2.o ../src/config/default/peripheral/uart/plib_uart2.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/163028504/xc32_monitor.o: ../src/config/default/stdio/xc32_monitor.c  .generated_files/flags/default/33ae95aa30157feacadcfcda7584e94ba649cdf8 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/163028504/xc32_monitor.o: ../src/config/default/stdio/xc32_monitor.c  .generated_files/flags/default/16c8fa5801091a42c6bee8be23775561d1273f36 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/163028504" 
 	@${RM} ${OBJECTDIR}/_ext/163028504/xc32_monitor.o.d 
 	@${RM} ${OBJECTDIR}/_ext/163028504/xc32_monitor.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/163028504/xc32_monitor.o.d" -o ${OBJECTDIR}/_ext/163028504/xc32_monitor.o ../src/config/default/stdio/xc32_monitor.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/163028504/xc32_monitor.o.d" -o ${OBJECTDIR}/_ext/163028504/xc32_monitor.o ../src/config/default/stdio/xc32_monitor.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1171490990/initialization.o: ../src/config/default/initialization.c  .generated_files/flags/default/bbce5c3b45dcb3eda69b0aa98f442ca631973791 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1171490990/initialization.o: ../src/config/default/initialization.c  .generated_files/flags/default/1eb012220937dc75a6bea4eb7cc4c1f76f2859f6 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1171490990" 
 	@${RM} ${OBJECTDIR}/_ext/1171490990/initialization.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1171490990/initialization.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1171490990/initialization.o.d" -o ${OBJECTDIR}/_ext/1171490990/initialization.o ../src/config/default/initialization.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1171490990/initialization.o.d" -o ${OBJECTDIR}/_ext/1171490990/initialization.o ../src/config/default/initialization.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1171490990/interrupts.o: ../src/config/default/interrupts.c  .generated_files/flags/default/395744f5d0452ede9e636c46b1f61eed89a0cbab .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1171490990/interrupts.o: ../src/config/default/interrupts.c  .generated_files/flags/default/a032910f3b4d40c5f95950314b333450985c8574 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1171490990" 
 	@${RM} ${OBJECTDIR}/_ext/1171490990/interrupts.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1171490990/interrupts.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1171490990/interrupts.o.d" -o ${OBJECTDIR}/_ext/1171490990/interrupts.o ../src/config/default/interrupts.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1171490990/interrupts.o.d" -o ${OBJECTDIR}/_ext/1171490990/interrupts.o ../src/config/default/interrupts.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1171490990/exceptions.o: ../src/config/default/exceptions.c  .generated_files/flags/default/f9cb78b9f4f1c170762408118e4c4cc5583cfb3c .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1171490990/exceptions.o: ../src/config/default/exceptions.c  .generated_files/flags/default/7faaefa62662c1b648836446dce37a699f563946 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1171490990" 
 	@${RM} ${OBJECTDIR}/_ext/1171490990/exceptions.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1171490990/exceptions.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1171490990/exceptions.o.d" -o ${OBJECTDIR}/_ext/1171490990/exceptions.o ../src/config/default/exceptions.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1171490990/exceptions.o.d" -o ${OBJECTDIR}/_ext/1171490990/exceptions.o ../src/config/default/exceptions.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1360937237/store.o: ../src/store.c  .generated_files/flags/default/f0c5d0dd1b42ced4146bf09d01e2281dfa79bcea .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1360937237/store.o: ../src/store.c  .generated_files/flags/default/34b9461e82ddbe810af128d98d5fe8b8aa0a18b0 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/store.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/store.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/store.o.d" -o ${OBJECTDIR}/_ext/1360937237/store.o ../src/store.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/store.o.d" -o ${OBJECTDIR}/_ext/1360937237/store.o ../src/store.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1360937237/esp32_comm.o: ../src/esp32_comm.c  .generated_files/flags/default/77a9ea42272d87bbdc38701ffea733091021993e .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1360937237/esp32_comm.o: ../src/esp32_comm.c  .generated_files/flags/default/f36c1d79d7ca8a1c9789a9661670631e1a3846f0 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/esp32_comm.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/esp32_comm.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/esp32_comm.o.d" -o ${OBJECTDIR}/_ext/1360937237/esp32_comm.o ../src/esp32_comm.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/esp32_comm.o.d" -o ${OBJECTDIR}/_ext/1360937237/esp32_comm.o ../src/esp32_comm.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1360937237/esp32_proto.o: ../src/esp32_proto.c  .generated_files/flags/default/eed8f29ab7594d1aa805a02728ed6c55d003fdda .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1360937237/esp32_proto.o: ../src/esp32_proto.c  .generated_files/flags/default/1cf49f84206f0b67377278e65fb96e683d23bc62 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/esp32_proto.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/esp32_proto.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/esp32_proto.o.d" -o ${OBJECTDIR}/_ext/1360937237/esp32_proto.o ../src/esp32_proto.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/esp32_proto.o.d" -o ${OBJECTDIR}/_ext/1360937237/esp32_proto.o ../src/esp32_proto.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1360937237/io_monitor.o: ../src/io_monitor.c  .generated_files/flags/default/4293313ec86d6237185a51bb8e6ef44b684b1ae6 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1360937237/io_monitor.o: ../src/io_monitor.c  .generated_files/flags/default/62f592ccb5a7d757e3a6bcf8a40ef53ec5dbcda3 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/io_monitor.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/io_monitor.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/io_monitor.o.d" -o ${OBJECTDIR}/_ext/1360937237/io_monitor.o ../src/io_monitor.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/io_monitor.o.d" -o ${OBJECTDIR}/_ext/1360937237/io_monitor.o ../src/io_monitor.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1360937237/alarm_mgr.o: ../src/alarm_mgr.c  .generated_files/flags/default/332fc0e0d7b0a4ffb29e9a71c7a8a51a81b0035 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1360937237/alarm_mgr.o: ../src/alarm_mgr.c  .generated_files/flags/default/1bb99d76f9e80777c18a4c8b434d3ae34b7d7a20 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/alarm_mgr.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/alarm_mgr.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/alarm_mgr.o.d" -o ${OBJECTDIR}/_ext/1360937237/alarm_mgr.o ../src/alarm_mgr.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/alarm_mgr.o.d" -o ${OBJECTDIR}/_ext/1360937237/alarm_mgr.o ../src/alarm_mgr.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1360937237/gsm_le910.o: ../src/gsm_le910.c  .generated_files/flags/default/f9145712c3805f49c6ce2b2242b65499714d48 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1360937237/gsm_le910.o: ../src/gsm_le910.c  .generated_files/flags/default/5925d61336740578d3eee03ddcc9a47ed54bb1a1 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/gsm_le910.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/gsm_le910.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/gsm_le910.o.d" -o ${OBJECTDIR}/_ext/1360937237/gsm_le910.o ../src/gsm_le910.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/gsm_le910.o.d" -o ${OBJECTDIR}/_ext/1360937237/gsm_le910.o ../src/gsm_le910.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1360937237/sms_service.o: ../src/sms_service.c  .generated_files/flags/default/6718e0bb49b5705f3af8f61312da8317bf147b2f .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1360937237/sms_service.o: ../src/sms_service.c  .generated_files/flags/default/756beff5626fff44fbf69c7d463fe9b54e5f94a6 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/sms_service.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/sms_service.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/sms_service.o.d" -o ${OBJECTDIR}/_ext/1360937237/sms_service.o ../src/sms_service.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/sms_service.o.d" -o ${OBJECTDIR}/_ext/1360937237/sms_service.o ../src/sms_service.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1360937237/flash_w25q32.o: ../src/flash_w25q32.c  .generated_files/flags/default/9229d0a3b31e9d8b0c46c715e103d9d391d3176a .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1360937237/flash_w25q32.o: ../src/flash_w25q32.c  .generated_files/flags/default/4e231d90a82ce389c9104bb49b19002782bc2bd1 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/flash_w25q32.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/flash_w25q32.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/flash_w25q32.o.d" -o ${OBJECTDIR}/_ext/1360937237/flash_w25q32.o ../src/flash_w25q32.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/flash_w25q32.o.d" -o ${OBJECTDIR}/_ext/1360937237/flash_w25q32.o ../src/flash_w25q32.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1360937237/storage.o: ../src/storage.c  .generated_files/flags/default/c8b1d6e704275b9a3d1e29d59d4efadb681806ae .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1360937237/storage.o: ../src/storage.c  .generated_files/flags/default/3efd9113dac0576400f60df0b56f3a3c79deb19 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/storage.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/storage.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/storage.o.d" -o ${OBJECTDIR}/_ext/1360937237/storage.o ../src/storage.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/storage.o.d" -o ${OBJECTDIR}/_ext/1360937237/storage.o ../src/storage.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1360937237/phonebook_flash.o: ../src/phonebook_flash.c  .generated_files/flags/default/4236c4cd9be9eb3bc6046096962aedc73d339cf9 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1360937237/phonebook_flash.o: ../src/phonebook_flash.c  .generated_files/flags/default/fff67620df9e693dc83a883ab25afabaee7ae30e .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/phonebook_flash.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/phonebook_flash.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/phonebook_flash.o.d" -o ${OBJECTDIR}/_ext/1360937237/phonebook_flash.o ../src/phonebook_flash.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/phonebook_flash.o.d" -o ${OBJECTDIR}/_ext/1360937237/phonebook_flash.o ../src/phonebook_flash.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1360937237/telit.o: ../src/telit.c  .generated_files/flags/default/f49fc583d7dc03dac248a72046f115b457b1af44 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1360937237/telit.o: ../src/telit.c  .generated_files/flags/default/ae4146b07d5735a8941304eec5e2afcf8d3d0b4b .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/telit.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/telit.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/telit.o.d" -o ${OBJECTDIR}/_ext/1360937237/telit.o ../src/telit.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/telit.o.d" -o ${OBJECTDIR}/_ext/1360937237/telit.o ../src/telit.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1360937237/bsp.o: ../src/bsp.c  .generated_files/flags/default/341d01898cfaf121819d66bea2b1fc50d6d3477d .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1360937237/bsp.o: ../src/bsp.c  .generated_files/flags/default/be4095503b2dc2e97e33b7e8dea9e8e7ed09c55a .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/bsp.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/bsp.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/bsp.o.d" -o ${OBJECTDIR}/_ext/1360937237/bsp.o ../src/bsp.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/bsp.o.d" -o ${OBJECTDIR}/_ext/1360937237/bsp.o ../src/bsp.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1360937237/esp32.o: ../src/esp32.c  .generated_files/flags/default/2ce2e58917dab856022e95c468ef66d1c3a7ce1a .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1360937237/esp32.o: ../src/esp32.c  .generated_files/flags/default/f661edeb3a7b3ee1fa5cde98b677b0e4315023cd .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/esp32.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/esp32.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/esp32.o.d" -o ${OBJECTDIR}/_ext/1360937237/esp32.o ../src/esp32.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/esp32.o.d" -o ${OBJECTDIR}/_ext/1360937237/esp32.o ../src/esp32.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1360937237/w5500if.o: ../src/w5500if.c  .generated_files/flags/default/d59b34c828821d4354e5a50b678c2d0bfaa577b3 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1360937237/w5500if.o: ../src/w5500if.c  .generated_files/flags/default/a077dc4dbfc03c60b69e44669245febd58763dbb .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/w5500if.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/w5500if.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/w5500if.o.d" -o ${OBJECTDIR}/_ext/1360937237/w5500if.o ../src/w5500if.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/w5500if.o.d" -o ${OBJECTDIR}/_ext/1360937237/w5500if.o ../src/w5500if.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1360937237/main.o: ../src/main.c  .generated_files/flags/default/e61090b668d30b811d58c359faa14d26cf329c50 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
-	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
-	@${RM} ${OBJECTDIR}/_ext/1360937237/main.o.d 
-	@${RM} ${OBJECTDIR}/_ext/1360937237/main.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/main.o.d" -o ${OBJECTDIR}/_ext/1360937237/main.o ../src/main.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
-	
-${OBJECTDIR}/protothreads.o: protothreads.c  .generated_files/flags/default/7f3e7c6987c8f7fca5ba8390ffbed7f4b5bdefc5 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/protothreads.o.d 
-	@${RM} ${OBJECTDIR}/protothreads.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/protothreads.o.d" -o ${OBJECTDIR}/protothreads.o protothreads.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
-	
-${OBJECTDIR}/_ext/1360937237/handlers.o: ../src/handlers.c  .generated_files/flags/default/dfde51410f0bebc41e4b4c17042d8510a69a03b9 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
-	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
-	@${RM} ${OBJECTDIR}/_ext/1360937237/handlers.o.d 
-	@${RM} ${OBJECTDIR}/_ext/1360937237/handlers.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/handlers.o.d" -o ${OBJECTDIR}/_ext/1360937237/handlers.o ../src/handlers.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
-	
-${OBJECTDIR}/_ext/1360937237/ff.o: ../src/ff.c  .generated_files/flags/default/36f0dc459f91ec3edb21369e302b89ba1c04db73 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
-	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
-	@${RM} ${OBJECTDIR}/_ext/1360937237/ff.o.d 
-	@${RM} ${OBJECTDIR}/_ext/1360937237/ff.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/ff.o.d" -o ${OBJECTDIR}/_ext/1360937237/ff.o ../src/ff.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
-	
-${OBJECTDIR}/_ext/1360937237/sd_spi_lowlevel.o: ../src/sd_spi_lowlevel.c  .generated_files/flags/default/e72a05f3a67222fa3ed5c52436cc0f784040d50 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1360937237/sd_spi_lowlevel.o: ../src/sd_spi_lowlevel.c  .generated_files/flags/default/b844e01e7275bb4eaf4389de5118330ac8d868a5 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/sd_spi_lowlevel.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/sd_spi_lowlevel.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/sd_spi_lowlevel.o.d" -o ${OBJECTDIR}/_ext/1360937237/sd_spi_lowlevel.o ../src/sd_spi_lowlevel.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/sd_spi_lowlevel.o.d" -o ${OBJECTDIR}/_ext/1360937237/sd_spi_lowlevel.o ../src/sd_spi_lowlevel.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1360937237/diskio.o: ../src/diskio.c  .generated_files/flags/default/b9faf9c725ea6733547fbac9a7e0cbe8585c0c1 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1360937237/main.o: ../src/main.c  .generated_files/flags/default/abd2a09bbf01d831ad131a76d0d1e36628e4fbce .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
-	@${RM} ${OBJECTDIR}/_ext/1360937237/diskio.o.d 
-	@${RM} ${OBJECTDIR}/_ext/1360937237/diskio.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/diskio.o.d" -o ${OBJECTDIR}/_ext/1360937237/diskio.o ../src/diskio.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	@${RM} ${OBJECTDIR}/_ext/1360937237/main.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1360937237/main.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/main.o.d" -o ${OBJECTDIR}/_ext/1360937237/main.o ../src/main.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1360937237/sd_card.o: ../src/sd_card.c  .generated_files/flags/default/d2a6d52400029d9d56eab5e5d7eab44d669024c4 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/protothreads.o: protothreads.c  .generated_files/flags/default/7db35ee478d7b381057f8c8221a10be072812c03 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/protothreads.o.d 
+	@${RM} ${OBJECTDIR}/protothreads.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/protothreads.o.d" -o ${OBJECTDIR}/protothreads.o protothreads.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/_ext/1360937237/handlers.o: ../src/handlers.c  .generated_files/flags/default/10638215e5945db43c2203c4d40c64e63aa2d0f5 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
-	@${RM} ${OBJECTDIR}/_ext/1360937237/sd_card.o.d 
-	@${RM} ${OBJECTDIR}/_ext/1360937237/sd_card.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/sd_card.o.d" -o ${OBJECTDIR}/_ext/1360937237/sd_card.o ../src/sd_card.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	@${RM} ${OBJECTDIR}/_ext/1360937237/handlers.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1360937237/handlers.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/handlers.o.d" -o ${OBJECTDIR}/_ext/1360937237/handlers.o ../src/handlers.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/_ext/1100529066/drv_sdspi_file_system.o: ../src/config/default/driver/sdspi/src/drv_sdspi_file_system.c  .generated_files/flags/default/d21e5c51f971fb309a28dcac49d9f1e3281b0c2b .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/_ext/1100529066" 
+	@${RM} ${OBJECTDIR}/_ext/1100529066/drv_sdspi_file_system.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1100529066/drv_sdspi_file_system.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1100529066/drv_sdspi_file_system.o.d" -o ${OBJECTDIR}/_ext/1100529066/drv_sdspi_file_system.o ../src/config/default/driver/sdspi/src/drv_sdspi_file_system.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/_ext/1100529066/drv_sdspi.o: ../src/config/default/driver/sdspi/src/drv_sdspi.c  .generated_files/flags/default/2ef846299f3ac1ad3a5b3522dbb54be13b65779a .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/_ext/1100529066" 
+	@${RM} ${OBJECTDIR}/_ext/1100529066/drv_sdspi.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1100529066/drv_sdspi.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1100529066/drv_sdspi.o.d" -o ${OBJECTDIR}/_ext/1100529066/drv_sdspi.o ../src/config/default/driver/sdspi/src/drv_sdspi.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/_ext/411819097/ffunicode.o: ../src/config/default/system/fs/fat_fs/file_system/ffunicode.c  .generated_files/flags/default/1f98fc5b075d0b059c670560783ed65ef766e074 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/_ext/411819097" 
+	@${RM} ${OBJECTDIR}/_ext/411819097/ffunicode.o.d 
+	@${RM} ${OBJECTDIR}/_ext/411819097/ffunicode.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/411819097/ffunicode.o.d" -o ${OBJECTDIR}/_ext/411819097/ffunicode.o ../src/config/default/system/fs/fat_fs/file_system/ffunicode.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/_ext/1171490990/tasks.o: ../src/config/default/tasks.c  .generated_files/flags/default/65c053b66a39084f32ccedbdbd5fe1748e296901 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/_ext/1171490990" 
+	@${RM} ${OBJECTDIR}/_ext/1171490990/tasks.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1171490990/tasks.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1171490990/tasks.o.d" -o ${OBJECTDIR}/_ext/1171490990/tasks.o ../src/config/default/tasks.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/_ext/411819097/ff.o: ../src/config/default/system/fs/fat_fs/file_system/ff.c  .generated_files/flags/default/5e621e0b1c9954920ab1969d3bb01dd7236b318e .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/_ext/411819097" 
+	@${RM} ${OBJECTDIR}/_ext/411819097/ff.o.d 
+	@${RM} ${OBJECTDIR}/_ext/411819097/ff.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/411819097/ff.o.d" -o ${OBJECTDIR}/_ext/411819097/ff.o ../src/config/default/system/fs/fat_fs/file_system/ff.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/_ext/565198302/diskio.o: ../src/config/default/system/fs/fat_fs/hardware_access/diskio.c  .generated_files/flags/default/dc565806ec74fb8be8c637edfcbcd6d45e00a25 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/_ext/565198302" 
+	@${RM} ${OBJECTDIR}/_ext/565198302/diskio.o.d 
+	@${RM} ${OBJECTDIR}/_ext/565198302/diskio.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/565198302/diskio.o.d" -o ${OBJECTDIR}/_ext/565198302/diskio.o ../src/config/default/system/fs/fat_fs/hardware_access/diskio.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/_ext/1269487135/sys_fs_fat_interface.o: ../src/config/default/system/fs/src/sys_fs_fat_interface.c  .generated_files/flags/default/60663609498d53a19cf4dcc6dd33f315ec3aec83 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/_ext/1269487135" 
+	@${RM} ${OBJECTDIR}/_ext/1269487135/sys_fs_fat_interface.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1269487135/sys_fs_fat_interface.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1269487135/sys_fs_fat_interface.o.d" -o ${OBJECTDIR}/_ext/1269487135/sys_fs_fat_interface.o ../src/config/default/system/fs/src/sys_fs_fat_interface.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/_ext/1269487135/sys_fs_media_manager.o: ../src/config/default/system/fs/src/sys_fs_media_manager.c  .generated_files/flags/default/ca1efe5d927e82f2b1af025f2bbcda72f42c62cd .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/_ext/1269487135" 
+	@${RM} ${OBJECTDIR}/_ext/1269487135/sys_fs_media_manager.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1269487135/sys_fs_media_manager.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1269487135/sys_fs_media_manager.o.d" -o ${OBJECTDIR}/_ext/1269487135/sys_fs_media_manager.o ../src/config/default/system/fs/src/sys_fs_media_manager.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/_ext/1100529066/drv_sdspi_plib_interface.o: ../src/config/default/driver/sdspi/src/drv_sdspi_plib_interface.c  .generated_files/flags/default/cf4c334531aaf01d298513c468a04970578a3a72 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/_ext/1100529066" 
+	@${RM} ${OBJECTDIR}/_ext/1100529066/drv_sdspi_plib_interface.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1100529066/drv_sdspi_plib_interface.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1100529066/drv_sdspi_plib_interface.o.d" -o ${OBJECTDIR}/_ext/1100529066/drv_sdspi_plib_interface.o ../src/config/default/driver/sdspi/src/drv_sdspi_plib_interface.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/_ext/1269487135/sys_fs.o: ../src/config/default/system/fs/src/sys_fs.c  .generated_files/flags/default/14175b2527fd4a7d8deaf2c4c457c3d76024f603 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/_ext/1269487135" 
+	@${RM} ${OBJECTDIR}/_ext/1269487135/sys_fs.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1269487135/sys_fs.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1269487135/sys_fs.o.d" -o ${OBJECTDIR}/_ext/1269487135/sys_fs.o ../src/config/default/system/fs/src/sys_fs.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/_ext/14461671/sys_dma.o: ../src/config/default/system/dma/sys_dma.c  .generated_files/flags/default/2c4ebf0f61ead95ebcfad243b5f8c240aead1788 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/_ext/14461671" 
+	@${RM} ${OBJECTDIR}/_ext/14461671/sys_dma.o.d 
+	@${RM} ${OBJECTDIR}/_ext/14461671/sys_dma.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/14461671/sys_dma.o.d" -o ${OBJECTDIR}/_ext/14461671/sys_dma.o ../src/config/default/system/dma/sys_dma.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/_ext/101884895/sys_time.o: ../src/config/default/system/time/src/sys_time.c  .generated_files/flags/default/90d82210be82e0550d880816fbe657b2b51cb352 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/_ext/101884895" 
+	@${RM} ${OBJECTDIR}/_ext/101884895/sys_time.o.d 
+	@${RM} ${OBJECTDIR}/_ext/101884895/sys_time.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/101884895/sys_time.o.d" -o ${OBJECTDIR}/_ext/101884895/sys_time.o ../src/config/default/system/time/src/sys_time.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/_ext/1881668453/sys_int.o: ../src/config/default/system/int/src/sys_int.c  .generated_files/flags/default/43f6df482128c599be5282e9c27c2e6fe447ae66 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/_ext/1881668453" 
+	@${RM} ${OBJECTDIR}/_ext/1881668453/sys_int.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1881668453/sys_int.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1881668453/sys_int.o.d" -o ${OBJECTDIR}/_ext/1881668453/sys_int.o ../src/config/default/system/int/src/sys_int.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
 else
-${OBJECTDIR}/_ext/1360937237/layers_docments.o: ../src/layers_docments.c  .generated_files/flags/default/2cdeaf8f05cabdafb80940a3b99077242f4e7e25 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1360937237/layers_docments.o: ../src/layers_docments.c  .generated_files/flags/default/52fa15829a6d1cd6f861c3ab96be040127c32b87 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/layers_docments.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/layers_docments.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/layers_docments.o.d" -o ${OBJECTDIR}/_ext/1360937237/layers_docments.o ../src/layers_docments.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/layers_docments.o.d" -o ${OBJECTDIR}/_ext/1360937237/layers_docments.o ../src/layers_docments.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/60165520/plib_clk.o: ../src/config/default/peripheral/clk/plib_clk.c  .generated_files/flags/default/338d6d97531962d5421da5b8c896536cb9e1f764 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/60165520/plib_clk.o: ../src/config/default/peripheral/clk/plib_clk.c  .generated_files/flags/default/55387250036cdcbfb7ff516f0614352bef776b7b .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/60165520" 
 	@${RM} ${OBJECTDIR}/_ext/60165520/plib_clk.o.d 
 	@${RM} ${OBJECTDIR}/_ext/60165520/plib_clk.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/60165520/plib_clk.o.d" -o ${OBJECTDIR}/_ext/60165520/plib_clk.o ../src/config/default/peripheral/clk/plib_clk.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/60165520/plib_clk.o.d" -o ${OBJECTDIR}/_ext/60165520/plib_clk.o ../src/config/default/peripheral/clk/plib_clk.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1865200349/plib_evic.o: ../src/config/default/peripheral/evic/plib_evic.c  .generated_files/flags/default/108dde86a4cc7aba2e81d51d7dc33c5c952482d7 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1865200349/plib_evic.o: ../src/config/default/peripheral/evic/plib_evic.c  .generated_files/flags/default/e17379d035dfed37ef315ef2e107f51b7b4e410d .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1865200349" 
 	@${RM} ${OBJECTDIR}/_ext/1865200349/plib_evic.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1865200349/plib_evic.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1865200349/plib_evic.o.d" -o ${OBJECTDIR}/_ext/1865200349/plib_evic.o ../src/config/default/peripheral/evic/plib_evic.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1865200349/plib_evic.o.d" -o ${OBJECTDIR}/_ext/1865200349/plib_evic.o ../src/config/default/peripheral/evic/plib_evic.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1865254177/plib_gpio.o: ../src/config/default/peripheral/gpio/plib_gpio.c  .generated_files/flags/default/50842ffeefb4f7d3a32307768f3e35c6916bd024 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1865254177/plib_gpio.o: ../src/config/default/peripheral/gpio/plib_gpio.c  .generated_files/flags/default/1f203ea481920cb88f95fba2a768ab9bf91b9ee5 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1865254177" 
 	@${RM} ${OBJECTDIR}/_ext/1865254177/plib_gpio.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1865254177/plib_gpio.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1865254177/plib_gpio.o.d" -o ${OBJECTDIR}/_ext/1865254177/plib_gpio.o ../src/config/default/peripheral/gpio/plib_gpio.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1865254177/plib_gpio.o.d" -o ${OBJECTDIR}/_ext/1865254177/plib_gpio.o ../src/config/default/peripheral/gpio/plib_gpio.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/298189674/plib_spi1_master.o: ../src/config/default/peripheral/spi/spi_master/plib_spi1_master.c  .generated_files/flags/default/817635f81534c08e9d967f8e8a1e01971f3a35a4 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/298189674/plib_spi1_master.o: ../src/config/default/peripheral/spi/spi_master/plib_spi1_master.c  .generated_files/flags/default/8153aba09fb3c505dd71d02ab5fa2ae630aefc23 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/298189674" 
 	@${RM} ${OBJECTDIR}/_ext/298189674/plib_spi1_master.o.d 
 	@${RM} ${OBJECTDIR}/_ext/298189674/plib_spi1_master.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/298189674/plib_spi1_master.o.d" -o ${OBJECTDIR}/_ext/298189674/plib_spi1_master.o ../src/config/default/peripheral/spi/spi_master/plib_spi1_master.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/298189674/plib_spi1_master.o.d" -o ${OBJECTDIR}/_ext/298189674/plib_spi1_master.o ../src/config/default/peripheral/spi/spi_master/plib_spi1_master.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/298189674/plib_spi3_master.o: ../src/config/default/peripheral/spi/spi_master/plib_spi3_master.c  .generated_files/flags/default/446e971db00127b1b4b38520baf2b2681390f504 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/298189674/plib_spi3_master.o: ../src/config/default/peripheral/spi/spi_master/plib_spi3_master.c  .generated_files/flags/default/fa3b0f4e3adfa5e95c29926ab0f4df4ec79794ab .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/298189674" 
 	@${RM} ${OBJECTDIR}/_ext/298189674/plib_spi3_master.o.d 
 	@${RM} ${OBJECTDIR}/_ext/298189674/plib_spi3_master.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/298189674/plib_spi3_master.o.d" -o ${OBJECTDIR}/_ext/298189674/plib_spi3_master.o ../src/config/default/peripheral/spi/spi_master/plib_spi3_master.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/298189674/plib_spi3_master.o.d" -o ${OBJECTDIR}/_ext/298189674/plib_spi3_master.o ../src/config/default/peripheral/spi/spi_master/plib_spi3_master.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1865638794/plib_tmr1.o: ../src/config/default/peripheral/tmr1/plib_tmr1.c  .generated_files/flags/default/92d42ba9151884883f362c8ce3f2380fbc33a75a .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1865638794/plib_tmr1.o: ../src/config/default/peripheral/tmr1/plib_tmr1.c  .generated_files/flags/default/da1ccdc60f30cc58777b05bbf179908e0e425693 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1865638794" 
 	@${RM} ${OBJECTDIR}/_ext/1865638794/plib_tmr1.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1865638794/plib_tmr1.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1865638794/plib_tmr1.o.d" -o ${OBJECTDIR}/_ext/1865638794/plib_tmr1.o ../src/config/default/peripheral/tmr1/plib_tmr1.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1865638794/plib_tmr1.o.d" -o ${OBJECTDIR}/_ext/1865638794/plib_tmr1.o ../src/config/default/peripheral/tmr1/plib_tmr1.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1865657120/plib_uart3.o: ../src/config/default/peripheral/uart/plib_uart3.c  .generated_files/flags/default/21a3dbf2f53c6b09e09d9c693c5c46312125ee9b .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1865657120/plib_uart3.o: ../src/config/default/peripheral/uart/plib_uart3.c  .generated_files/flags/default/3bf56cf813ef8c4413cc85e23e06e8d4c03964fc .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1865657120" 
 	@${RM} ${OBJECTDIR}/_ext/1865657120/plib_uart3.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1865657120/plib_uart3.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1865657120/plib_uart3.o.d" -o ${OBJECTDIR}/_ext/1865657120/plib_uart3.o ../src/config/default/peripheral/uart/plib_uart3.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1865657120/plib_uart3.o.d" -o ${OBJECTDIR}/_ext/1865657120/plib_uart3.o ../src/config/default/peripheral/uart/plib_uart3.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1865657120/plib_uart1.o: ../src/config/default/peripheral/uart/plib_uart1.c  .generated_files/flags/default/d63875c03c155c4076367267936175e914314949 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1865657120/plib_uart1.o: ../src/config/default/peripheral/uart/plib_uart1.c  .generated_files/flags/default/daf4f629b3518c73ed527da37cd96e6343a8aefe .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1865657120" 
 	@${RM} ${OBJECTDIR}/_ext/1865657120/plib_uart1.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1865657120/plib_uart1.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1865657120/plib_uart1.o.d" -o ${OBJECTDIR}/_ext/1865657120/plib_uart1.o ../src/config/default/peripheral/uart/plib_uart1.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1865657120/plib_uart1.o.d" -o ${OBJECTDIR}/_ext/1865657120/plib_uart1.o ../src/config/default/peripheral/uart/plib_uart1.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1865657120/plib_uart2.o: ../src/config/default/peripheral/uart/plib_uart2.c  .generated_files/flags/default/40accf344011ce6642cd0fa815bcf9548bec5b70 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1865657120/plib_uart2.o: ../src/config/default/peripheral/uart/plib_uart2.c  .generated_files/flags/default/f331ff1a1704a6e253102a82304fd50a0b08d0c1 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1865657120" 
 	@${RM} ${OBJECTDIR}/_ext/1865657120/plib_uart2.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1865657120/plib_uart2.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1865657120/plib_uart2.o.d" -o ${OBJECTDIR}/_ext/1865657120/plib_uart2.o ../src/config/default/peripheral/uart/plib_uart2.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1865657120/plib_uart2.o.d" -o ${OBJECTDIR}/_ext/1865657120/plib_uart2.o ../src/config/default/peripheral/uart/plib_uart2.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/163028504/xc32_monitor.o: ../src/config/default/stdio/xc32_monitor.c  .generated_files/flags/default/b37e6f619642fbd59533a7755787f049c6dc7e5d .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/163028504/xc32_monitor.o: ../src/config/default/stdio/xc32_monitor.c  .generated_files/flags/default/7554d5d9094799f7680b576b48d4558a06f7c005 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/163028504" 
 	@${RM} ${OBJECTDIR}/_ext/163028504/xc32_monitor.o.d 
 	@${RM} ${OBJECTDIR}/_ext/163028504/xc32_monitor.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/163028504/xc32_monitor.o.d" -o ${OBJECTDIR}/_ext/163028504/xc32_monitor.o ../src/config/default/stdio/xc32_monitor.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/163028504/xc32_monitor.o.d" -o ${OBJECTDIR}/_ext/163028504/xc32_monitor.o ../src/config/default/stdio/xc32_monitor.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1171490990/initialization.o: ../src/config/default/initialization.c  .generated_files/flags/default/3fb2401c76d9510c6e961eae4cd8fcb9bc1e9f2c .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1171490990/initialization.o: ../src/config/default/initialization.c  .generated_files/flags/default/10092bd6c7de878eafdbe82cccc09754bd8af97c .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1171490990" 
 	@${RM} ${OBJECTDIR}/_ext/1171490990/initialization.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1171490990/initialization.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1171490990/initialization.o.d" -o ${OBJECTDIR}/_ext/1171490990/initialization.o ../src/config/default/initialization.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1171490990/initialization.o.d" -o ${OBJECTDIR}/_ext/1171490990/initialization.o ../src/config/default/initialization.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1171490990/interrupts.o: ../src/config/default/interrupts.c  .generated_files/flags/default/43b33968ba2ca7ffb156022ed894e862f5232b .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1171490990/interrupts.o: ../src/config/default/interrupts.c  .generated_files/flags/default/7e6e67ec3af33eb73124501b8e6a0f9ebceb4c76 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1171490990" 
 	@${RM} ${OBJECTDIR}/_ext/1171490990/interrupts.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1171490990/interrupts.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1171490990/interrupts.o.d" -o ${OBJECTDIR}/_ext/1171490990/interrupts.o ../src/config/default/interrupts.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1171490990/interrupts.o.d" -o ${OBJECTDIR}/_ext/1171490990/interrupts.o ../src/config/default/interrupts.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1171490990/exceptions.o: ../src/config/default/exceptions.c  .generated_files/flags/default/588fcf7db0fe9c73423e85107213dd9f020286a1 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1171490990/exceptions.o: ../src/config/default/exceptions.c  .generated_files/flags/default/da3cb166bd954758a4468fe5d11b16b898bd7770 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1171490990" 
 	@${RM} ${OBJECTDIR}/_ext/1171490990/exceptions.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1171490990/exceptions.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1171490990/exceptions.o.d" -o ${OBJECTDIR}/_ext/1171490990/exceptions.o ../src/config/default/exceptions.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1171490990/exceptions.o.d" -o ${OBJECTDIR}/_ext/1171490990/exceptions.o ../src/config/default/exceptions.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1360937237/store.o: ../src/store.c  .generated_files/flags/default/85053744dc620224cf47e0c6ae1e4ed3e138cfff .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1360937237/store.o: ../src/store.c  .generated_files/flags/default/ff9a03a3a54734f3caf6bc0f377eec8a89546dba .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/store.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/store.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/store.o.d" -o ${OBJECTDIR}/_ext/1360937237/store.o ../src/store.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/store.o.d" -o ${OBJECTDIR}/_ext/1360937237/store.o ../src/store.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1360937237/esp32_comm.o: ../src/esp32_comm.c  .generated_files/flags/default/2b5b59a9a49aff0efcf45f63513840f332532a4e .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1360937237/esp32_comm.o: ../src/esp32_comm.c  .generated_files/flags/default/c9595f9a70254133f5d54938a6bdf25eeacbf1eb .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/esp32_comm.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/esp32_comm.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/esp32_comm.o.d" -o ${OBJECTDIR}/_ext/1360937237/esp32_comm.o ../src/esp32_comm.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/esp32_comm.o.d" -o ${OBJECTDIR}/_ext/1360937237/esp32_comm.o ../src/esp32_comm.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1360937237/esp32_proto.o: ../src/esp32_proto.c  .generated_files/flags/default/6cd9b0808db9dec8bfd01e68260c1e6973285cea .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1360937237/esp32_proto.o: ../src/esp32_proto.c  .generated_files/flags/default/9f94ec2479c3bb62b8cf7ae936c4914ebc5ba0c0 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/esp32_proto.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/esp32_proto.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/esp32_proto.o.d" -o ${OBJECTDIR}/_ext/1360937237/esp32_proto.o ../src/esp32_proto.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/esp32_proto.o.d" -o ${OBJECTDIR}/_ext/1360937237/esp32_proto.o ../src/esp32_proto.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1360937237/io_monitor.o: ../src/io_monitor.c  .generated_files/flags/default/6c6a3d160aa3479126e0f25d3bb7ad106af092bf .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1360937237/io_monitor.o: ../src/io_monitor.c  .generated_files/flags/default/ca9e1924b27d201ca40f1cdec1b34197783a761b .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/io_monitor.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/io_monitor.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/io_monitor.o.d" -o ${OBJECTDIR}/_ext/1360937237/io_monitor.o ../src/io_monitor.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/io_monitor.o.d" -o ${OBJECTDIR}/_ext/1360937237/io_monitor.o ../src/io_monitor.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1360937237/alarm_mgr.o: ../src/alarm_mgr.c  .generated_files/flags/default/8d9b1a1eb7fe30968719d32aaaf2e6b4d58d44c5 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1360937237/alarm_mgr.o: ../src/alarm_mgr.c  .generated_files/flags/default/dec756575ab1f730665e1cec7977c83dec1f85e0 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/alarm_mgr.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/alarm_mgr.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/alarm_mgr.o.d" -o ${OBJECTDIR}/_ext/1360937237/alarm_mgr.o ../src/alarm_mgr.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/alarm_mgr.o.d" -o ${OBJECTDIR}/_ext/1360937237/alarm_mgr.o ../src/alarm_mgr.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1360937237/gsm_le910.o: ../src/gsm_le910.c  .generated_files/flags/default/5c4131091f87479fe1b7b2d0bec6f4cc1f0948c5 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1360937237/gsm_le910.o: ../src/gsm_le910.c  .generated_files/flags/default/2e0cd434e8f5f1de07d602e8277824597d67afbd .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/gsm_le910.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/gsm_le910.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/gsm_le910.o.d" -o ${OBJECTDIR}/_ext/1360937237/gsm_le910.o ../src/gsm_le910.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/gsm_le910.o.d" -o ${OBJECTDIR}/_ext/1360937237/gsm_le910.o ../src/gsm_le910.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1360937237/sms_service.o: ../src/sms_service.c  .generated_files/flags/default/101d1865f89461eb63d1de1986fea397c9d7dc1a .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1360937237/sms_service.o: ../src/sms_service.c  .generated_files/flags/default/7d7db3e843d34657df08396f35e1ace441ca40ba .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/sms_service.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/sms_service.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/sms_service.o.d" -o ${OBJECTDIR}/_ext/1360937237/sms_service.o ../src/sms_service.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/sms_service.o.d" -o ${OBJECTDIR}/_ext/1360937237/sms_service.o ../src/sms_service.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1360937237/flash_w25q32.o: ../src/flash_w25q32.c  .generated_files/flags/default/7866c230a58d75bface08bdb39e0384af9551919 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1360937237/flash_w25q32.o: ../src/flash_w25q32.c  .generated_files/flags/default/3e183367de41130da22f378e6fe35eb22745bdd .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/flash_w25q32.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/flash_w25q32.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/flash_w25q32.o.d" -o ${OBJECTDIR}/_ext/1360937237/flash_w25q32.o ../src/flash_w25q32.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/flash_w25q32.o.d" -o ${OBJECTDIR}/_ext/1360937237/flash_w25q32.o ../src/flash_w25q32.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1360937237/storage.o: ../src/storage.c  .generated_files/flags/default/c4465adfca873f59457098652b3f74c0e7260fe0 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1360937237/storage.o: ../src/storage.c  .generated_files/flags/default/c24f6bce090951f3668e2088a7902e5e4d9b23b4 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/storage.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/storage.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/storage.o.d" -o ${OBJECTDIR}/_ext/1360937237/storage.o ../src/storage.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/storage.o.d" -o ${OBJECTDIR}/_ext/1360937237/storage.o ../src/storage.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1360937237/phonebook_flash.o: ../src/phonebook_flash.c  .generated_files/flags/default/256cdf036c728d40a919a3f0659d65f233e5d64 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1360937237/phonebook_flash.o: ../src/phonebook_flash.c  .generated_files/flags/default/40d3e8a5f66c5177b8594137c35dc6ee2d0732f2 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/phonebook_flash.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/phonebook_flash.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/phonebook_flash.o.d" -o ${OBJECTDIR}/_ext/1360937237/phonebook_flash.o ../src/phonebook_flash.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/phonebook_flash.o.d" -o ${OBJECTDIR}/_ext/1360937237/phonebook_flash.o ../src/phonebook_flash.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1360937237/telit.o: ../src/telit.c  .generated_files/flags/default/3d6c08f793b977986f5e1bb8038840e425df5631 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1360937237/telit.o: ../src/telit.c  .generated_files/flags/default/53d9853ca1e6a01d0b444efc7066b0a341fd6ed2 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/telit.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/telit.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/telit.o.d" -o ${OBJECTDIR}/_ext/1360937237/telit.o ../src/telit.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/telit.o.d" -o ${OBJECTDIR}/_ext/1360937237/telit.o ../src/telit.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1360937237/bsp.o: ../src/bsp.c  .generated_files/flags/default/e906c1b0c3ad338d9fc70e20da85bfe8e140a3f1 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1360937237/bsp.o: ../src/bsp.c  .generated_files/flags/default/fccb47971d414b38bde000ec6224107a5709b6d0 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/bsp.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/bsp.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/bsp.o.d" -o ${OBJECTDIR}/_ext/1360937237/bsp.o ../src/bsp.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/bsp.o.d" -o ${OBJECTDIR}/_ext/1360937237/bsp.o ../src/bsp.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1360937237/esp32.o: ../src/esp32.c  .generated_files/flags/default/f242d24e0bf6179a24feeee1c45e0021455d51c3 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1360937237/esp32.o: ../src/esp32.c  .generated_files/flags/default/3522360fb82980d16cae24267e2c9e7c8c0e9fa1 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/esp32.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/esp32.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/esp32.o.d" -o ${OBJECTDIR}/_ext/1360937237/esp32.o ../src/esp32.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/esp32.o.d" -o ${OBJECTDIR}/_ext/1360937237/esp32.o ../src/esp32.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1360937237/w5500if.o: ../src/w5500if.c  .generated_files/flags/default/631c2e419b562f984e05b5ad12f8a5634b6b899e .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1360937237/w5500if.o: ../src/w5500if.c  .generated_files/flags/default/9b882ab8b504b7e6d06e7257a676d53c57e73743 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/w5500if.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/w5500if.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/w5500if.o.d" -o ${OBJECTDIR}/_ext/1360937237/w5500if.o ../src/w5500if.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/w5500if.o.d" -o ${OBJECTDIR}/_ext/1360937237/w5500if.o ../src/w5500if.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1360937237/main.o: ../src/main.c  .generated_files/flags/default/a3854bd592aa58f47019e4234a39d98afcd7d20 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
-	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
-	@${RM} ${OBJECTDIR}/_ext/1360937237/main.o.d 
-	@${RM} ${OBJECTDIR}/_ext/1360937237/main.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/main.o.d" -o ${OBJECTDIR}/_ext/1360937237/main.o ../src/main.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
-	
-${OBJECTDIR}/protothreads.o: protothreads.c  .generated_files/flags/default/f8b9b485783bb85c419163d7465a087f3f55c187 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/protothreads.o.d 
-	@${RM} ${OBJECTDIR}/protothreads.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/protothreads.o.d" -o ${OBJECTDIR}/protothreads.o protothreads.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
-	
-${OBJECTDIR}/_ext/1360937237/handlers.o: ../src/handlers.c  .generated_files/flags/default/7c6832563dec98b2d9d312b8e78e3579c620138 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
-	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
-	@${RM} ${OBJECTDIR}/_ext/1360937237/handlers.o.d 
-	@${RM} ${OBJECTDIR}/_ext/1360937237/handlers.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/handlers.o.d" -o ${OBJECTDIR}/_ext/1360937237/handlers.o ../src/handlers.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
-	
-${OBJECTDIR}/_ext/1360937237/ff.o: ../src/ff.c  .generated_files/flags/default/8118e68d8c54cf003c031ac43278042fbd7faa91 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
-	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
-	@${RM} ${OBJECTDIR}/_ext/1360937237/ff.o.d 
-	@${RM} ${OBJECTDIR}/_ext/1360937237/ff.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/ff.o.d" -o ${OBJECTDIR}/_ext/1360937237/ff.o ../src/ff.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
-	
-${OBJECTDIR}/_ext/1360937237/sd_spi_lowlevel.o: ../src/sd_spi_lowlevel.c  .generated_files/flags/default/4571cf5f2a3e793929d76411a18ec3a851beb15c .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1360937237/sd_spi_lowlevel.o: ../src/sd_spi_lowlevel.c  .generated_files/flags/default/a227d029c26affa5461c7eb396f9e8697c29d2e6 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/sd_spi_lowlevel.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/sd_spi_lowlevel.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/sd_spi_lowlevel.o.d" -o ${OBJECTDIR}/_ext/1360937237/sd_spi_lowlevel.o ../src/sd_spi_lowlevel.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/sd_spi_lowlevel.o.d" -o ${OBJECTDIR}/_ext/1360937237/sd_spi_lowlevel.o ../src/sd_spi_lowlevel.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1360937237/diskio.o: ../src/diskio.c  .generated_files/flags/default/297f75e6534db7158bca4a484e4eee35cbdca99a .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1360937237/main.o: ../src/main.c  .generated_files/flags/default/bb337a5bca0645d4fbd5406b612a6b4aece7cc69 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
-	@${RM} ${OBJECTDIR}/_ext/1360937237/diskio.o.d 
-	@${RM} ${OBJECTDIR}/_ext/1360937237/diskio.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/diskio.o.d" -o ${OBJECTDIR}/_ext/1360937237/diskio.o ../src/diskio.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	@${RM} ${OBJECTDIR}/_ext/1360937237/main.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1360937237/main.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/main.o.d" -o ${OBJECTDIR}/_ext/1360937237/main.o ../src/main.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1360937237/sd_card.o: ../src/sd_card.c  .generated_files/flags/default/ef82849f43f7ba72ec7d6440c11257f1de03c275 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/protothreads.o: protothreads.c  .generated_files/flags/default/4a1be809e014fcc997b9f45df422d0b1390a0a51 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/protothreads.o.d 
+	@${RM} ${OBJECTDIR}/protothreads.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/protothreads.o.d" -o ${OBJECTDIR}/protothreads.o protothreads.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/_ext/1360937237/handlers.o: ../src/handlers.c  .generated_files/flags/default/6a6cfdeb90636ef7cb5e295f4c82a2cc6e0f13c7 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
-	@${RM} ${OBJECTDIR}/_ext/1360937237/sd_card.o.d 
-	@${RM} ${OBJECTDIR}/_ext/1360937237/sd_card.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/sd_card.o.d" -o ${OBJECTDIR}/_ext/1360937237/sd_card.o ../src/sd_card.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	@${RM} ${OBJECTDIR}/_ext/1360937237/handlers.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1360937237/handlers.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1360937237/handlers.o.d" -o ${OBJECTDIR}/_ext/1360937237/handlers.o ../src/handlers.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/_ext/1100529066/drv_sdspi_file_system.o: ../src/config/default/driver/sdspi/src/drv_sdspi_file_system.c  .generated_files/flags/default/d8f85b5c38bf6d0e66130ce0682434a54981c1db .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/_ext/1100529066" 
+	@${RM} ${OBJECTDIR}/_ext/1100529066/drv_sdspi_file_system.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1100529066/drv_sdspi_file_system.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1100529066/drv_sdspi_file_system.o.d" -o ${OBJECTDIR}/_ext/1100529066/drv_sdspi_file_system.o ../src/config/default/driver/sdspi/src/drv_sdspi_file_system.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/_ext/1100529066/drv_sdspi.o: ../src/config/default/driver/sdspi/src/drv_sdspi.c  .generated_files/flags/default/956d705a8950838527dd52b4da9b5e82d1b60bef .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/_ext/1100529066" 
+	@${RM} ${OBJECTDIR}/_ext/1100529066/drv_sdspi.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1100529066/drv_sdspi.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1100529066/drv_sdspi.o.d" -o ${OBJECTDIR}/_ext/1100529066/drv_sdspi.o ../src/config/default/driver/sdspi/src/drv_sdspi.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/_ext/411819097/ffunicode.o: ../src/config/default/system/fs/fat_fs/file_system/ffunicode.c  .generated_files/flags/default/94236bd785976c2ce75b9d213b895a0d0cde12df .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/_ext/411819097" 
+	@${RM} ${OBJECTDIR}/_ext/411819097/ffunicode.o.d 
+	@${RM} ${OBJECTDIR}/_ext/411819097/ffunicode.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/411819097/ffunicode.o.d" -o ${OBJECTDIR}/_ext/411819097/ffunicode.o ../src/config/default/system/fs/fat_fs/file_system/ffunicode.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/_ext/1171490990/tasks.o: ../src/config/default/tasks.c  .generated_files/flags/default/9b085e58824b20fbfcd64cb6349f1eaa1eaed5a6 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/_ext/1171490990" 
+	@${RM} ${OBJECTDIR}/_ext/1171490990/tasks.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1171490990/tasks.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1171490990/tasks.o.d" -o ${OBJECTDIR}/_ext/1171490990/tasks.o ../src/config/default/tasks.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/_ext/411819097/ff.o: ../src/config/default/system/fs/fat_fs/file_system/ff.c  .generated_files/flags/default/f04c0f603bfe47f1fd328e44433464271a90387b .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/_ext/411819097" 
+	@${RM} ${OBJECTDIR}/_ext/411819097/ff.o.d 
+	@${RM} ${OBJECTDIR}/_ext/411819097/ff.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/411819097/ff.o.d" -o ${OBJECTDIR}/_ext/411819097/ff.o ../src/config/default/system/fs/fat_fs/file_system/ff.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/_ext/565198302/diskio.o: ../src/config/default/system/fs/fat_fs/hardware_access/diskio.c  .generated_files/flags/default/f7f8fe30fc11d49f76ff06c3478ae97eb52786df .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/_ext/565198302" 
+	@${RM} ${OBJECTDIR}/_ext/565198302/diskio.o.d 
+	@${RM} ${OBJECTDIR}/_ext/565198302/diskio.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/565198302/diskio.o.d" -o ${OBJECTDIR}/_ext/565198302/diskio.o ../src/config/default/system/fs/fat_fs/hardware_access/diskio.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/_ext/1269487135/sys_fs_fat_interface.o: ../src/config/default/system/fs/src/sys_fs_fat_interface.c  .generated_files/flags/default/57a8495b0f1da0f6ca88f47bf7786ac20f67f66b .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/_ext/1269487135" 
+	@${RM} ${OBJECTDIR}/_ext/1269487135/sys_fs_fat_interface.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1269487135/sys_fs_fat_interface.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1269487135/sys_fs_fat_interface.o.d" -o ${OBJECTDIR}/_ext/1269487135/sys_fs_fat_interface.o ../src/config/default/system/fs/src/sys_fs_fat_interface.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/_ext/1269487135/sys_fs_media_manager.o: ../src/config/default/system/fs/src/sys_fs_media_manager.c  .generated_files/flags/default/2976a730510632fffebc5ef313b9ecf04ccc9e64 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/_ext/1269487135" 
+	@${RM} ${OBJECTDIR}/_ext/1269487135/sys_fs_media_manager.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1269487135/sys_fs_media_manager.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1269487135/sys_fs_media_manager.o.d" -o ${OBJECTDIR}/_ext/1269487135/sys_fs_media_manager.o ../src/config/default/system/fs/src/sys_fs_media_manager.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/_ext/1100529066/drv_sdspi_plib_interface.o: ../src/config/default/driver/sdspi/src/drv_sdspi_plib_interface.c  .generated_files/flags/default/de000831f105c3e287ea8fe5e2a6c9d29f8bce30 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/_ext/1100529066" 
+	@${RM} ${OBJECTDIR}/_ext/1100529066/drv_sdspi_plib_interface.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1100529066/drv_sdspi_plib_interface.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1100529066/drv_sdspi_plib_interface.o.d" -o ${OBJECTDIR}/_ext/1100529066/drv_sdspi_plib_interface.o ../src/config/default/driver/sdspi/src/drv_sdspi_plib_interface.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/_ext/1269487135/sys_fs.o: ../src/config/default/system/fs/src/sys_fs.c  .generated_files/flags/default/fc227b4094841c6e4a68817e22b3590073e53136 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/_ext/1269487135" 
+	@${RM} ${OBJECTDIR}/_ext/1269487135/sys_fs.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1269487135/sys_fs.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1269487135/sys_fs.o.d" -o ${OBJECTDIR}/_ext/1269487135/sys_fs.o ../src/config/default/system/fs/src/sys_fs.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/_ext/14461671/sys_dma.o: ../src/config/default/system/dma/sys_dma.c  .generated_files/flags/default/bc99fbb74324321019256eed91aaee4bfb4c9067 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/_ext/14461671" 
+	@${RM} ${OBJECTDIR}/_ext/14461671/sys_dma.o.d 
+	@${RM} ${OBJECTDIR}/_ext/14461671/sys_dma.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/14461671/sys_dma.o.d" -o ${OBJECTDIR}/_ext/14461671/sys_dma.o ../src/config/default/system/dma/sys_dma.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/_ext/101884895/sys_time.o: ../src/config/default/system/time/src/sys_time.c  .generated_files/flags/default/e484d39eef5b0decc6aa42f26588361665ed48a7 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/_ext/101884895" 
+	@${RM} ${OBJECTDIR}/_ext/101884895/sys_time.o.d 
+	@${RM} ${OBJECTDIR}/_ext/101884895/sys_time.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/101884895/sys_time.o.d" -o ${OBJECTDIR}/_ext/101884895/sys_time.o ../src/config/default/system/time/src/sys_time.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/_ext/1881668453/sys_int.o: ../src/config/default/system/int/src/sys_int.c  .generated_files/flags/default/ec1882e09015738d106cd2d8719c867a64420dbd .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/_ext/1881668453" 
+	@${RM} ${OBJECTDIR}/_ext/1881668453/sys_int.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1881668453/sys_int.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default" -I"../src/config/default/system/fs/fat_fs/file_system" -I"../src/config/default/system/fs/fat_fs/hardware_access" -MP -MMD -MF "${OBJECTDIR}/_ext/1881668453/sys_int.o.d" -o ${OBJECTDIR}/_ext/1881668453/sys_int.o ../src/config/default/system/int/src/sys_int.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  
 	
 endif
 

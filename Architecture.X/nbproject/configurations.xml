@@ -6,6 +6,22 @@
                    projectFiles="true">
       <logicalFolder name="config" displayName="config" projectFiles="true">
         <logicalFolder name="default" displayName="default" projectFiles="true">
+          <logicalFolder name="driver" displayName="driver" projectFiles="true">
+            <logicalFolder name="sdspi" displayName="sdspi" projectFiles="true">
+              <itemPath>../src/config/default/driver/sdspi/src/drv_sdspi_file_system.h</itemPath>
+              <itemPath>../src/config/default/driver/sdspi/src/drv_sdspi_local.h</itemPath>
+              <itemPath>../src/config/default/driver/sdspi/src/drv_sdspi_plib_interface.h</itemPath>
+              <itemPath>../src/config/default/driver/sdspi/drv_sdspi.h</itemPath>
+              <itemPath>../src/config/default/driver/sdspi/drv_sdspi_definitions.h</itemPath>
+            </logicalFolder>
+            <itemPath>../src/config/default/driver/driver.h</itemPath>
+            <itemPath>../src/config/default/driver/driver_common.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="osal" displayName="osal" projectFiles="true">
+            <itemPath>../src/config/default/osal/osal_impl_basic.h</itemPath>
+            <itemPath>../src/config/default/osal/osal.h</itemPath>
+            <itemPath>../src/config/default/osal/osal_definitions.h</itemPath>
+          </logicalFolder>
           <logicalFolder name="peripheral" displayName="peripheral" projectFiles="true">
             <logicalFolder name="clk" displayName="clk" projectFiles="true">
               <itemPath>../src/config/default/peripheral/clk/plib_clk.h</itemPath>
@@ -34,11 +50,58 @@
               <itemPath>../src/config/default/peripheral/uart/plib_uart_common.h</itemPath>
             </logicalFolder>
           </logicalFolder>
+          <logicalFolder name="system" displayName="system" projectFiles="true">
+            <logicalFolder name="debug" displayName="debug" projectFiles="true">
+              <itemPath>../src/config/default/system/debug/sys_debug.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="dma" displayName="dma" projectFiles="true">
+              <itemPath>../src/config/default/system/dma/sys_dma_mapping.h</itemPath>
+              <itemPath>../src/config/default/system/dma/sys_dma.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="fs" displayName="fs" projectFiles="true">
+              <logicalFolder name="fat_fs" displayName="fat_fs" projectFiles="true">
+                <logicalFolder name="file_system" displayName="file_system" projectFiles="true">
+                  <itemPath>../src/config/default/system/fs/fat_fs/file_system/ffconf.h</itemPath>
+                  <itemPath>../src/config/default/system/fs/fat_fs/file_system/ff.h</itemPath>
+                </logicalFolder>
+                <logicalFolder name="hardware_access"
+                               displayName="hardware_access"
+                               projectFiles="true">
+                  <itemPath>../src/config/default/system/fs/fat_fs/hardware_access/diskio.h</itemPath>
+                </logicalFolder>
+              </logicalFolder>
+              <itemPath>../src/config/default/system/fs/sys_fs_fat_interface.h</itemPath>
+              <itemPath>../src/config/default/system/fs/src/sys_fs_media_manager_local.h</itemPath>
+              <itemPath>../src/config/default/system/fs/sys_fs.h</itemPath>
+              <itemPath>../src/config/default/system/fs/sys_fs_media_manager.h</itemPath>
+              <itemPath>../src/config/default/system/fs/src/sys_fs_local.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="int" displayName="int" projectFiles="true">
+              <itemPath>../src/config/default/system/int/sys_int_mapping.h</itemPath>
+              <itemPath>../src/config/default/system/int/sys_int.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="ports" displayName="ports" projectFiles="true">
+              <itemPath>../src/config/default/system/ports/sys_ports_mapping.h</itemPath>
+              <itemPath>../src/config/default/system/ports/sys_ports.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="time" displayName="time" projectFiles="true">
+              <itemPath>../src/config/default/system/time/sys_time_definitions.h</itemPath>
+              <itemPath>../src/config/default/system/time/sys_time.h</itemPath>
+              <itemPath>../src/config/default/system/time/src/sys_time_local.h</itemPath>
+            </logicalFolder>
+            <itemPath>../src/config/default/system/system_module.h</itemPath>
+            <itemPath>../src/config/default/system/system_media.h</itemPath>
+            <itemPath>../src/config/default/system/system.h</itemPath>
+            <itemPath>../src/config/default/system/system_common.h</itemPath>
+          </logicalFolder>
           <itemPath>../src/config/default/toolchain_specifics.h</itemPath>
           <itemPath>../src/config/default/interrupts.h</itemPath>
           <itemPath>../src/config/default/device.h</itemPath>
           <itemPath>../src/config/default/definitions.h</itemPath>
           <itemPath>../src/store.h</itemPath>
+          <itemPath>../src/config/default/configuration.h</itemPath>
+          <itemPath>../src/config/default/sys_tasks.h</itemPath>
+          <itemPath>../src/config/default/user.h</itemPath>
         </logicalFolder>
         <itemPath>../src/esp32_comm.h</itemPath>
         <itemPath>../src/esp32_proto.h</itemPath>
@@ -55,7 +118,6 @@
       <itemPath>../src/proto.h</itemPath>
       <itemPath>../src/schema.h</itemPath>
       <itemPath>../src/phonebook_flash.h</itemPath>
-      <itemPath>../src/ff.h</itemPath>
       <itemPath>../src/sd_spi_lowlevel.h</itemPath>
       <itemPath>../src/integer.h</itemPath>
     </logicalFolder>
@@ -79,6 +141,13 @@
                    projectFiles="true">
       <logicalFolder name="config" displayName="config" projectFiles="true">
         <logicalFolder name="default" displayName="default" projectFiles="true">
+          <logicalFolder name="driver" displayName="driver" projectFiles="true">
+            <logicalFolder name="sdspi" displayName="sdspi" projectFiles="true">
+              <itemPath>../src/config/default/driver/sdspi/src/drv_sdspi_file_system.c</itemPath>
+              <itemPath>../src/config/default/driver/sdspi/src/drv_sdspi.c</itemPath>
+              <itemPath>../src/config/default/driver/sdspi/src/drv_sdspi_plib_interface.c</itemPath>
+            </logicalFolder>
+          </logicalFolder>
           <logicalFolder name="peripheral" displayName="peripheral" projectFiles="true">
             <logicalFolder name="clk" displayName="clk" projectFiles="true">
               <itemPath>../src/config/default/peripheral/clk/plib_clk.c</itemPath>
@@ -107,10 +176,38 @@
           <logicalFolder name="stdio" displayName="stdio" projectFiles="true">
             <itemPath>../src/config/default/stdio/xc32_monitor.c</itemPath>
           </logicalFolder>
+          <logicalFolder name="system" displayName="system" projectFiles="true">
+            <logicalFolder name="dma" displayName="dma" projectFiles="true">
+              <itemPath>../src/config/default/system/dma/sys_dma.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="fs" displayName="fs" projectFiles="true">
+              <logicalFolder name="fat_fs" displayName="fat_fs" projectFiles="true">
+                <logicalFolder name="file_system" displayName="file_system" projectFiles="true">
+                  <itemPath>../src/config/default/system/fs/fat_fs/file_system/ffunicode.c</itemPath>
+                  <itemPath>../src/config/default/system/fs/fat_fs/file_system/ff.c</itemPath>
+                </logicalFolder>
+                <logicalFolder name="hardware_access"
+                               displayName="hardware_access"
+                               projectFiles="true">
+                  <itemPath>../src/config/default/system/fs/fat_fs/hardware_access/diskio.c</itemPath>
+                </logicalFolder>
+              </logicalFolder>
+              <itemPath>../src/config/default/system/fs/src/sys_fs_fat_interface.c</itemPath>
+              <itemPath>../src/config/default/system/fs/src/sys_fs_media_manager.c</itemPath>
+              <itemPath>../src/config/default/system/fs/src/sys_fs.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="int" displayName="int" projectFiles="true">
+              <itemPath>../src/config/default/system/int/src/sys_int.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="time" displayName="time" projectFiles="true">
+              <itemPath>../src/config/default/system/time/src/sys_time.c</itemPath>
+            </logicalFolder>
+          </logicalFolder>
           <itemPath>../src/config/default/initialization.c</itemPath>
           <itemPath>../src/config/default/interrupts.c</itemPath>
           <itemPath>../src/config/default/exceptions.c</itemPath>
           <itemPath>../src/store.c</itemPath>
+          <itemPath>../src/config/default/tasks.c</itemPath>
         </logicalFolder>
         <itemPath>../src/esp32_comm.c</itemPath>
         <itemPath>../src/esp32_proto.c</itemPath>
@@ -133,16 +230,9 @@
         <itemPath>../src/w5500if.h</itemPath>
         <itemPath>../src/sd_spi_lowlevel.c</itemPath>
       </logicalFolder>
-      <logicalFolder name="sdcard" displayName="sdcard" projectFiles="true">
-        <itemPath>../src/diskio.h</itemPath>
-        <itemPath>../src/ffconf.h</itemPath>
-        <itemPath>../src/diskio.c</itemPath>
-        <itemPath>../src/sd_card.c</itemPath>
-      </logicalFolder>
       <itemPath>../src/main.c</itemPath>
       <itemPath>protothreads.c</itemPath>
       <itemPath>../src/handlers.c</itemPath>
-      <itemPath>../src/ff.c</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
@@ -194,6 +284,7 @@
       <C32>
         <property key="additional-warnings" value="false"/>
         <property key="addresss-attribute-use" value="false"/>
+        <property key="appendMe" value="-w -Wno-error=unused-variable"/>
         <property key="cast-align" value="false"/>
         <property key="code-model" value="default"/>
         <property key="const-model" value="default"/>
@@ -207,7 +298,8 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="expand-pragma-config" value="false"/>
-        <property key="extra-include-directories" value="../src;../src/config/default"/>
+        <property key="extra-include-directories"
+                  value="../src;../src/config/default;../src/config/default/system/fs/fat_fs/file_system;../src/config/default/system/fs/fat_fs/hardware_access"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
@@ -273,6 +365,7 @@
         <property key="additional-options-use-response-files" value="false"/>
         <property key="additional-options-write-sla" value="false"/>
         <property key="allocate-dinit" value="false"/>
+        <property key="appendMe" value=""/>
         <property key="code-dinit" value="false"/>
         <property key="ebase-addr" value=""/>
         <property key="enable-check-sections" value="false"/>
@@ -319,6 +412,7 @@
       <C32CPP>
         <property key="additional-warnings" value="false"/>
         <property key="addresss-attribute-use" value="false"/>
+        <property key="appendMe" value=""/>
         <property key="check-new" value="false"/>
         <property key="eh-specs" value="true"/>
         <property key="enable-app-io" value="false"/>
@@ -327,7 +421,8 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exceptions" value="true"/>
         <property key="exclude-floating-point" value="false"/>
-        <property key="extra-include-directories" value="../src;../src/config/default"/>
+        <property key="extra-include-directories"
+                  value="../src;../src/config/default;../src/config/default/system/fs/fat_fs/file_system;../src/config/default/system/fs/fat_fs/hardware_access"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>

@@ -57,6 +57,32 @@
 #include "flash_w25q32.h"
 #include "storage.h"
 
+#include "ff.h"
+
+static FATFS fs;
+static bool sd_mounted = false;
+
+
+bool SD_Mount(void)
+{
+    FRESULT res;
+
+    res = f_mount(&fs, "0:", 1);
+    if (res == FR_OK)
+    {
+        sd_mounted = true;
+        UART3_WriteString33("SD mounted OK\r\n");
+        return true;
+    }
+    else
+    {
+        sd_mounted = false;
+        UART3_WriteString33("SD mount FAILED: ");
+        UART3_WriteString33(fatfs_err_str(res));
+        UART3_WriteString33("\r\n");
+        return false;
+    }
+}
 
 
 

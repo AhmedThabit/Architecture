@@ -57,7 +57,7 @@ volatile static SPI_OBJECT spi3Obj;
 #define SPI3_CON_MODE_32_MODE_16            (0UL << _SPI3CON_MODE16_POSITION)
 #define SPI3_CON_ENHBUF                     (1UL << _SPI3CON_ENHBUF_POSITION)
 #define SPI3_CON_MCLKSEL                    (0UL << _SPI3CON_MCLKSEL_POSITION)
-#define SPI3_CON_MSSEN                      (1UL << _SPI3CON_MSSEN_POSITION)
+#define SPI3_CON_MSSEN                      (0UL << _SPI3CON_MSSEN_POSITION)
 #define SPI3_CON_SMP                        (0UL << _SPI3CON_SMP_POSITION)
 
 void SPI3_Initialize ( void )
@@ -93,7 +93,7 @@ void SPI3_Initialize ( void )
     CKE = 1
     MODE<32,16> = 0
     ENHBUF = 1
-    MSSEN = 1
+    MSSEN = 0
     MCLKSEL = 0
     */
     SPI3CONSET = (SPI3_CON_MSSEN | SPI3_CON_MCLKSEL | SPI3_CON_ENHBUF | SPI3_CON_MODE_32_MODE_16 | SPI3_CON_CKE | SPI3_CON_CKP | SPI3_CON_MSTEN | SPI3_CON_SMP);

@@ -1,1 +1,0 @@
- $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -ffunction-sections -fdata-sections -O1 -fno-common -I"../src" -I"../src/config/default"   -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -w -Wno-error=unused-variable -mdfp="${DFP_DIR}"  C:\Users\ahmed.thabit\Desktop\Minesh\ArchitectureFolder\src\w5500if.c
