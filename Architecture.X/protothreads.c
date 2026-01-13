@@ -10,6 +10,8 @@
 #include <string.h>
 #include "esp32_proto.h"
 #include <stdio.h>
+#include "ff.h"
+#include "spi_bus_guard.h"
 
 #define UART1_DEBUG 0
 #define UART1_THREAD 0
@@ -33,12 +35,15 @@ extern volatile uint32_t msTicks;
 extern volatile bool sms_enabled = true;
 extern volatile unsigned sms_count = 1;
 
+static FATFS fs;
+static bool sd_mounted = false;
+
 uint8_t sms_get_enabled(void) {
     return sms_enabled ? 1u : 0u;
 }
 
 // One pt struct per thread
-struct pt ptSensor, ptTelit, ptEsp32, ptEth, ptCLI, ptEspTxTest, ptPreflight;
+struct pt ptSensor, ptTelit, ptEsp32, ptEth, ptCLI, ptEspTxTest, ptPreflight, ptSdCard;
 
 void handle_sms_enable_cmd(uint8_t flag) {
     sms_enabled = (flag != 0);
@@ -56,6 +61,13 @@ void UART1_WriteString11(const char *str) {
 
 void UART3_WriteString33(const char* str) {
     UART3_Write((void*) str, strlen(str));
+}
+
+void BlockingUART3_WriteString33(const char* s) {
+    while (*s) {
+        while (U3STAbits.UTXBF); // wait for space
+        U3TXREG = *s++;
+    }
 }
 
 void UART3_WriteChar33(char c) {
@@ -184,8 +196,100 @@ static inline void uart3_ctrl_z(void) {
 
 }
 
+static void uart3_write_hex3(uint8_t byte) {
+    const char hex[] = "0123456789ABCDEF";
+    char out[3] = {hex[byte >> 4], hex[byte & 0x0F], 0};
+    BlockingUART3_WriteString33(out);
+}
+
 
 //-------------end uart 3 ---- sms
+
+static const char* fatfs_err_str(FRESULT r) {
+    switch (r) {
+        case FR_OK: return "FR_OK";
+        case FR_NOT_READY: return "FR_NOT_READY";
+        case FR_NO_FILESYSTEM: return "FR_NO_FILESYSTEM";
+        case FR_DISK_ERR: return "FR_DISK_ERR";
+        case FR_TIMEOUT: return "FR_TIMEOUT";
+        default: return "FR_OTHER";
+    }
+}
+
+//static bool SD_MountStep(void) {
+//    UART3_WriteString33("SD mount step...\r\n");
+//
+//    // 1) Register FS object (should be fast)
+//    FRESULT res = f_mount(&fs, "0:", 0);
+//    if (res != FR_OK) {
+//        sd_mounted = false;
+//        UART3_WriteString33("f_mount failed: ");
+//        UART3_WriteString33(fatfs_err_str(res));
+//        UART3_WriteString33("\r\n");
+//        return false;
+//    }
+//
+//    // 2) Trigger media access with a fast verification call
+//    DWORD fre_clust = 0;
+//    FATFS *pfs = NULL;
+//    res = f_getfree("0:", &fre_clust, &pfs);
+//
+//    if (res == FR_OK) {
+//        sd_mounted = true;
+//        UART3_WriteString33("SD mounted OK\r\n");
+//        return true;
+//    }
+//
+//    sd_mounted = false;
+//    UART3_WriteString33("SD not ready: ");
+//    UART3_WriteString33(fatfs_err_str(res));
+//    UART3_WriteString33("\r\n");
+//    return false;
+//}
+
+#include "sd_fatfs_guard.h"
+
+//static bool SD_Mount(void) {
+//    BlockingUART3_WriteString33("SD mount start...\r\n");
+//
+//    // deselect flash (shared bus)
+//    GPIO_RA9_FL_SS3_Set();
+//
+//    BlockingUART3_WriteString33("f_mount...\r\n");
+//    FRESULT res = SD_f_mount(&fs, "0:", 0); //f_mount(&fs, "0:", 0);
+//    BlockingUART3_WriteString33("f_mount returned\r\n");
+//
+//    if (res != FR_OK) {
+//        BlockingUART3_WriteString33("f_mount FAIL: ");
+//        BlockingUART3_WriteString33(fatfs_err_str(res));
+//        BlockingUART3_WriteString33("\r\n");
+//        sd_mounted = false;
+//        return false;
+//    }
+//
+//    BlockingUART3_WriteString33("f_getfree...\r\n");
+//    DWORD fre_clust = 0;
+//    FATFS *pfs = 0;
+//    res = f_getfree("0:", &fre_clust, &pfs);
+//    BlockingUART3_WriteString33("f_getfree returned\r\n");
+//
+//    if (res == FR_OK) {
+//        BlockingUART3_WriteString33("SD mounted OK\r\n");
+//        sd_mounted = true;
+//        return true;
+//    }
+//
+//    BlockingUART3_WriteString33("SD verify FAIL: ");
+//    BlockingUART3_WriteString33(fatfs_err_str(res));
+//    BlockingUART3_WriteString33("\r\n");
+//    sd_mounted = false;
+//    return false;
+//}
+
+
+
+
+//PorotoThread
 
 void Protothreads_Init(void) {
     PT_INIT(&ptSensor);
@@ -195,9 +299,11 @@ void Protothreads_Init(void) {
     PT_INIT(&ptEth);
     PT_INIT(&ptCLI);
     PT_INIT(&ptPreflight);
+    PT_INIT(&ptSdCard);
 
 
 }
+
 
 /* ????????? SensorThread ????????? */
 PT_THREAD(SensorThread(struct pt *pt)) {
@@ -396,14 +502,16 @@ PT_THREAD(TelitPreflightThread(struct pt *pt)) {
     UART3_WriteString33("AT+CMGF=1\r");
 
     PT_WAIT_UNTIL(pt, rx_wait_any((const char*[]) {
-        "OK", "+CMS ERROR"}, 2, t0, 3000, &which));
+        "OK", "+CMS ERROR"
+    }, 2, t0, 3000, &which));
 
     /* GSM charset (optional) */
     rx_wait_begin(&t0);
     UART3_WriteString33("AT+CSCS=\"GSM\"\r");
 
     PT_WAIT_UNTIL(pt, rx_wait_any((const char*[]) {
-        "OK", "+CME ERROR", "+CMS ERROR"}, 3, t0, 3000, &which));
+        "OK", "+CME ERROR", "+CMS ERROR"
+    }, 3, t0, 3000, &which));
 
     PT_END(pt);
 }
@@ -577,6 +685,11 @@ PT_THREAD(CliThread(struct pt *pt)) {
 
     PT_END(pt);
 }
+
+
+
+
+
 
 
 

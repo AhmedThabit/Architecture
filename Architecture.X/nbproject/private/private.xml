@@ -2,18 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/flash_w25q32.c</file>
-            <file>file:/C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/diskio.h</file>
-            <file>file:/C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/config/default/initialization.c</file>
-            <file>file:/C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/ffconf.h</file>
-            <file>file:/C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/main.c</file>
-            <file>file:/C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/sd_card.c</file>
-            <file>file:/C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/ff.c</file>
-            <file>file:/C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/config/default/peripheral/clk/plib_clk.c</file>
-            <file>file:/C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/esp32_proto.c</file>
-            <file>file:/C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/diskio.c</file>
-            <file>file:/C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/ff.h</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

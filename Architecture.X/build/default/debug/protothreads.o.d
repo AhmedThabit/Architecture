@@ -55,7 +55,8 @@ build/default/debug/protothreads.o: protothreads.c ../../pt.h ../../lc.h \
  ../src/config/default/system/dma/sys_dma_mapping.h \
  ../src/config/default/osal/osal.h \
  ../src/config/default/system/debug/sys_debug.h ../src/bsp.h \
- ../src/esp32_proto.h
+ ../src/esp32_proto.h ../src/spi_bus_guard.h ../src/sd_fatfs_guard.h \
+ ../src/spi_bus_guard.h
 
 ../../pt.h:
 
@@ -182,3 +183,9 @@ build/default/debug/protothreads.o: protothreads.c ../../pt.h ../../lc.h \
 ../src/bsp.h:
 
 ../src/esp32_proto.h:
+
+../src/spi_bus_guard.h:
+
+../src/sd_fatfs_guard.h:
+
+../src/spi_bus_guard.h:
