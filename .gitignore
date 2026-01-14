@@ -1,0 +1,16 @@
+# ===== MPLAB X / Embedded build outputs =====
+Architecture.X/build/
+Architecture.X/dist/
+Architecture.X/.generated_files/
+
+# Object & dependency files
+*.o
+*.o.d
+*.a
+*.elf
+*.map
+
+# MPLAB user-specific
+*.user
+*.log
+*.bak
