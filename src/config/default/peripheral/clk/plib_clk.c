@@ -105,7 +105,7 @@ void CLK_Initialize(void) {
     SYSKEY = 0x556699AAU;
 
     /* Peripheral Module Disable Configuration */
-    PMD1 = 0x101001U;
+    PMD1 = 0x101001U;  //  PMD1 = 0x101001U;
     PMD2 = 0xf000007U;
     PMD3 = 0x1ff00U;
     PMD4 = 0x6U;

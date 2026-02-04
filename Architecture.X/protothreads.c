@@ -10,6 +10,7 @@
 #include <string.h>
 #include "esp32_proto.h"
 #include <stdio.h>
+#include "sd_card_thread.h"  // NEW
 
 #define UART1_DEBUG 0
 #define UART1_THREAD 0
@@ -39,7 +40,7 @@ uint8_t sms_get_enabled(void) {
 
 // One pt struct per thread
 struct pt ptSensor, ptTelit, ptEsp32, ptEth, ptCLI, ptEspTxTest, ptPreflight;
-
+struct pt ptSDCard;  // NEW
 void handle_sms_enable_cmd(uint8_t flag) {
     sms_enabled = (flag != 0);
     sms_count = 0; // optional: reset attempts
@@ -195,7 +196,7 @@ void Protothreads_Init(void) {
     PT_INIT(&ptEth);
     PT_INIT(&ptCLI);
     PT_INIT(&ptPreflight);
-
+    PT_INIT(&ptSDCard);  // NEW
 
 }
 

@@ -46,7 +46,8 @@
 #include "definitions.h"
 #include "device.h"
 
-
+#include "configuration.h"
+#include "system/fs/sys_fs_fat_interface.h"
 // ****************************************************************************
 // ****************************************************************************
 // Section: Configuration Bits
@@ -162,6 +163,47 @@
 
   Remarks:
  */
+// SD Card device and mount names
+#define SDCARD_MOUNT_NAME    "/mnt/mydrive"
+#define SDCARD_DEV_NAME      "/dev/mmcblka1"
+
+// Define system objects (storage for driver handles)
+SYSTEM_OBJECTS sysObj;
+
+// Mount table - used by media manager when SD card is inserted
+const SYS_FS_MEDIA_MOUNT_DATA sysfsMountTable[SYS_FS_VOLUME_NUMBER] =
+{
+    {
+        .mountName = SDCARD_MOUNT_NAME,
+        .devName   = SDCARD_DEV_NAME,
+        .fsType    = FAT
+    }
+};
+
+// FAT File System function mapping (define FIRST before using in sysFSInit)
+const SYS_FS_FUNCTIONS FatFsFunctions =
+{
+    .mount   = FATFS_mount,
+    .unmount = FATFS_unmount,
+    .open    = FATFS_open,
+    .read_t  = FATFS_read,      // Use _t suffix for your Harmony version
+    .write_t = FATFS_write,     // Use _t suffix for your Harmony version
+    .close   = FATFS_close,
+    .seek    = FATFS_lseek,
+    .tell    = FATFS_tell,
+    .eof     = FATFS_eof,
+    .size    = FATFS_size,
+    .fstat   = FATFS_stat,
+};
+
+// File system registration table (uses FatFsFunctions, so must come AFTER)
+const SYS_FS_REGISTRATION_TABLE sysFSInit[SYS_FS_MAX_FILE_SYSTEM_TYPE] =
+{
+    {
+        .nativeFileSystemType = FAT,
+        .nativeFileSystemFunctions = &FatFsFunctions
+    }
+};
 
 void SYS_Initialize(void* data) {
 
@@ -171,62 +213,67 @@ void SYS_Initialize(void* data) {
     /* Start out with interrupts disabled before configuring any modules */
     (void) __builtin_disable_interrupts();
 
-//    working LED
-//    LED_LED1_TRIS = OUTPUT;
-//    LED_LED1_LAT = LED_ON;
+    //    working LED
+    //    LED_LED1_TRIS = OUTPUT;
+    //    LED_LED1_LAT = LED_ON;
 
     CLK_Initialize();
 
     //Notwoking
-//       // 1) Ensure digital mode
-//    ANSELACLR = (1u << 15); // clear ANSA15 -> digital
-//
-//    // 2) Make it output
-//    TRISACLR = (1u << 15); // 0 = output (atomic)
-//
-//    // 3) Drive the latch
-//    LATASET = (1u << 15); // set = 1 (atomic)
-//    // If your LED is active-low, use LATACLR instead:
-//    LATACLR = (1u << 15);
-//
-//
-//    //Not working
-//    LED_LED1_TRIS = OUTPUT;
-//    LED_LED1_LAT = LED_ON;
+    //       // 1) Ensure digital mode
+    //    ANSELACLR = (1u << 15); // clear ANSA15 -> digital
+    //
+    //    // 2) Make it output
+    //    TRISACLR = (1u << 15); // 0 = output (atomic)
+    //
+    //    // 3) Drive the latch
+    //    LATASET = (1u << 15); // set = 1 (atomic)
+    //    // If your LED is active-low, use LATACLR instead:
+    //    LATACLR = (1u << 15);
+    //
+    //
+    //    //Not working
+    //    LED_LED1_TRIS = OUTPUT;
+    //    LED_LED1_LAT = LED_ON;
 
     GPIO_Initialize();
-//LATA = 0x8000; /* LED ON worked here*/
-    
-//
-//   LATA = 0x8000; /* LED ON */
+    //LATA = 0x8000; /* LED ON worked here*/
+
+    //
+    //   LATA = 0x8000; /* LED ON */
 
     UART1_Initialize();
-    
-    
-//   UART1_WriteString("GPIOSending NOooSMS...\r\n");
+
+
+    //   UART1_WriteString("GPIOSending NOooSMS...\r\n");
 
     UART2_Initialize();
     UART3_Initialize();
-    
-	SPI3_Initialize();
-    
-    
-//     UART1_WriteString("PDMSending NOooSMS...\r\n");
-    
-    
-    
-    TMR1_Initialize();
-    
-    
 
-    
-//    UART1_WriteString("Sending NOooSMS...\r\n");
-    
-//    LED_LED1_TRIS = OUTPUT;
-//    LED_LED1_LAT = LED_ON;
-    
+    SPI3_Initialize();
+
+
+    //     UART1_WriteString("PDMSending NOooSMS...\r\n");
+
+
+
+    TMR1_Initialize();
+
+
+
+
+    //    UART1_WriteString("Sending NOooSMS...\r\n");
+
+    //    LED_LED1_TRIS = OUTPUT;
+    //    LED_LED1_LAT = LED_ON;
+
 
     SPI1_Initialize();
+// Initialize SDSPI driver for SD card (before FS init)
+    sysObj.drvSDSPI0 = DRV_SDSPI_Initialize(DRV_SDSPI_INDEX_0, (SYS_MODULE_INIT *)NULL);
+    
+    // Initialize File System Service with REGISTRATION TABLE (not mount table!)
+    SYS_FS_Initialize((const void *)sysFSInit);  // ? CORRECT
 
 
     EVIC_Initialize();

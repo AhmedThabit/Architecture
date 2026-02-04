@@ -10,6 +10,9 @@
             <make-dep-projects/>
             <sourceRootList>
                 <sourceRootElem>../src</sourceRootElem>
+                <sourceRootElem>../src/config/default/driver</sourceRootElem>
+                <sourceRootElem>../src/config/default/driver/sdspi</sourceRootElem>
+                <sourceRootElem>../src/config/default/driver/sdspi/src</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

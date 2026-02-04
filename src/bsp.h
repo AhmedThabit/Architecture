@@ -8,6 +8,8 @@
 static void Timer1Handler(uint32_t status, uintptr_t context);
 #endif
 
+extern volatile uint32_t msTicks;
+
 void BSP_Timer1_Init(void);
 
 /**

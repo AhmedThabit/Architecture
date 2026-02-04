@@ -58,6 +58,23 @@
 #include "peripheral/tmr1/plib_tmr1.h"
 #include "peripheral/spi/spi_master/plib_spi1_master.h"
 
+
+// NEW: SD Card related includes (from SD project)
+#include "peripheral/spi/spi_master/plib_spi3_master.h"  // SD card on SPI3
+#include "system/fs/sys_fs.h"
+#include "system/fs/sys_fs_media_manager.h"
+#include "system/fs/sys_fs_fat_interface.h"
+#include "system/fs/fat_fs/file_system/ff.h"
+#include "system/fs/fat_fs/file_system/ffconf.h"
+#include "system/fs/fat_fs/hardware_access/diskio.h"
+#include "driver/sdspi/drv_sdspi.h"
+#include "system/time/sys_time.h"
+#include "system/int/sys_int.h"
+#include "system/ports/sys_ports.h"
+#include "system/dma/sys_dma.h"
+#include "osal/osal.h"
+#include "system/debug/sys_debug.h"
+
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
@@ -119,6 +136,32 @@ extern "C" {
   Remarks:
     This function will only be called once, after system reset.
 */
+
+    
+// ============================================================================
+// FORWARD DECLARATIONS (instead of including app.h)
+// ============================================================================
+
+// Application functions - implemented in app.c
+//void APP_Initialize(void);
+//void APP_Tasks(void);
+//
+//// Optional status functions if needed by other modules
+//bool APP_IsSDCardReady(void);
+//const char* APP_GetSDCardStatus(void);
+
+// ============================================================================
+// SYSTEM OBJECTS
+// ============================================================================
+
+typedef struct
+{
+    SYS_MODULE_OBJ drvSDSPI0;
+    SYS_MODULE_OBJ sysTime;
+} SYSTEM_OBJECTS;
+
+extern SYSTEM_OBJECTS sysObj;
+
 
 void SYS_Initialize( void *data );
 

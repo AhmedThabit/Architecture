@@ -57,6 +57,8 @@
 #include "flash_w25q32.h"
 #include "storage.h"
 
+// NEW: SD Card thread (replaces app.h)
+#include "sd_card_thread.h"
 
 
 
@@ -104,11 +106,11 @@ void UART1_WriteString(const char *str) {
 #include <stdio.h>
 
 // declare UART3_WriteString33 prototype or include the header
-void UART3_WriteString33(const char *str);  // forward declaration
+void UART3_WriteString33(const char *str); // forward declaration
 
 static void uart3_write_hex(uint8_t byte) {
     const char hex[] = "0123456789ABCDEF";
-    char out[3] = { hex[byte >> 4], hex[byte & 0x0F], 0 };
+    char out[3] = {hex[byte >> 4], hex[byte & 0x0F], 0};
     UART3_WriteString33(out);
 }
 
@@ -127,11 +129,10 @@ void test_phonebook_direct(void) {
     send_phonebook_list();
 }
 
-
 void test_flash_raw(void) {
     //UART3_WriteString33("before Flash init\r\n");
     Flash_Init();
-        UART3_WriteString33("after Flash init: \n");
+    UART3_WriteString33("after Flash init: \n");
     uint32_t testAddr = 0x00010000; // pick a 4 kB sector boundary
     const char *msg = "Hello, W25Q32!";
     size_t msgLen = strlen(msg) + 1; // include terminating 0
@@ -191,18 +192,20 @@ int main(void) {
 
     // main.c
     ESP32_UartInit(); // call after SYS_Initialize
-    Flash_Init();
-    PhonebookFlash_Init(); 
-    
-    Cfg_Load(); // load config from external flash
 
-    
-    
+    /*   remove flash memory for testing the sd card only*/ //start
+    //    Flash_Init();
+    //    PhonebookFlash_Init(); 
+    //    
+    //    Cfg_Load(); // load config from external flash
+    /*   remove flash memory for testing the sd card only*/ //end
+
+
     //test_phonebook_direct();
-    
-    
-    
-    
+
+
+
+
     // === UART test = One-time UART startup messages  ===
     //    UART1_Write((uint8_t *) "1 Hello ESP32!\r\n", 16);
     //    UART3_Write((uint8_t *) "AT\r\n", 4);
@@ -223,12 +226,12 @@ int main(void) {
 
 
     // somewhere in main loop (once after ESP32_UartInit)
-//    static bool test_out_once = false;
-//    if (!test_out_once) {
-//        const uint8_t ping[] = {0x81, 0x00, 0x01, 0x04, 'P', 'I', 'N', 'G'}; // ROP=0x81, STATUS=OK, TLV tag=1, len=4, "PING"
-//        ESP32_SendFrame(ping, sizeof ping);
-//        test_out_once = true;
-//    }
+    //    static bool test_out_once = false;
+    //    if (!test_out_once) {
+    //        const uint8_t ping[] = {0x81, 0x00, 0x01, 0x04, 'P', 'I', 'N', 'G'}; // ROP=0x81, STATUS=OK, TLV tag=1, len=4, "PING"
+    //        ESP32_SendFrame(ping, sizeof ping);
+    //        test_out_once = true;
+    //    }
 
 
     /** Layer 3: Protothreads scheduler initialization */
@@ -259,36 +262,42 @@ int main(void) {
     static volatile bool preflight_running = true;
     int f = 0;
 
-    
-        while (preflight_running) {
-            SYS_Tasks();
-    
-            // returns 1 while still running, 0 when hits PT_END
-            preflight_running = !PT_SCHEDULE(TelitPreflightThread(&ptPreflight));
-    
-            // keep other threads alive during boot if needed
-            PT_SCHEDULE(Esp32Thread(&ptEsp32));
-    
-        }
-    
-        while (true) {
-            /* Maintain state machines of all polled MPLAB Harmony modules. */
-            SYS_Tasks();
-    
-            // Cooperatively run each Protothread once per loop
-            //        SensorThread(&ptSensor);
-            //        if(f==0){
-            //        UART3_WriteString33("T-est AT\r\n");
-            //        f=f+1;
-            //        }
+
+    while (preflight_running) {
+        SYS_Tasks();
+
+        // returns 1 while still running, 0 when hits PT_END
+        preflight_running = !PT_SCHEDULE(TelitPreflightThread(&ptPreflight));
+
+        // keep other threads alive during boot if needed
+        PT_SCHEDULE(Esp32Thread(&ptEsp32));
+
+        PT_SCHEDULE(SDCardThread(&ptSDCard)); // NEW: SD card runs during boot too
+        // Optional: Check if SD card is ready during boot
+        //        if (SDCard_IsReady()) {
+        //            // SD card ready - could signal this to other threads
+        //        }
+
+    }
+
+    while (true) {
+        /* Maintain state machines of all polled MPLAB Harmony modules. */
+        SYS_Tasks();
+
+        // Cooperatively run each Protothread once per loop
+        //        SensorThread(&ptSensor);
+        //        if(f==0){
+        //        UART3_WriteString33("T-est AT\r\n");
+        //        f=f+1;
+        //        }
         //    TelitThread(&ptTelit);
-            Esp32Thread(&ptEsp32);
-    
-            //        Esp32TxTestThread(&ptEspTxTest);
-            //        EthThread(&ptEth);
-            //        CliThread(&ptCLI);
-    
-        }
+        Esp32Thread(&ptEsp32);
+        SDCardThread(&ptSDCard);        // NEW: SD card thread
+        //        Esp32TxTestThread(&ptEspTxTest);
+        //        EthThread(&ptEth);
+        //        CliThread(&ptCLI);
+
+    }
 
     /* Execution should not come here during normal operation */
 
