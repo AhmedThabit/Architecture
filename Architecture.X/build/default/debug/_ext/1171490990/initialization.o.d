@@ -55,7 +55,8 @@ build/default/debug/_ext/1171490990/initialization.o: \
  ../src/config/default/system/dma/sys_dma.h \
  ../src/config/default/system/dma/sys_dma_mapping.h \
  ../src/config/default/osal/osal.h \
- ../src/config/default/system/debug/sys_debug.h
+ ../src/config/default/system/debug/sys_debug.h \
+ ../src/config/default/../../app.h
 
 ../src/config/default/configuration.h:
 
@@ -170,3 +171,5 @@ build/default/debug/_ext/1171490990/initialization.o: \
 ../src/config/default/osal/osal.h:
 
 ../src/config/default/system/debug/sys_debug.h:
+
+../src/config/default/../../app.h:

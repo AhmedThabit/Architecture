@@ -46,6 +46,7 @@
 #include "configuration.h"
 #include "definitions.h"
 #include "device.h"
+#include "../../app.h"
 
 
 // ****************************************************************************
@@ -316,6 +317,8 @@ void SYS_Initialize ( void* data )
 
 	GPIO_Initialize();
 
+    TMR1_Initialize();
+    
 	SPI3_Initialize();
 
 	UART3_Initialize();
@@ -324,7 +327,7 @@ void SYS_Initialize ( void* data )
 
 	UART2_Initialize();
 
-    TMR1_Initialize();
+    
 
 	SPI1_Initialize();
 
@@ -348,6 +351,7 @@ void SYS_Initialize ( void* data )
     /*** File System Service Initialization Code ***/
     (void) SYS_FS_Initialize( (const void *) sysFSInit );
 
+    APP_Initialize();
 
     /* MISRAC 2012 deviation block end */
     EVIC_Initialize();
