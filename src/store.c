@@ -43,7 +43,7 @@ static void Cfg_WriteHeaderAndData(const CfgHeader *hdr, const DeviceCfg *cfg)
 
 void Cfg_Load(void)
 {
-    Flash_Init();
+    //Flash_Init();
 //test comment
     /* Initialise g_cfg to defaults.  This sets g_cfg.version to the current
      * firmware version (0x00010100) before we validate the header.  Without

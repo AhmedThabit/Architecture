@@ -72,10 +72,14 @@ static void Flash_PageProgram_NoLock(uint32_t addr, const uint8_t *buf, size_t l
 }
 
 // ---- public API (acquire/release bus here; NEVER spin forever on bus) ----
+static bool flash_initialized = false;
 
 void Flash_Init(void)
 {
-    SPI3_Initialize();
+    if (flash_initialized) return;
+    flash_initialized = true;
+    //no need
+    //SPI3_Initialize();
 
     // Make CS pins digital outputs and deselect both devices
     ANSELACLR = (1u << 9);
