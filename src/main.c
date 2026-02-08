@@ -238,7 +238,7 @@ int main(void) {
      * @brief Layer 1 helpers.
      * Provides a 1 ms system tick (Timer1) used by Protothreads.
      */
-//    BSP_Timer1_Init(); // the 1?ms SysTick for Protothreads
+    BSP_Timer1_Init(); // the 1?ms SysTick for Protothreads
 
     /* Layer 4 middleware
      * - Initialize UART3 for Telit modem
