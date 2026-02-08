@@ -210,16 +210,16 @@ int main(void) {
     SYS_Initialize(NULL);
 
     // main.c
-//    ESP32_UartInit(); // call after SYS_Initialize
+    ESP32_UartInit(); // call after SYS_Initialize
     
                                     //SD_ServiceInit();
                                     //SD_TestInit();
                                 //    SD_Service_Task();
-//    SPIBus_Init();
-//    Flash_Init();
-//    PhonebookFlash_Init();
-//
-//    Cfg_Load(); // load config from external flash
+    SPIBus_Init();
+//->    Flash_Init();   //SD card not work until comment this line
+    PhonebookFlash_Init();
+
+//->Cfg_Load(); // load config from external flash //SD card not work until comment this line
 
 
 
@@ -260,9 +260,9 @@ int main(void) {
 //    Protothreads_Init();
 
     // in main(), after BSP_UART3_Init() and before enabling interrupts:
-//    UART3_ReadCallbackRegister(telit_rx_callback, 0);
-//    UART3_ReadThresholdSet(1);
-//    UART3_ReadNotificationEnable(true, true); // persistent notify
+    UART3_ReadCallbackRegister(telit_rx_callback, 0);
+    UART3_ReadThresholdSet(1);
+    UART3_ReadNotificationEnable(true, true); // persistent notify
 
                                 //UART3_WriteString33("Before storage init\r\n");
                                 //Storage_Init();
@@ -312,7 +312,7 @@ int main(void) {
                         //SD_TestTask();
                         //SD_Service_Task();
         
-//        PT_SCHEDULE(Esp32Thread(&ptEsp32));
+        PT_SCHEDULE(Esp32Thread(&ptEsp32));
                         //PT_SCHEDULE(SD_TestThread(&ptSdCard));
 
                         //PT_SCHEDULE(SD_TestThread(&ptSdTest));
