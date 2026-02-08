@@ -85,7 +85,9 @@ SYS_FS_Tasks();
 
     /* Maintain Middleware & Other Libraries */
     
-
+ /* Maintain the application's state machine. */
+        /* Call Application task APP. */
+    APP_Tasks();
 
 }
 

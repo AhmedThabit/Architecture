@@ -1,0 +1,187 @@
+================================================================================
+TIMER1 MIGRATION PLAN - Architecture Project
+================================================================================
+Date: February 2026
+Project: C:\Users\ahmed.thabit\Desktop\Minesh\ArchitectureFolder
+
+================================================================================
+CURRENT SITUATION
+================================================================================
+
+This project is DIFFERENT from the previous SD card project:
+
+1. Timer1 PLIB ALREADY EXISTS but is INCOMPLETE
+   - Location: src/config/default/peripheral/tmr1/
+   - Current configuration: PR1 = 5999, prescaler 1:2
+   - Purpose: Appears to be used for application timing
+   
+2. Core Timer is used for SYS_TIME
+   - Location: src/config/default/peripheral/coretimer/
+   - Frequency: 24 MHz (CPU_CLOCK / 2 = 48MHz / 2)
+   
+3. BOTH timers are initialized in SYS_Initialize():
+   - TMR1_Initialize();      (line ~213)
+   - CORETIMER_Initialize(); (line ~212)
+   
+4. SYS_TIME uses Core Timer through sysTimePlibAPI structure
+
+PROBLEM: 
+The existing Timer1 implementation is MISSING critical functions needed by 
+SYS_TIME:
+  - TMR1_FrequencyGet() (defined but returns wrong value for SYS_TIME)
+  - TMR1_CompareSet() (completely missing)
+  
+Additionally, the current Timer1 configuration (PR1=5999, prescaler 1:2) 
+suggests it may be used elsewhere in the application!
+
+================================================================================
+CRITICAL QUESTIONS TO ANSWER BEFORE PROCEEDING
+================================================================================
+
+⚠️  IMPORTANT: Before making ANY changes, we need to determine:
+
+1. Is Timer1 currently being used by the application code?
+   - Check for TMR1_ function calls in application files
+   - Check for Timer1 interrupt usage
+   - Check if the 5999 period value is significant
+   
+2. If Timer1 IS being used:
+   - Can we move that functionality to another timer (e.g., TMR2)?
+   - OR should we keep Core Timer for SYS_TIME?
+   
+3. What is the desired configuration?
+   - Same as previous project (3 MHz with 1:8 prescaler)?
+   - OR different frequency to match application needs?
+
+================================================================================
+RECOMMENDED APPROACH - OPTION A (If Timer1 is NOT used elsewhere)
+================================================================================
+
+Replace Core Timer with Timer1 for SYS_TIME:
+
+STEP 1: Update Timer1 PLIB to be SYS_TIME compatible
+--------
+Modify: src/config/default/peripheral/tmr1/plib_tmr1.c
+Modify: src/config/default/peripheral/tmr1/plib_tmr1.h
+
+Add missing functions:
+  - uint32_t TMR1_FrequencyGet(void) - return actual timer frequency
+  - void TMR1_CompareSet(uint32_t compare) - set PR1 register
+  
+Reconfigure for SYS_TIME use:
+  - Prescaler: 1:8 (for 3 MHz from 24 MHz PBCLK)
+  - Period: 0xFFFF (maximum, free-running)
+  - Frequency: 3,000,000 Hz
+
+STEP 2: Update initialization.c
+--------
+File: src/config/default/initialization.c
+
+Change sysTimePlibAPI to use TMR1 instead of CORETIMER:
+  OLD: .timerCallbackSet = CORETIMER_CallbackSet,
+  NEW: .timerCallbackSet = TMR1_CallbackSet,
+  
+  OLD: .timerStart = CORETIMER_Start,
+  NEW: .timerStart = TMR1_Start,
+  
+  (... and so on for all functions)
+
+Change interrupt number:
+  OLD: .hwTimerIntNum = 0,
+  NEW: .hwTimerIntNum = _TIMER_1_VECTOR,
+
+Remove CORETIMER_Initialize():
+  DELETE: CORETIMER_Initialize();
+  KEEP:   TMR1_Initialize();
+
+STEP 3: Update definitions.h
+--------
+File: src/config/default/definitions.h
+
+OPTIONAL: Remove coretimer include if not used elsewhere:
+  Can remove: #include "peripheral/coretimer/plib_coretimer.h"
+  Keep Timer1: #include "peripheral/tmr1/plib_tmr1.h"
+
+================================================================================
+RECOMMENDED APPROACH - OPTION B (If Timer1 IS used elsewhere)
+================================================================================
+
+Keep current configuration and DO NOT migrate:
+
+REASON: If Timer1 is actively being used by application code with specific
+timing requirements (PR1=5999 suggests ~2ms period at current settings), 
+changing it could break application functionality.
+
+ALTERNATIVE: Keep Core Timer for SYS_TIME, or migrate application code to 
+use a different timer (TMR2, TMR3, etc.) first.
+
+================================================================================
+WHAT TO DO NEXT
+================================================================================
+
+STEP 1: Investigate Timer1 Usage
+-----------
+Run these searches to find Timer1 usage:
+  
+  Search in src/ folder for:
+  - "TMR1_"
+  - "TIMER_1"
+  - "T1CON"
+  - "PR1"
+  - "5999"
+  
+  Look in these files especially:
+  - src/main.c
+  - src/app.c
+  - src/handlers.c
+  - src/tasks.c
+  - Any files with "timer" in the name
+
+STEP 2: Decide on Migration Strategy
+-----------
+Based on search results:
+  
+  IF Timer1 is NOT used: Proceed with OPTION A
+  IF Timer1 IS used: Evaluate OPTION B or timer reassignment
+
+STEP 3: Request Assistance
+-----------
+Once you've investigated Timer1 usage, let me know what you found and I can:
+  - Create the modified Timer1 PLIB files
+  - Update initialization.c
+  - Update definitions.h
+  - Provide testing guidance
+
+================================================================================
+COMPARISON: This Project vs Previous Project
+================================================================================
+
+PREVIOUS PROJECT (sdspi_fat):
+  - No Timer1 PLIB existed
+  - Clean slate for Timer1 implementation
+  - Straightforward replacement
+  - No conflicts
+
+THIS PROJECT (Architecture):
+  - Timer1 PLIB exists but incomplete
+  - Timer1 MAY be used by application
+  - Need to investigate before proceeding
+  - Potential for conflicts
+  - More complex migration
+
+================================================================================
+SAFETY FIRST
+================================================================================
+
+⚠️  DO NOT PROCEED WITH MODIFICATIONS until we confirm Timer1 usage!
+
+Making changes without understanding current Timer1 use could:
+  - Break existing application timing
+  - Cause interrupt conflicts  
+  - Create unpredictable behavior
+
+Let's investigate first, then make informed decisions.
+
+================================================================================
+END OF MIGRATION PLAN
+================================================================================

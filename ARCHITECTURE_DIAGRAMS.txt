@@ -1,0 +1,277 @@
+================================================================================
+VISUAL ARCHITECTURE DIAGRAM - After Timer2 Migration
+================================================================================
+
+┌──────────────────────────────────────────────────────────────────────────┐
+│                         APPLICATION LAYER                                 │
+│                                                                           │
+│  ┌─────────────────┐  ┌──────────────────┐  ┌──────────────────┐        │
+│  │  Protothreads   │  │   SYS_TIME       │  │  Other Services  │        │
+│  │  (Cooperative   │  │   (Delays,       │  │  (SD, UART,      │        │
+│  │   Multitasking) │  │   Callbacks,     │  │   SPI, etc.)     │        │
+│  │                 │  │   Timers)        │  │                  │        │
+│  └────────┬────────┘  └────────┬─────────┘  └──────────────────┘        │
+│           │                    │                                         │
+└───────────┼────────────────────┼─────────────────────────────────────────┘
+            │                    │
+            │                    │
+            ▼                    ▼
+┌──────────────────────────────────────────────────────────────────────────┐
+│                         MIDDLEWARE LAYER                                  │
+│                                                                           │
+│  ┌─────────────────┐  ┌──────────────────┐                              │
+│  │  BSP_Timer1     │  │  SYS_TIME        │                              │
+│  │  (bsp.c)        │  │  Service         │                              │
+│  │                 │  │  (sys_time.c)    │                              │
+│  │  - msTicks++    │  │                  │                              │
+│  │  - 1ms tick     │  │  - Software      │                              │
+│  │                 │  │    timers        │                              │
+│  └────────┬────────┘  │  - Callbacks     │                              │
+│           │           │  - Delay mgmt    │                              │
+│           │           └────────┬─────────┘                              │
+│           │                    │                                         │
+└───────────┼────────────────────┼─────────────────────────────────────────┘
+            │                    │
+            │                    │
+            ▼                    ▼
+┌──────────────────────────────────────────────────────────────────────────┐
+│                         PLIB LAYER (Hardware Abstraction)                 │
+│                                                                           │
+│  ┌─────────────────┐  ┌──────────────────┐  ┌──────────────────┐        │
+│  │   TIMER1 PLIB   │  │   TIMER2 PLIB    │  │  CORE TIMER      │        │
+│  │  plib_tmr1.c/h  │  │  plib_tmr2.c/h   │  │  (Available)     │        │
+│  │                 │  │                  │  │                  │        │
+│  │  PR1 = 5999     │  │  PR2 = 0xFFFF    │  │  Not used for    │        │
+│  │  Prescaler 1:8  │  │  Prescaler 1:8   │  │  SYS_TIME        │        │
+│  │  1000 Hz        │  │  6 MHz           │  │                  │        │
+│  └────────┬────────┘  └────────┬─────────┘  └──────────────────┘        │
+│           │                    │                                         │
+└───────────┼────────────────────┼─────────────────────────────────────────┘
+            │                    │
+            │                    │
+            ▼                    ▼
+┌──────────────────────────────────────────────────────────────────────────┐
+│                         HARDWARE LAYER                                    │
+│                                                                           │
+│  ┌─────────────────┐  ┌──────────────────┐  ┌──────────────────┐        │
+│  │   TMR1 Module   │  │   TMR2 Module    │  │  Core Timer      │        │
+│  │                 │  │                  │  │                  │        │
+│  │   T1CON         │  │   T2CON          │  │   COUNT/COMPARE  │        │
+│  │   TMR1          │  │   TMR2           │  │                  │        │
+│  │   PR1           │  │   PR2            │  │                  │        │
+│  │   IFS0/IEC0     │  │   IFS0/IEC0      │  │                  │        │
+│  │   IPC1          │  │   IPC2           │  │                  │        │
+│  └────────┬────────┘  └────────┬─────────┘  └──────────────────┘        │
+│           │                    │                                         │
+│           ▼                    ▼                                         │
+│  ┌─────────────────┐  ┌──────────────────┐                              │
+│  │ TIMER_1_Handler │  │ TIMER_2_Handler  │                              │
+│  │  (interrupts.c) │  │  (interrupts.c)  │                              │
+│  └─────────────────┘  └──────────────────┘                              │
+│                                                                           │
+│                    PIC32MM0256GPM064                                      │
+└──────────────────────────────────────────────────────────────────────────┘
+
+
+================================================================================
+INTERRUPT FLOW - Timer1 (Protothreads)
+================================================================================
+
+Hardware Event: TMR1 = PR1 (every 1ms)
+         │
+         ▼
+Set T1IF Flag in IFS0
+         │
+         ▼
+CPU jumps to TIMER_1_Handler() in interrupts.c
+         │
+         ▼
+Calls TIMER_1_InterruptHandler() in plib_tmr1.c
+         │
+         ▼
+Clears T1IF flag
+         │
+         ▼
+Calls registered callback: Timer1Handler() in bsp.c
+         │
+         ▼
+Increments msTicks++ 
+         │
+         ▼
+Return from interrupt
+         │
+         ▼
+Application continues (Protothreads use msTicks for scheduling)
+
+
+================================================================================
+INTERRUPT FLOW - Timer2 (SYS_TIME)
+================================================================================
+
+Hardware Event: TMR2 reaches compare value
+         │
+         ▼
+Set T2IF Flag in IFS0
+         │
+         ▼
+CPU jumps to TIMER_2_Handler() in interrupts.c
+         │
+         ▼
+Calls TIMER_2_InterruptHandler() in plib_tmr2.c
+         │
+         ▼
+Clears T2IF flag
+         │
+         ▼
+Calls registered callback: SYS_TIME_PLIBCallback() in sys_time.c
+         │
+         ▼
+SYS_TIME processes software timers:
+  - Check expired timers
+  - Call user callbacks
+  - Update timer list
+  - Calculate next interrupt time
+  - Update PR2 for next compare
+         │
+         ▼
+Return from interrupt
+         │
+         ▼
+Application continues
+
+
+================================================================================
+TIMER COMPARISON TABLE
+================================================================================
+
+Feature          Timer1              Timer2              Core Timer
+───────────────────────────────────────────────────────────────────────────
+Purpose          Protothreads        SYS_TIME            Available
+Used By          BSP/Application     Harmony Service     None
+Frequency        1 kHz (1ms)         6 MHz               24 MHz
+Prescaler        1:8                 1:8                 None (CPU/2)
+Period Reg       PR1 = 5999          PR2 = 0xFFFF        Compare Reg
+Counter Size     16-bit              16-bit              32-bit
+Int Vector       _TIMER_1_VECTOR     _TIMER_2_VECTOR     _CORE_TIMER_VECTOR
+Priority         1                   1                   N/A
+Callback         Timer1Handler       SYS_TIME callback   N/A
+Critical?        YES (don't change)  YES (for delays)    No (freed)
+───────────────────────────────────────────────────────────────────────────
+
+
+================================================================================
+CLOCK TREE
+================================================================================
+
+                    ┌───────────────┐
+                    │   FRC 8MHz    │
+                    │   Internal RC │
+                    └───────┬───────┘
+                            │
+                            ▼
+                    ┌───────────────┐
+                    │  FRC Divider  │
+                    │    (/1)       │
+                    └───────┬───────┘
+                            │
+                            ▼
+                    ┌───────────────┐
+                    │  System PLL   │
+                    │  (6x mult)    │
+                    └───────┬───────┘
+                            │
+                            ▼
+                    ┌───────────────┐
+                    │ SYSCLK 48MHz  │
+                    └───────┬───────┘
+                            │
+                ┌───────────┼───────────┐
+                │           │           │
+                ▼           ▼           ▼
+        ┌──────────┐ ┌──────────┐ ┌──────────┐
+        │  PBCLK1  │ │  PBCLK2  │ │  PBCLK3  │
+        │  48 MHz  │ │  48 MHz  │ │  48 MHz  │
+        └──────────┘ └──────────┘ └────┬─────┘
+                                        │
+                        ┌───────────────┼───────────────┐
+                        │               │               │
+                        ▼               ▼               ▼
+                 ┌────────────┐  ┌────────────┐  ┌────────────┐
+                 │   Timer1   │  │   Timer2   │  │    SPI     │
+                 │  Prescaler │  │  Prescaler │  │            │
+                 │    1:8     │  │    1:8     │  │            │
+                 └─────┬──────┘  └─────┬──────┘  └────────────┘
+                       │               │
+                       ▼               ▼
+                  ┌────────┐      ┌────────┐
+                  │ 6 MHz  │      │ 6 MHz  │
+                  │ ÷6000  │      │(free   │
+                  │        │      │running)│
+                  └────┬───┘      └────────┘
+                       │
+                       ▼
+                  ┌────────┐
+                  │ 1 kHz  │
+                  │ (1ms)  │
+                  └────────┘
+
+
+================================================================================
+MEMORY MAP - Timer Registers
+================================================================================
+
+Timer1 Registers (0xBF800600 base):
+  T1CON   @ 0xBF800600  - Control register
+  TMR1    @ 0xBF800610  - Counter register
+  PR1     @ 0xBF800620  - Period register
+  
+Timer2 Registers (0xBF800800 base):
+  T2CON   @ 0xBF800800  - Control register
+  TMR2    @ 0xBF800810  - Counter register
+  PR2     @ 0xBF800820  - Period register
+
+Interrupt Registers:
+  IFS0    @ 0xBF881040  - Interrupt flag status (T1IF, T2IF)
+  IEC0    @ 0xBF881060  - Interrupt enable control (T1IE, T2IE)
+  IPC1    @ 0xBF8810A0  - Timer1 priority control
+  IPC2    @ 0xBF8810B0  - Timer2 priority control
+
+Core Timer Registers:
+  COUNT   @ CP0 Reg 9   - Count register
+  COMPARE @ CP0 Reg 11  - Compare register
+
+
+================================================================================
+KEY BENEFITS OF NEW ARCHITECTURE
+================================================================================
+
+1. SEPARATION OF CONCERNS
+   ┌────────────────────────────────────────────┐
+   │  Timer1 → Application-specific timing      │
+   │           (Protothreads, 1ms tick)         │
+   ├────────────────────────────────────────────┤
+   │  Timer2 → System-level timing              │
+   │           (SYS_TIME service)               │
+   ├────────────────────────────────────────────┤
+   │  Core Timer → Available for future use     │
+   └────────────────────────────────────────────┘
+
+2. FLEXIBILITY
+   - Core Timer now free for precision timing
+   - Can add Timer3/4/5 for additional needs
+   - Each timer has specific purpose
+
+3. MAINTAINABILITY
+   - Clear ownership of each timer
+   - Easy to understand timing architecture
+   - Follows Harmony 3 design patterns
+
+4. SAFETY
+   - Timer1 unchanged (zero risk to Protothreads)
+   - Tested Timer2 implementation
+   - Backward compatible with all SYS_TIME APIs
+
+
+================================================================================
+END OF VISUAL ARCHITECTURE DIAGRAM
+================================================================================

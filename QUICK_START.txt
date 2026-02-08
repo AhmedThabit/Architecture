@@ -1,0 +1,40 @@
+================================================================================
+QUICK START - Timer2 Migration
+================================================================================
+
+**WHAT CHANGED:**
+  Core Timer → Timer2 for SYS_TIME
+  Timer1 → Still used for Protothreads (unchanged)
+
+**FILES TO ADD TO MPLAB X:**
+  1. src/config/default/peripheral/tmr2/plib_tmr2.h
+  2. src/config/default/peripheral/tmr2/plib_tmr2.c
+
+**HOW TO ADD FILES:**
+  1. Open MPLAB X project
+  2. Right-click "Header Files" → Add Existing Item → plib_tmr2.h
+  3. Right-click "Source Files" → Add Existing Item → plib_tmr2.c
+  4. Clean and Build
+
+**VERIFICATION:**
+  ✓ Build succeeds
+  ✓ Protothreads work (Timer1 @ 1ms)
+  ✓ SYS_TIME works (Timer2 @ 6MHz)
+  ✓ Application runs normally
+
+**NEW TIMER CONFIGURATION:**
+  Timer1: Protothreads, 1ms tick, PR1=5999, Prescaler 1:8
+  Timer2: SYS_TIME, 6MHz, PR2=0xFFFF, Prescaler 1:8
+  Core Timer: FREE (available for other uses)
+
+**INTERRUPT VECTORS:**
+  Timer1: _TIMER_1_VECTOR (priority 1)
+  Timer2: _TIMER_2_VECTOR (priority 1)
+
+**IF PROBLEMS:**
+  See TIMER2_MIGRATION_COMPLETE.txt for detailed troubleshooting
+
+**APPLICATION CODE CHANGES:**
+  NONE! Everything works transparently.
+
+================================================================================

@@ -210,119 +210,119 @@ int main(void) {
     SYS_Initialize(NULL);
 
     // main.c
-    ESP32_UartInit(); // call after SYS_Initialize
+//    ESP32_UartInit(); // call after SYS_Initialize
     
-    //SD_ServiceInit();
-    //SD_TestInit();
-    SD_Service_Task();
-    SPIBus_Init();
-    Flash_Init();
-    PhonebookFlash_Init();
-
-    Cfg_Load(); // load config from external flash
-
-
-
-    //test_phonebook_direct();
+                                    //SD_ServiceInit();
+                                    //SD_TestInit();
+                                //    SD_Service_Task();
+//    SPIBus_Init();
+//    Flash_Init();
+//    PhonebookFlash_Init();
+//
+//    Cfg_Load(); // load config from external flash
 
 
 
+                                //test_phonebook_direct();
 
-    // === UART test = One-time UART startup messages  ===
-    //    UART1_Write((uint8_t *) "1 Hello ESP32!\r\n", 16);
-    //    UART3_Write((uint8_t *) "AT\r\n", 4);
-    //    UART1_WriteString("2 Sending NOooSMS...\r\n");
-    //    UART1_WriteString("3 TSSSSending SMS...\r\n");
+
+
+
+                                // === UART test = One-time UART startup messages  ===
+                                //    UART1_Write((uint8_t *) "1 Hello ESP32!\r\n", 16);
+                                //    UART3_Write((uint8_t *) "AT\r\n", 4);
+                                //    UART1_WriteString("2 Sending NOooSMS...\r\n");
+                                //    UART1_WriteString("3 TSSSSending SMS...\r\n");
 
     /**
      * @brief Layer 1 helpers.
      * Provides a 1 ms system tick (Timer1) used by Protothreads.
      */
-    BSP_Timer1_Init(); // the 1?ms SysTick for Protothreads
+//    BSP_Timer1_Init(); // the 1?ms SysTick for Protothreads
 
     /* Layer 4 middleware
      * - Initialize UART3 for Telit modem
      * - Attach/register parser callback
      */
-    BSP_UART3_Init();
+//    BSP_UART3_Init();
 
 
-    // somewhere in main loop (once after ESP32_UartInit)
-    //    static bool test_out_once = false;
-    //    if (!test_out_once) {
-    //        const uint8_t ping[] = {0x81, 0x00, 0x01, 0x04, 'P', 'I', 'N', 'G'}; // ROP=0x81, STATUS=OK, TLV tag=1, len=4, "PING"
-    //        ESP32_SendFrame(ping, sizeof ping);
-    //        test_out_once = true;
-    //    }
+                                // somewhere in main loop (once after ESP32_UartInit)
+                                //    static bool test_out_once = false;
+                                //    if (!test_out_once) {
+                                //        const uint8_t ping[] = {0x81, 0x00, 0x01, 0x04, 'P', 'I', 'N', 'G'}; // ROP=0x81, STATUS=OK, TLV tag=1, len=4, "PING"
+                                //        ESP32_SendFrame(ping, sizeof ping);
+                                //        test_out_once = true;
+                                //    }
 
 
     /** Layer 3: Protothreads scheduler initialization */
-    Protothreads_Init();
+//    Protothreads_Init();
 
     // in main(), after BSP_UART3_Init() and before enabling interrupts:
-    UART3_ReadCallbackRegister(telit_rx_callback, 0);
-    UART3_ReadThresholdSet(1);
-    UART3_ReadNotificationEnable(true, true); // persistent notify
+//    UART3_ReadCallbackRegister(telit_rx_callback, 0);
+//    UART3_ReadThresholdSet(1);
+//    UART3_ReadNotificationEnable(true, true); // persistent notify
 
-    //UART3_WriteString33("Before storage init\r\n");
-    //Storage_Init();
-    //UART3_WriteString33("Before flash raw\r\n");
-    //test_flash_raw();
-    //UART3_WriteString33("after flash raw\r\n");
-    //
+                                //UART3_WriteString33("Before storage init\r\n");
+                                //Storage_Init();
+                                //UART3_WriteString33("Before flash raw\r\n");
+                                //test_flash_raw();
+                                //UART3_WriteString33("after flash raw\r\n");
+                                //
 
     (void) __builtin_enable_interrupts();
 
-    //    //===  Register UART3 receive callback for Telit responses === interrupt-based notification =====
-    //    UART3_ReadCallbackRegister(telit_rx_callback, 0);
-    //    UART3_ReadThresholdSet(1);
-    //    UART3_ReadNotificationEnable(true, true); // persistent notification
-    //    
-    //    BSP_UART3_Init();          // register the Telit UART3 callback
+                                //    //===  Register UART3 receive callback for Telit responses === interrupt-based notification =====
+                                //    UART3_ReadCallbackRegister(telit_rx_callback, 0);
+                                //    UART3_ReadThresholdSet(1);
+                                //    UART3_ReadNotificationEnable(true, true); // persistent notification
+                                //    
+                                //    BSP_UART3_Init();          // register the Telit UART3 callback
 
     // -------- BOOT PHASE: run preflight until it returns PT_END --------
     static volatile bool preflight_running = true;
     int f = 0;
 
 
-    //        while (preflight_running) {
-    //            SYS_Tasks();
-    //    
-    //            // returns 1 while still running, 0 when hits PT_END
-    //            preflight_running = !PT_SCHEDULE(TelitPreflightThread(&ptPreflight));
-    //    
-    //            // keep other threads alive during boot if needed
-    //            PT_SCHEDULE(Esp32Thread(&ptEsp32));
-    //    
-    //        }
+            //        while (preflight_running) {
+            //            SYS_Tasks();
+            //    
+            //            // returns 1 while still running, 0 when hits PT_END
+            //            preflight_running = !PT_SCHEDULE(TelitPreflightThread(&ptPreflight));
+            //    
+            //            // keep other threads alive during boot if needed
+            //            PT_SCHEDULE(Esp32Thread(&ptEsp32));
+            //    
+            //        }
 
     while (true) {
         /* Maintain state machines of all polled MPLAB Harmony modules. */
         SYS_Tasks();
 
-        // Cooperatively run each Protothread once per loop
-        //        SensorThread(&ptSensor);
-        //        if(f==0){
-//                UART3_WriteString33("T-est AT\r\n");
-        //        f=f+1;
-        //        }
-        //    TelitThread(&ptTelit);
-        //        Esp32Thread(&ptEsp32);
-        //SD_ServiceTask();
-        //SD_TestTask();
-        SD_Service_Task();
+                        // Cooperatively run each Protothread once per loop
+                        //        SensorThread(&ptSensor);
+                        //        if(f==0){
+                //                UART3_WriteString33("T-est AT\r\n");
+                        //        f=f+1;
+                        //        }
+                        //    TelitThread(&ptTelit);
+                        //        Esp32Thread(&ptEsp32);
+                        //SD_ServiceTask();
+                        //SD_TestTask();
+                        //SD_Service_Task();
         
-        PT_SCHEDULE(Esp32Thread(&ptEsp32));
-        //PT_SCHEDULE(SD_TestThread(&ptSdCard));
+//        PT_SCHEDULE(Esp32Thread(&ptEsp32));
+                        //PT_SCHEDULE(SD_TestThread(&ptSdCard));
 
-        //PT_SCHEDULE(SD_TestThread(&ptSdTest));
-        
-        //PT_SCHEDULE(SdCardThread(&ptSdCard));
-        //SdCardThread(&ptSdCard);
+                        //PT_SCHEDULE(SD_TestThread(&ptSdTest));
 
-        //        Esp32TxTestThread(&ptEspTxTest);
-        //        EthThread(&ptEth);
-        //        CliThread(&ptCLI);
+                        //PT_SCHEDULE(SdCardThread(&ptSdCard));
+                        //SdCardThread(&ptSdCard);
+
+                        //        Esp32TxTestThread(&ptEspTxTest);
+                        //        EthThread(&ptEth);
+                        //        CliThread(&ptCLI);
 
     }
 

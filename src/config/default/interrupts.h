@@ -56,7 +56,7 @@
 // Section: Handler Routines
 // *****************************************************************************
 // *****************************************************************************
-
+void CORE_TIMER_InterruptHandler( void );
 void TIMER_1_InterruptHandler( void );
 void SPI1_TX_InterruptHandler( void );
 void SPI1_RX_InterruptHandler( void );

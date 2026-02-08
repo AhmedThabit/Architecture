@@ -1,0 +1,183 @@
+================================================================================
+BUILD FIXES APPLIED - Timer2 Migration
+================================================================================
+Date: February 2026
+Project: ArchitectureFolder
+
+These fixes were applied after the initial build errors.
+
+================================================================================
+ISSUE 1: SYS_TIME_PLIB_INTERFACE Structure Mismatch
+================================================================================
+
+ERROR:
+------
+../src/config/default/initialization.c:269:6: error: 'SYS_TIME_PLIB_INTERFACE' 
+has no member named 'timerCompareSet'
+../src/config/default/initialization.c:270:6: error: 'SYS_TIME_PLIB_INTERFACE'  
+has no member named 'timerCounterGet'
+
+CAUSE:
+------
+Different Harmony 3 versions have different SYS_TIME_PLIB_INTERFACE structures.
+This project's structure only has 5 members:
+  - timerCallbackSet
+  - timerStart
+  - timerStop
+  - timerFrequencyGet
+  - timerPeriodSet
+
+The newer version (used in first project) has 7 members (adds timerCompareSet 
+and timerCounterGet).
+
+FIX APPLIED:
+------------
+File: src/config/default/initialization.c (line ~260)
+
+REMOVED these two lines:
+    .timerCompareSet = (SYS_TIME_PLIB_COMPARE_SET)TMR2_CompareSet,
+    .timerCounterGet = (SYS_TIME_PLIB_COUNTER_GET)TMR2_CounterGet,
+
+Result: Structure now matches actual definition with only 5 members.
+
+================================================================================
+ISSUE 2: Missing Interrupt Register Definitions
+================================================================================
+
+ERROR:
+------
+plib_tmr2.c:93:15: error: '_IPC2_T2IP_MASK' undeclared
+plib_tmr2.c:93:33: error: '_IPC2_T2IS_MASK' undeclared
+plib_tmr2.c:94:22: error: '_IPC2_T2IP_POSITION' undeclared
+plib_tmr2.c:94:52: error: '_IPC2_T2IS_POSITION' undeclared
+
+CAUSE:
+------
+Timer2 interrupt priority bits are in IPC4 register, not IPC2 register.
+The device header file doesn't have _IPC2_T2IP_MASK definitions.
+Timer1 code doesn't configure interrupt priority in TMR1_Initialize().
+
+FIX APPLIED:
+------------
+File: src/config/default/peripheral/tmr2/plib_tmr2.c (line ~84)
+
+REMOVED interrupt priority configuration from TMR2_Initialize():
+    IEC0CLR = _IEC0_T2IE_MASK;
+    IPC2CLR = _IPC2_T2IP_MASK | _IPC2_T2IS_MASK;
+    IPC2SET = (1U << _IPC2_T2IP_POSITION) | (0U << _IPC2_T2IS_POSITION);
+
+ADDED comment:
+    /* Note: Interrupt priority is configured by EVIC_Initialize() */
+    /* Interrupt will be enabled when TMR2_Start() is called */
+
+Result: Simplified initialization matching Timer1 pattern.
+
+================================================================================
+ISSUE 3: Timer2 Interrupt Priority Not Configured
+================================================================================
+
+ISSUE:
+------
+With interrupt priority configuration removed from TMR2_Initialize(), 
+it must be configured elsewhere (in EVIC_Initialize).
+
+FIX APPLIED:
+------------
+File: src/config/default/peripheral/evic/plib_evic.c (line ~60)
+
+ADDED Timer2 interrupt priority configuration:
+    IPC4SET = 0x40000U | 0x0U;  /* TIMER_2:  Priority 1 / Subpriority 0 */
+
+This configures:
+  - Priority: 1
+  - Subpriority: 0
+  - Same as Timer1 and other peripherals
+
+Explanation:
+- 0x40000U sets bits 18-16 in IPC4 register
+- These bits control Timer2 interrupt priority
+- Value of 1 = Priority level 1
+
+================================================================================
+TECHNICAL DETAILS
+================================================================================
+
+IPC4 Register Layout (Timer interrupt priorities):
+---------------------------------------------------
+Bits 31-24: Reserved
+Bits 23-21: Reserved  
+Bits 20-18: T2IP[2:0]  - Timer2 Interrupt Priority (0x4 = Priority 1)
+Bits 17-16: T2IS[1:0]  - Timer2 Interrupt Subpriority (0x0 = Sub 0)
+Bits 15-08: Reserved
+Bits 07-05: Reserved
+Bits 04-02: T1IP[2:0]  - Timer1 Interrupt Priority (0x4 = Priority 1)
+Bits 01-00: T1IS[1:0]  - Timer1 Interrupt Subpriority (0x0 = Sub 0)
+
+Setting value 0x40000:
+- Binary: 0000 0000 0000 0100 0000 0000 0000 0000
+- Sets T2IP to 0b100 (Priority 1)
+- Sets T2IS to 0b00 (Subpriority 0)
+
+================================================================================
+FILES MODIFIED IN THIS FIX
+================================================================================
+
+1. src/config/default/initialization.c
+   - Removed timerCompareSet and timerCounterGet from sysTimePlibAPI
+   
+2. src/config/default/peripheral/tmr2/plib_tmr2.c
+   - Removed interrupt priority configuration from TMR2_Initialize()
+   
+3. src/config/default/peripheral/evic/plib_evic.c
+   - Added Timer2 interrupt priority configuration
+
+================================================================================
+BUILD STATUS AFTER FIXES
+================================================================================
+
+Expected result: Clean build with no errors
+
+The project should now compile successfully with these fixes applied.
+
+================================================================================
+LESSONS LEARNED
+================================================================================
+
+1. HARMONY 3 VERSION DIFFERENCES
+   - Different versions may have different structure definitions
+   - Always check actual structure definition in sys_time_definitions.h
+   - Don't assume all projects use same Harmony version
+
+2. INTERRUPT CONFIGURATION PATTERNS
+   - Check existing timer PLIBs for patterns (Timer1 in this case)
+   - Some projects configure interrupts in EVIC_Initialize()
+   - Some configure in peripheral Initialize() function
+   - Follow the established pattern in the project
+
+3. REGISTER DEFINITIONS
+   - Not all register bit definitions exist in all devices
+   - Timer2 uses IPC4 register, not IPC2
+   - Always verify register names in device header files
+   - When in doubt, follow existing working code pattern
+
+================================================================================
+VERIFICATION STEPS
+================================================================================
+
+After applying these fixes:
+
+1. Clean the project
+2. Build the project
+3. Verify no compilation errors
+4. Check build output for Timer2 files compiled successfully
+5. Program and test functionality
+
+Expected build output should show:
+  - plib_tmr2.c compiled successfully
+  - initialization.c compiled successfully
+  - plib_evic.c compiled successfully
+  - No errors, ready to program
+
+================================================================================
+END OF ERRATA
+================================================================================

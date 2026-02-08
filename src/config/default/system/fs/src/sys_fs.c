@@ -405,37 +405,6 @@ void SYS_FS_Tasks ( void )
     SYS_FS_MEDIA_MANAGER_Tasks();
 }
 
-//******************************************************************************
-/*Function:
-    void SYS_FS_EventHandlerSet
-    (
-        const void* eventHandler,
-        const uintptr_t context
-    )
-
-  Summary:
-    Allows a client to identify an event handling function for the file system
-    to call back when mount/unmount operation has completed.
-
-  Description:
-    This function allows a client to identify an event handling function for
-    the File System to call back when mount/unmount operation has completed.
-    The file system will pass mount name back to the client by calling
-    "eventHandler".
-
-  Returns:
-    None
-
-    See sys_fs.h for usage information.
-***************************************************************************/
-void SYS_FS_EventHandlerSet
-(
-    const void * eventHandler,
-    const uintptr_t context
-)
-{
-    SYS_FS_MEDIA_MANAGER_EventHandlerSet(eventHandler, context);
-}
 
 //******************************************************************************
 /*Function:
@@ -546,7 +515,7 @@ SYS_FS_RESULT SYS_FS_Mount
         return SYS_FS_RES_FAILURE;
     }
 
-    /* Clear the error value when mount is successful */
+    /* Clear the error value when mount is sucessful */
     errorValue = SYS_FS_ERROR_OK;
 
     /* Verify if the requested file system is supported by SYS_FS */
@@ -640,6 +609,7 @@ SYS_FS_RESULT SYS_FS_Mount
     if (disk->fsFunctions->chdrive != NULL)
     {
         (void) disk->fsFunctions->chdrive(disk->diskNumber);
+        fileStatus = (int)SYS_FS_ERROR_OK;
     }
     else
     {
@@ -1173,10 +1143,9 @@ int32_t SYS_FS_FileSeek
 {
     int fileStatus = -1;
     SYS_FS_OBJ *obj = (SYS_FS_OBJ *)handle;
-    uint32_t tell = 0;
+    long tell = 0;
     uint32_t size = 0;
-    uint32_t temp = 0;
-    uint32_t offset1 = (uint32_t)offset;
+    int temp = 0;
     OSAL_RESULT osalResult = OSAL_RESULT_FAIL;
 
     /* Check if the handle is valid. */
@@ -1216,17 +1185,17 @@ int32_t SYS_FS_FileSeek
     if (osalResult == OSAL_RESULT_SUCCESS)
     {
         /* SYS_FS_SEEK_SET case. */
-        temp = offset1;
+        temp = offset;
 
         if (whence == SYS_FS_SEEK_CUR)
         {
-            tell = obj->mountPoint->fsFunctions->tell(obj->nativeFSFileObj);
-            temp = (offset1 + tell);
+            tell = (long)obj->mountPoint->fsFunctions->tell(obj->nativeFSFileObj);
+            temp = (offset + tell);
         }
         else if (whence == SYS_FS_SEEK_END)
         {
             size = obj->mountPoint->fsFunctions->size(obj->nativeFSFileObj);
-            temp = (offset1 + size);
+            temp = (offset + (int)size);
         }
         else
         {
@@ -1990,7 +1959,7 @@ SYS_FS_RESULT SYS_FS_DirSearch
         }
 
         /* Firstly, match the file attribute with the requested attribute */
-        if (((stat->fattrib & (uint8_t)attr) != 0U) ||
+		if (((stat->fattrib & (uint8_t)attr) != 0U) ||
             (attr == SYS_FS_ATTR_FILE))
         {
             if((stat->lfname != NULL) && (stat->lfname[0] != '\0'))
@@ -3550,7 +3519,7 @@ SYS_FS_RESULT SYS_FS_DrivePartition
     osalResult = OSAL_MUTEX_Lock(&(disk->mutexDiskVolume), OSAL_WAIT_FOREVER);
     if (osalResult == OSAL_RESULT_SUCCESS)
     {
-        fileStatus = disk->fsFunctions->partitionDisk((uint8_t)VolToPart[disk->diskNumber].pd, partition, work);
+        fileStatus = disk->fsFunctions->partitionDisk((uint8_t)disk->diskNumber, partition, work);
         (void) OSAL_MUTEX_Unlock(&(disk->mutexDiskVolume));
 
         errorValue = (SYS_FS_ERROR)fileStatus;

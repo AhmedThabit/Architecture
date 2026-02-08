@@ -4,9 +4,9 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#ifdef USE_TIMER1_HANDLER
-static void Timer1Handler(uint32_t status, uintptr_t context);
-#endif
+//#ifdef USE_TIMER1_HANDLER
+//static void Timer1Handler(uint32_t status, uintptr_t context);
+//#endif
 
 void BSP_Timer1_Init(void);
 
@@ -53,5 +53,15 @@ void Bootloader_Jump(void);
  * @see   BSP_Timer1_Init()
  */
 extern volatile uint32_t msTicks;
+
+
+#define pic32mm_usb_curiosity
+#define BSP_NAME             "pic32mm_usb_curiosity"
+
+/*** LED Macros for LED1 ***/
+#define LED1_Toggle() (LATAINV = (1UL<<15))
+#define LED1_Get() ((PORTA >> 15) & 0x1)
+#define LED1_On() (LATASET = (1UL<<15))
+#define LED1_Off() (LATACLR = (1UL<<15))
 
 #endif // BSP_H

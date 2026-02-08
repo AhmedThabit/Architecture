@@ -47,6 +47,7 @@
 #include "definitions.h"
 #include "device.h"
 #include "../../app.h"
+#include "peripheral/coretimer/plib_coretimer.h"
 
 
 // ****************************************************************************
@@ -196,14 +197,19 @@ SYSTEM_OBJECTS sysObj;
 // *****************************************************************************
 // <editor-fold defaultstate="collapsed" desc="File System Initialization Data">
 
- const SYS_FS_MEDIA_MOUNT_DATA sysfsMountTable[SYS_FS_VOLUME_NUMBER] =
+// const SYS_FS_MEDIA_MOUNT_DATA sysfsMountTable[SYS_FS_VOLUME_NUMBER] =
+//{
+//    {
+//        .mountName = SYS_FS_MEDIA_IDX0_MOUNT_NAME_VOLUME_IDX0,
+//        .devName   = SYS_FS_MEDIA_IDX0_DEVICE_NAME_VOLUME_IDX0,
+//        .mediaType = SYS_FS_MEDIA_TYPE_IDX0,
+//        .fsType   = SYS_FS_TYPE_IDX0
+//    },
+//};
+
+const SYS_FS_MEDIA_MOUNT_DATA sysfsMountTable[SYS_FS_VOLUME_NUMBER] =
 {
-    {
-        .mountName = SYS_FS_MEDIA_IDX0_MOUNT_NAME_VOLUME_IDX0,
-        .devName   = SYS_FS_MEDIA_IDX0_DEVICE_NAME_VOLUME_IDX0,
-        .mediaType = SYS_FS_MEDIA_TYPE_IDX0,
-        .fsType   = SYS_FS_TYPE_IDX0
-    },
+    {NULL}
 };
 
 
@@ -266,18 +272,29 @@ static const SYS_FS_REGISTRATION_TABLE sysFSInit [ SYS_FS_MAX_FILE_SYSTEM_TYPE ]
 // *****************************************************************************
 // <editor-fold defaultstate="collapsed" desc="SYS_TIME Initialization Data">
 
+//static const SYS_TIME_PLIB_INTERFACE sysTimePlibAPI = {
+//    .timerCallbackSet = (SYS_TIME_PLIB_CALLBACK_REGISTER)TMR1_CallbackRegister,
+//    .timerStart = (SYS_TIME_PLIB_START)TMR1_Start,
+//    .timerStop = (SYS_TIME_PLIB_STOP)TMR1_Stop ,
+//    .timerFrequencyGet = (SYS_TIME_PLIB_FREQUENCY_GET)TMR1_FrequencyGet,
+//    .timerPeriodSet = (SYS_TIME_PLIB_PERIOD_SET)TMR1_PeriodSet,
+//};
+
+/* Core Timer Configuration */
 static const SYS_TIME_PLIB_INTERFACE sysTimePlibAPI = {
-    .timerCallbackSet = (SYS_TIME_PLIB_CALLBACK_REGISTER)TMR1_CallbackRegister,
-    .timerStart = (SYS_TIME_PLIB_START)TMR1_Start,
-    .timerStop = (SYS_TIME_PLIB_STOP)TMR1_Stop ,
-    .timerFrequencyGet = (SYS_TIME_PLIB_FREQUENCY_GET)TMR1_FrequencyGet,
-    .timerPeriodSet = (SYS_TIME_PLIB_PERIOD_SET)TMR1_PeriodSet,
+    .timerCallbackSet = (SYS_TIME_PLIB_CALLBACK_REGISTER)CORETIMER_CallbackSet,
+    .timerStart = (SYS_TIME_PLIB_START)CORETIMER_Start,
+    .timerStop = (SYS_TIME_PLIB_STOP)CORETIMER_Stop ,
+    .timerFrequencyGet = (SYS_TIME_PLIB_FREQUENCY_GET)CORETIMER_FrequencyGet,
+    .timerPeriodSet = (SYS_TIME_PLIB_PERIOD_SET)NULL,
+    .timerCompareSet = (SYS_TIME_PLIB_COMPARE_SET)CORETIMER_CompareSet,
+    .timerCounterGet = (SYS_TIME_PLIB_COUNTER_GET)CORETIMER_CounterGet,
 };
 
 static const SYS_TIME_INIT sysTimeInitData =
 {
     .timePlib = &sysTimePlibAPI,
-    .hwTimerIntNum = 17,
+    .hwTimerIntNum = 0,
 };
 
 // </editor-fold>
@@ -317,6 +334,8 @@ void SYS_Initialize ( void* data )
 
 	GPIO_Initialize();
 
+    CORETIMER_Initialize();
+    
     TMR1_Initialize();
     
 	SPI3_Initialize();
