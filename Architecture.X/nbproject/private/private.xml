@@ -2,6 +2,11 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/drivers/esp32/esp32_comm.c</file>
+            <file>file:/C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/main.c</file>
+            <file>file:/C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/app/app.c</file>
+            <file>file:/C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/Architecture.X/protothreads.c</file>
+        </group>
     </open-files>
 </project-private>

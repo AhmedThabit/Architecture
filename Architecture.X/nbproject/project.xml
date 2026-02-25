@@ -10,6 +10,13 @@
             <make-dep-projects/>
             <sourceRootList>
                 <sourceRootElem>../src</sourceRootElem>
+                <sourceRootElem>C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/app</sourceRootElem>
+                <sourceRootElem>C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/common</sourceRootElem>
+                <sourceRootElem>C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/config</sourceRootElem>
+                <sourceRootElem>C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/drivers</sourceRootElem>
+                <sourceRootElem>C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/hal</sourceRootElem>
+                <sourceRootElem>C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/services</sourceRootElem>
+                <sourceRootElem>C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/test</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

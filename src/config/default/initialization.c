@@ -46,7 +46,7 @@
 #include "configuration.h"
 #include "definitions.h"
 #include "device.h"
-#include "../../app.h"
+#include "../../app/app.h"
 #include "peripheral/coretimer/plib_coretimer.h"
 
 

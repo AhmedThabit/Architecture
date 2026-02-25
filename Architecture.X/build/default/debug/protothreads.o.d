@@ -1,6 +1,6 @@
-build/default/debug/protothreads.o: protothreads.c ../../pt.h ../../lc.h \
- ../../lc-switch.h ../Architecture.X/protothreads.h \
- ../Architecture.X/../../pt.h ../src/config/default/definitions.h \
+build/default/debug/protothreads.o: protothreads.c ../src/common/pt.h \
+ ../src/common/lc.h ../src/common/lc-switch.h ../src/common/pt.h \
+ protothreads.h ../src/config/default/definitions.h \
  ../src/config/default/peripheral/spi/spi_master/plib_spi3_master.h \
  ../src/config/default/device.h \
  ../src/config/default/toolchain_specifics.h \
@@ -54,19 +54,23 @@ build/default/debug/protothreads.o: protothreads.c ../../pt.h ../../lc.h \
  ../src/config/default/system/dma/sys_dma.h \
  ../src/config/default/system/dma/sys_dma_mapping.h \
  ../src/config/default/osal/osal.h \
- ../src/config/default/system/debug/sys_debug.h ../src/bsp.h \
- ../src/esp32_proto.h ../src/spi_bus_guard.h ../src/sd_fatfs_guard.h \
- ../src/spi_bus_guard.h
+ ../src/config/default/system/debug/sys_debug.h ../src/hal/bsp/bsp.h \
+ ../src/config/app_config.h ../src/hal/spi_guard/spi_bus_guard.h \
+ ../src/drivers/modem/modem_uart.h ../src/drivers/modem/modem_at.h \
+ ../src/services/gsm/gsm_service.h \
+ ../src/services/esp32_proto/esp32_proto.h \
+ ../src/services/storage/store.h ../src/common/schema.h \
+ ../src/common/sd_fatfs_guard.h
 
-../../pt.h:
+../src/common/pt.h:
 
-../../lc.h:
+../src/common/lc.h:
 
-../../lc-switch.h:
+../src/common/lc-switch.h:
 
-../Architecture.X/protothreads.h:
+../src/common/pt.h:
 
-../Architecture.X/../../pt.h:
+protothreads.h:
 
 ../src/config/default/definitions.h:
 
@@ -180,12 +184,22 @@ build/default/debug/protothreads.o: protothreads.c ../../pt.h ../../lc.h \
 
 ../src/config/default/system/debug/sys_debug.h:
 
-../src/bsp.h:
+../src/hal/bsp/bsp.h:
 
-../src/esp32_proto.h:
+../src/config/app_config.h:
 
-../src/spi_bus_guard.h:
+../src/hal/spi_guard/spi_bus_guard.h:
 
-../src/sd_fatfs_guard.h:
+../src/drivers/modem/modem_uart.h:
 
-../src/spi_bus_guard.h:
+../src/drivers/modem/modem_at.h:
+
+../src/services/gsm/gsm_service.h:
+
+../src/services/esp32_proto/esp32_proto.h:
+
+../src/services/storage/store.h:
+
+../src/common/schema.h:
+
+../src/common/sd_fatfs_guard.h:

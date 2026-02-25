@@ -1,0 +1,21 @@
+@echo off
+REM Create architecture directories
+mkdir "C:\Users\ahmed.thabit\Desktop\Minesh\ArchitectureFolder\src\hal\spi_guard"
+mkdir "C:\Users\ahmed.thabit\Desktop\Minesh\ArchitectureFolder\src\hal\io_monitor"
+mkdir "C:\Users\ahmed.thabit\Desktop\Minesh\ArchitectureFolder\src\hal\sd_spi"
+mkdir "C:\Users\ahmed.thabit\Desktop\Minesh\ArchitectureFolder\src\drivers\flash"
+mkdir "C:\Users\ahmed.thabit\Desktop\Minesh\ArchitectureFolder\src\drivers\sd"
+mkdir "C:\Users\ahmed.thabit\Desktop\Minesh\ArchitectureFolder\src\drivers\telit"
+mkdir "C:\Users\ahmed.thabit\Desktop\Minesh\ArchitectureFolder\src\drivers\esp32"
+mkdir "C:\Users\ahmed.thabit\Desktop\Minesh\ArchitectureFolder\src\drivers\ethernet"
+mkdir "C:\Users\ahmed.thabit\Desktop\Minesh\ArchitectureFolder\src\services\gsm"
+mkdir "C:\Users\ahmed.thabit\Desktop\Minesh\ArchitectureFolder\src\services\sms"
+mkdir "C:\Users\ahmed.thabit\Desktop\Minesh\ArchitectureFolder\src\services\alarm"
+mkdir "C:\Users\ahmed.thabit\Desktop\Minesh\ArchitectureFolder\src\services\storage"
+mkdir "C:\Users\ahmed.thabit\Desktop\Minesh\ArchitectureFolder\src\services\config"
+mkdir "C:\Users\ahmed.thabit\Desktop\Minesh\ArchitectureFolder\src\services\phonebook"
+mkdir "C:\Users\ahmed.thabit\Desktop\Minesh\ArchitectureFolder\src\services\sd_service"
+mkdir "C:\Users\ahmed.thabit\Desktop\Minesh\ArchitectureFolder\src\services\esp32_proto"
+mkdir "C:\Users\ahmed.thabit\Desktop\Minesh\ArchitectureFolder\src\app\threads"
+mkdir "C:\Users\ahmed.thabit\Desktop\Minesh\ArchitectureFolder\src\test"
+echo Directories created!
