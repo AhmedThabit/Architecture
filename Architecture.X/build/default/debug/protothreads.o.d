@@ -56,8 +56,8 @@ build/default/debug/protothreads.o: protothreads.c ../src/common/pt.h \
  ../src/config/default/osal/osal.h \
  ../src/config/default/system/debug/sys_debug.h ../src/hal/bsp/bsp.h \
  ../src/config/app_config.h ../src/hal/spi_guard/spi_bus_guard.h \
- ../src/drivers/modem/modem_uart.h ../src/drivers/modem/modem_at.h \
- ../src/services/gsm/gsm_service.h \
+ ../src/services/modem_api/modem_api.h \
+ ../src/services/modem_api/modem_api_types.h \
  ../src/services/esp32_proto/esp32_proto.h \
  ../src/services/storage/store.h ../src/common/schema.h \
  ../src/common/sd_fatfs_guard.h ../src/config/default/user.h
@@ -190,11 +190,9 @@ protothreads.h:
 
 ../src/hal/spi_guard/spi_bus_guard.h:
 
-../src/drivers/modem/modem_uart.h:
+../src/services/modem_api/modem_api.h:
 
-../src/drivers/modem/modem_at.h:
-
-../src/services/gsm/gsm_service.h:
+../src/services/modem_api/modem_api_types.h:
 
 ../src/services/esp32_proto/esp32_proto.h:
 

@@ -38,7 +38,7 @@ void APP_Tasks(void)      { /* nothing — SdCardThread drives SD card   */ }
 #include "drivers/modem/modem_at.h"
 
 /* L3 — Services */
-#include "services/gsm/gsm_service.h"
+#include "services/modem_api/modem_api.h"
 #include "services/storage/storage.h"
 #include "services/esp32_proto/esp32_proto.h"
 #include "common/schema.h"
@@ -82,7 +82,7 @@ void App_Init(void)
 
     /* ── L2: Drivers (external chips) ───────────────────────────────── */
     Flash_Init();
-    GSM_Service_Init();         /* modem UART + AT engine            */
+    Modem_Init();               /* modem UART + AT engine            */
     ESP32_UartInit();           /* ESP32 binary link                 */
     ESP32_RegisterFrameHandler(Esp_HandleFrame);
 

@@ -3,13 +3,12 @@
  * @brief   Cooperative Protothread tasks for the Emergency Audio Dialer.
  *
  * @details Each PT_THREAD is a lightweight cooperative task scheduled from
- *          App_Run().  They use the new layered modem API:
- *            GSM_Cmd_Xxx()  — issue a command
- *            GSM_Poll_Xxx() — poll for result (used in PT_WAIT_UNTIL)
+ *          App_Run().  They use the abstract modem API:
+ *            Modem_Xxx_Cmd()  — start an operation
+ *            Modem_Xxx_Poll() — poll for result (used in PT_WAIT_UNTIL)
  *
- *          OLD direct UART3 calls are replaced by service-layer calls.
- *          The accumulator helpers (rx_wait_begin, rx_wait_token, etc.)
- *          are no longer needed — Modem_AT handles all that internally.
+ *          All modem access goes through modem_api.h — no direct AT calls.
+ *          To swap modem hardware, only the backend .c file changes.
  */
 
 #include <stdint.h>
@@ -28,12 +27,10 @@
 #include "hal/bsp/bsp.h"
 #include "hal/spi_guard/spi_bus_guard.h"
 
-/* Drivers */
-#include "drivers/modem/modem_uart.h"
-#include "drivers/modem/modem_at.h"
+/* Modem abstraction layer (no direct AT calls!) */
+#include "services/modem_api/modem_api.h"
 
 /* Services */
-#include "services/gsm/gsm_service.h"
 #include "services/esp32_proto/esp32_proto.h"
 #include "services/storage/store.h"
 
@@ -114,33 +111,35 @@ void UART3_WriteChar33(char c)
 /* ══════════════════════════════════════════════════════════════════════════
  *  TelitPreflightThread — Boot-up modem check sequence
  *
- *  Uses the new GSM service API:
- *    GSM_Cmd_Xxx()  → sends command + begins exchange
- *    GSM_Poll_Xxx() → used in PT_WAIT_UNTIL for non-blocking response
+ *  Uses the abstract modem API (modem_api.h):
+ *    Modem_Xxx_Cmd()  → starts the operation
+ *    Modem_Xxx_Poll() → returns true when complete
+ *
+ *  When you swap to a 5G modem, this thread stays UNCHANGED.
  * ══════════════════════════════════════════════════════════════════════════ */
 
 PT_THREAD(TelitPreflightThread(struct pt *pt))
 {
-    static uint32_t     t_delay;
-    static GSM_SimStatus sim_status;
-    static bool         registered;
-    static int          which;
+    static uint32_t       t_delay;
+    static Modem_Result   res;
+    static Modem_SimStatus sim_status;
+    static Modem_NetStatus net_status;
 
     PT_BEGIN(pt);
 
     /* 1. Echo OFF */
-    GSM_Cmd_EchoOff();
-    PT_WAIT_UNTIL(pt, GSM_Poll_OkError(&which));
+    Modem_EchoOff_Cmd();
+    PT_WAIT_UNTIL(pt, Modem_EchoOff_Poll(&res));
 
     /* 2. Verbose error codes */
-    GSM_Cmd_VerboseErrors();
-    PT_WAIT_UNTIL(pt, GSM_Poll_OkError(&which));
+    Modem_VerboseErrors_Cmd();
+    PT_WAIT_UNTIL(pt, Modem_VerboseErrors_Poll(&res));
 
     /* 3. Wait for SIM to be READY */
     for (;;) {
-        GSM_Cmd_QuerySIM();
-        PT_WAIT_UNTIL(pt, GSM_Poll_SIMStatus(&sim_status));
-        if (sim_status == GSM_SIM_READY) break;
+        Modem_QuerySIM_Cmd();
+        PT_WAIT_UNTIL(pt, Modem_QuerySIM_Poll(&res, &sim_status));
+        if (sim_status == MODEM_SIM_READY) break;
 
         t_delay = g_ms_ticks;
         PT_WAIT_UNTIL(pt, (g_ms_ticks - t_delay) >= 500);
@@ -148,22 +147,17 @@ PT_THREAD(TelitPreflightThread(struct pt *pt))
 
     /* 4. Wait for network registration */
     for (;;) {
-        GSM_Cmd_QueryRegistration();
-        PT_WAIT_UNTIL(pt, GSM_Poll_Registration(&registered));
-        if (registered) break;
+        Modem_QueryRegistration_Cmd();
+        PT_WAIT_UNTIL(pt, Modem_QueryRegistration_Poll(&res, &net_status));
+        if (net_status == MODEM_NET_HOME || net_status == MODEM_NET_ROAMING) break;
 
         t_delay = g_ms_ticks;
         PT_WAIT_UNTIL(pt, (g_ms_ticks - t_delay) >= 1000);
     }
 
-    /* 5. Configure SMS text mode */
-    GSM_Cmd_ConfigSMS();
-    PT_WAIT_UNTIL(pt, GSM_Poll_ConfigSMS(&which));
-
-    /* 6. GSM charset (optional) */
-    Modem_AT_BeginExchange(3000);
-    Modem_AT_SendCmd("AT+CSCS=\"GSM\"");
-    PT_WAIT_UNTIL(pt, GSM_Poll_OkError(&which));
+    /* 5. Configure SMS subsystem (text mode, charset, notify, storage) */
+    Modem_ConfigSMS_Cmd();
+    PT_WAIT_UNTIL(pt, Modem_ConfigSMS_Poll(&res));
 
     PT_END(pt);
 }
@@ -172,13 +166,17 @@ PT_THREAD(TelitPreflightThread(struct pt *pt))
  *  TelitThread — Periodic SMS sender
  *
  *  After preflight completes, this thread periodically sends an SMS
- *  to the default phonebook number using the GSM service API.
+ *  to the default phonebook number using the abstract modem API.
+ *
+ *  NOTE: Modem_SendSMS_Cmd() handles the ENTIRE multi-step dance
+ *        (AT+CMGS → ">" → body → Ctrl-Z → OK) in ONE Cmd/Poll pair.
+ *        No more manual prompt handling or Ctrl-Z sending!
  * ══════════════════════════════════════════════════════════════════════════ */
 
 PT_THREAD(TelitThread(struct pt *pt))
 {
-    static uint32_t t0, last_send;
-    static int      which;
+    static uint32_t     t0, last_send;
+    static Modem_Result res;
 
     PT_BEGIN(pt);
 
@@ -186,19 +184,19 @@ PT_THREAD(TelitThread(struct pt *pt))
     PT_WAIT_UNTIL(pt, g_ms_ticks >= 10001);
 
     /* Initial modem ping */
-    GSM_Cmd_Ping(1500);
-    PT_WAIT_UNTIL(pt, GSM_Poll_OkError(&which));
+    Modem_Ping_Cmd();
+    PT_WAIT_UNTIL(pt, Modem_Ping_Poll(&res));
 
     /* Configure SMS text mode */
-    GSM_Cmd_ConfigSMS();
-    PT_WAIT_UNTIL(pt, GSM_Poll_ConfigSMS(&which));
+    Modem_ConfigSMS_Cmd();
+    PT_WAIT_UNTIL(pt, Modem_ConfigSMS_Poll(&res));
 
     last_send = g_ms_ticks;
 
     while (1) {
         /* Periodic keep-alive */
-        GSM_Cmd_Ping(1000);
-        PT_WAIT_UNTIL(pt, GSM_Poll_OkError(&which));
+        Modem_Ping_Cmd();
+        PT_WAIT_UNTIL(pt, Modem_Ping_Poll(&res));
 
         /* Wait for SMS period */
         PT_WAIT_UNTIL(pt, (g_ms_ticks - last_send) >= SMS_PERIOD_MS);
@@ -217,23 +215,13 @@ PT_THREAD(TelitThread(struct pt *pt))
             continue;
         }
 
-        /* 1. AT+CMGS="number" */
-        GSM_Cmd_BeginSMS(dest);
-        PT_WAIT_UNTIL(pt, GSM_Poll_SMSPrompt(&which));
-        if (which == 2 || which == -1) {    /* ERROR or timeout */
-            last_send = g_ms_ticks;
-            continue;
+        /* Send SMS — ONE call handles the entire AT+CMGS dance */
+        Modem_SendSMS_Cmd(dest, "Hello from PIC32 via UART3");
+        PT_WAIT_UNTIL(pt, Modem_SendSMS_Poll(&res));
+
+        if (res == MODEM_OK) {
+            sms_count++;
         }
-
-        /* 2. Send body text */
-        Modem_Uart_SendString("Hello from PIC32 via UART3\r\n");
-        PT_WAIT_UNTIL(pt, Modem_Uart_TxComplete());
-
-        /* 3. Ctrl-Z + wait for delivery confirmation */
-        GSM_Cmd_SendSMSBody("");    /* body already sent, just Ctrl-Z */
-        PT_WAIT_UNTIL(pt, GSM_Poll_SMSResult(&which));
-
-        sms_count++;
         last_send = g_ms_ticks;
 
         /* Small delay before next iteration */
