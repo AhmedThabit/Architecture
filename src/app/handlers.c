@@ -8,7 +8,7 @@
  */
 
 #include "common/proto.h"
-#include "hal/gpio/io_monitor.h"
+#include "hal/io_monitor/io_monitor.h"
 #include "common/schema.h"
 #include "services/gsm/gsm_service.h"
 

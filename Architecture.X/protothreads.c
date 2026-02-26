@@ -340,17 +340,143 @@ PT_THREAD(Esp32TxTestThread(struct pt *pt))
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
- *  SdCardThread — Reserved for future SD card protothread operations
+ *  SdCardThread — SD card mount, directory create, file copy, LED on
  *
- *  NOTE: The SD card mount + file-copy demo is handled by APP_Tasks(),
- *        which runs inside SYS_Tasks() on every main loop pass.
- *        This thread is available for future SD operations that need
- *        cooperative scheduling (e.g. periodic logging, audio playback).
+ *  Flow:
+ *    1. Wait for SYS_FS_Mount() to succeed  (Harmony driver needs time)
+ *    2. Unmount and remount               (proves driver stability)
+ *    3. Set current drive
+ *    4. Open source file for reading
+ *    5. Create "Dir1" directory
+ *    6. Open destination file inside Dir1 for writing
+ *    7. Copy data in 512-byte chunks
+ *    8. Close both files
+ *    9. Turn LED ON = success
+ *
+ *  IMPORTANT: SYS_FS_Tasks() and DRV_SDSPI_Tasks() run inside SYS_Tasks()
+ *  which App_Run() calls every loop pass.  This thread cooperates by
+ *  yielding (PT_YIELD) between attempts, letting those drivers advance.
+ *
+ *  TEST: Put a file named "FILE_TOO_LONG_NAME_EXAMPLE_123.JPEG" on the
+ *        SD card root.  After boot, "Dir1/" will be created and the file
+ *        copied into it.  LED turns ON when done.  LED stays OFF on error.
  * ══════════════════════════════════════════════════════════════════════════ */
+
+#include "user.h"   /* LED_ON / LED_OFF macros */
+
+/* SD card test parameters — same file/dir as the original working demo */
+#define SD_MOUNT_NAME   "/mnt/mydrive"
+#define SD_DEV_NAME     "/dev/mmcblka1"
+#define SD_FILE_NAME    "FILE_TOO_LONG_NAME_EXAMPLE_123.JPEG"
+#define SD_DIR_NAME     "Dir1"
+#define SD_BUF_LEN      512
+
+static uint8_t s_sd_buf[SD_BUF_LEN];
 
 PT_THREAD(SdCardThread(struct pt *pt))
 {
+    static SYS_FS_HANDLE s_fh_src;
+    static SYS_FS_HANDLE s_fh_dst;
+    static int32_t       s_n_read;
+
     PT_BEGIN(pt);
-    /* SD card is driven by APP_Tasks() via Harmony's SYS_Tasks(). */
+
+    LED_OFF();
+
+    BlockingUART3_WriteString33("SD: mounting...\r\n");
+
+    /* ── Step 1: Mount (retry until Harmony driver is ready) ────────── */
+    while (SYS_FS_Mount(SD_DEV_NAME, SD_MOUNT_NAME, FAT, 0, NULL) != 0) {
+        PT_YIELD(pt);
+    }
+    BlockingUART3_WriteString33("SD: mounted\r\n");
+
+    /* ── Step 2: Unmount + remount (proves driver stability) ────────── */
+    while (SYS_FS_Unmount(SD_MOUNT_NAME) != 0) {
+        PT_YIELD(pt);
+    }
+    BlockingUART3_WriteString33("SD: unmounted\r\n");
+
+    while (SYS_FS_Mount(SD_DEV_NAME, SD_MOUNT_NAME, FAT, 0, NULL) != 0) {
+        PT_YIELD(pt);
+    }
+    BlockingUART3_WriteString33("SD: remounted\r\n");
+
+    /* ── Step 3: Set current drive ──────────────────────────────────── */
+    if (SYS_FS_CurrentDriveSet(SD_MOUNT_NAME) == SYS_FS_RES_FAILURE) {
+        BlockingUART3_WriteString33("SD: drive set FAIL\r\n");
+        PT_EXIT(pt);
+    }
+
+    /* ── Step 4: Open source file ───────────────────────────────────── */
+    s_fh_src = SYS_FS_FileOpen(SD_FILE_NAME, SYS_FS_FILE_OPEN_READ);
+    if (s_fh_src == SYS_FS_HANDLE_INVALID) {
+        BlockingUART3_WriteString33("SD: open src FAIL\r\n");
+        PT_EXIT(pt);
+    }
+    BlockingUART3_WriteString33("SD: src open OK\r\n");
+
+    /* ── Step 5: Create directory ───────────────────────────────────── */
+    if (SYS_FS_DirectoryMake(SD_DIR_NAME) == SYS_FS_RES_FAILURE) {
+        /* Not a fatal error — directory may already exist */
+        BlockingUART3_WriteString33("SD: mkdir skip (may exist)\r\n");
+    } else {
+        BlockingUART3_WriteString33("SD: mkdir OK\r\n");
+    }
+
+    /* ── Step 6: Open destination file ──────────────────────────────── */
+    s_fh_dst = SYS_FS_FileOpen(SD_DIR_NAME "/" SD_FILE_NAME,
+                                SYS_FS_FILE_OPEN_WRITE);
+    if (s_fh_dst == SYS_FS_HANDLE_INVALID) {
+        BlockingUART3_WriteString33("SD: open dst FAIL\r\n");
+        SYS_FS_FileClose(s_fh_src);
+        PT_EXIT(pt);
+    }
+    BlockingUART3_WriteString33("SD: dst open OK\r\n");
+
+    /* ── Step 7: Copy in chunks until EOF ───────────────────────────── */
+    while (1) {
+        s_n_read = SYS_FS_FileRead(s_fh_src, (void *)s_sd_buf, SD_BUF_LEN);
+
+        if (s_n_read == -1) {
+            BlockingUART3_WriteString33("SD: read ERR\r\n");
+            SYS_FS_FileClose(s_fh_src);
+            SYS_FS_FileClose(s_fh_dst);
+            PT_EXIT(pt);
+        }
+
+        if (s_n_read > 0) {
+            if (SYS_FS_FileWrite(s_fh_dst, (const void *)s_sd_buf,
+                                 s_n_read) == -1) {
+                BlockingUART3_WriteString33("SD: write ERR\r\n");
+                SYS_FS_FileClose(s_fh_src);
+                SYS_FS_FileClose(s_fh_dst);
+                PT_EXIT(pt);
+            }
+        }
+
+        /* Check for end of file */
+        if (SYS_FS_FileEOF(s_fh_src) == 1) {
+            break;
+        }
+
+        /* Yield after each chunk so other threads keep running */
+        PT_YIELD(pt);
+    }
+
+    /* ── Step 8: Close both files ──────────────────────────────────── */
+    SYS_FS_FileClose(s_fh_src);
+    SYS_FS_FileClose(s_fh_dst);
+
+    BlockingUART3_WriteString33("SD: copy DONE\r\n");
+
+    /* ── Step 9: LED ON = success ──────────────────────────────────── */
+    LED_ON();
+
+    /* Park the thread — SD work is complete */
+    while (1) {
+        PT_YIELD(pt);
+    }
+
     PT_END(pt);
 }
