@@ -144,4 +144,48 @@ typedef void (*Modem_SmsReceivedCallback)(uint8_t index, Modem_SmsStorage storag
 /** Called when call status changes (NO CARRIER, BUSY, etc.). */
 typedef void (*Modem_CallStatusCallback)(Modem_CallStatus new_status);
 
+/* ══════════════════════════════════════════════════════════════════════════
+ *  Audio path and codec configuration types
+ * ══════════════════════════════════════════════════════════════════════════ */
+
+/** Audio path selection — where voice audio is routed. */
+typedef enum {
+    MODEM_AUDIO_PATH_HANDSET = 0,   /**< External codec on Aux-PCM (MAX9867)*/
+    MODEM_AUDIO_PATH_HEADSET,       /**< Headset jack (if available)        */
+    MODEM_AUDIO_PATH_SPEAKER,       /**< Handsfree / loudspeaker            */
+    MODEM_AUDIO_PATH_USB,           /**< USB audio class (#USBCFG=11)       */
+} Modem_AudioPath;
+
+/** Audio profile — selects echo-canceller & gain tuning set. */
+typedef enum {
+    MODEM_AUDIO_PROFILE_HANDSET = 0,  /**< Close-talk profile               */
+    MODEM_AUDIO_PROFILE_HANDSFREE,    /**< Far-field / loudspeaker profile   */
+} Modem_AudioProfile;
+
+/** Codec clock source — determines MAX9867 MCLK origin. */
+typedef enum {
+    MODEM_CODEC_CLK_MODEM = 0,      /**< MCLK from modem PCM_CLK output    */
+    MODEM_CODEC_CLK_CRYSTAL,        /**< External crystal / oscillator      */
+} Modem_CodecClkSource;
+
+/** Audio codec status (returned by Audio_QueryCodec). */
+typedef struct {
+    uint8_t     codec_type;         /**< 0=none, 1=MAX9867, etc.            */
+    uint8_t     sample_rate_khz;    /**< 8 or 16                            */
+    uint8_t     bit_depth;          /**< 16                                 */
+    bool        active;             /**< true if codec is streaming         */
+} Modem_CodecInfo;
+
+/** Full audio configuration for multi-step setup. */
+typedef struct {
+    Modem_AudioPath         path;       /**< Audio routing selection         */
+    Modem_AudioProfile      profile;    /**< Echo-cancel / gain profile      */
+    Modem_CodecClkSource    clk_src;    /**< Clock source for codec          */
+    uint8_t                 spk_vol;    /**< Speaker volume (0–100)          */
+    uint8_t                 mic_gain;   /**< Microphone gain (0–100)         */
+    bool                    ec_enable;  /**< Echo canceller on/off           */
+    bool                    nr_enable;  /**< Noise reduction on/off          */
+    bool                    agc_enable; /**< Auto gain control on/off        */
+} Modem_AudioConfig;
+
 #endif /* MODEM_API_TYPES_H */

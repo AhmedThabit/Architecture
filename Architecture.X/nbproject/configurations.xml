@@ -147,6 +147,7 @@
         <logicalFolder name="modem" displayName="modem" projectFiles="true">
           <itemPath>C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/drivers/modem/modem_at.h</itemPath>
           <itemPath>C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/drivers/modem/modem_uart.h</itemPath>
+          <itemPath>C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/drivers/modem/telit_le910c4.h</itemPath>
         </logicalFolder>
         <logicalFolder name="sd" displayName="sd" projectFiles="true">
           <itemPath>C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/drivers/sd/sd_raw.h</itemPath>
@@ -174,12 +175,19 @@
       <logicalFolder name="services" displayName="services" projectFiles="true">
         <logicalFolder name="alarm" displayName="alarm" projectFiles="true">
         </logicalFolder>
+        <logicalFolder name="audio" displayName="audio" projectFiles="true">
+          <itemPath>C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/services/audio/audio_api.h</itemPath>
+        </logicalFolder>
         <logicalFolder name="esp32_proto" displayName="esp32_proto" projectFiles="true">
           <itemPath>C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/services/esp32_proto/esp32_proto.h</itemPath>
         </logicalFolder>
         <logicalFolder name="gsm" displayName="gsm" projectFiles="true">
           <itemPath>C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/services/gsm/gsm_le910.h</itemPath>
           <itemPath>C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/services/gsm/gsm_service.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="modem_api" displayName="modem_api" projectFiles="true">
+          <itemPath>C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/services/modem_api/modem_api.h</itemPath>
+          <itemPath>C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/services/modem_api/modem_api_types.h</itemPath>
         </logicalFolder>
         <logicalFolder name="sd_service" displayName="sd_service" projectFiles="true">
           <itemPath>C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/services/sd_service/sd_service.h</itemPath>
@@ -327,6 +335,7 @@
         <logicalFolder name="modem" displayName="modem" projectFiles="true">
           <itemPath>C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/drivers/modem/modem_at.c</itemPath>
           <itemPath>C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/drivers/modem/modem_uart.c</itemPath>
+          <itemPath>C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/drivers/modem/telit_le910c4.c</itemPath>
         </logicalFolder>
         <logicalFolder name="sd" displayName="sd" projectFiles="true">
           <itemPath>C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/drivers/sd/sd_raw.c</itemPath>
@@ -354,6 +363,9 @@
       <logicalFolder name="services" displayName="services" projectFiles="true">
         <logicalFolder name="alarm" displayName="alarm" projectFiles="true">
           <itemPath>C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/services/alarm/alarm_mgr.c</itemPath>
+        </logicalFolder>
+        <logicalFolder name="audio" displayName="audio" projectFiles="true">
+          <itemPath>C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/services/audio/telit_audio.c</itemPath>
         </logicalFolder>
         <logicalFolder name="esp32_proto" displayName="esp32_proto" projectFiles="true">
           <itemPath>C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/services/esp32_proto/esp32_proto.c</itemPath>

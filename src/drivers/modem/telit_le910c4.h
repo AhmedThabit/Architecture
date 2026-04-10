@@ -69,10 +69,11 @@
 /* AT+VTS="<string>" — built dynamically */
 /* AT+VTD=<duration> — built dynamically */
 
-/* Audio */
+/* Audio — basic (3GPP standard) */
 #define AT_CMD_VOLUME               "AT+CLVL"         /* +<level> appended */
 #define AT_CMD_MUTE_ON              "AT+CMUT=1"
 #define AT_CMD_MUTE_OFF             "AT+CMUT=0"
+#define AT_CMD_RINGER_VOLUME        "AT+CRSL"         /* +<level> appended */
 
 /* ══════════════════════════════════════════════════════════════════════════
  *  Telit-proprietary AT commands (LE910C4 specific)
@@ -83,6 +84,26 @@
 #define AT_CMD_TELIT_HANGUP         "AT#CHUP"
 /* AT#APLAY="<file>" — built dynamically */
 /* AT#ASEND=<len>    — built dynamically */
+
+/* Audio — Telit-proprietary (voice processing & codec) */
+#define AT_CMD_TELIT_PROFILE_SEL    "AT#PSEL"         /* =<0|1> appended    */
+#define AT_CMD_TELIT_CODECINFO      "AT#CODECINFO"
+#define AT_CMD_TELIT_SPKMUT         "AT#SPKMUT"       /* =<0|1> appended    */
+#define AT_CMD_TELIT_LOOPBACK       "AT#SRP"          /* =<0|2> appended    */
+/* Handsfree voice processing */
+#define AT_CMD_TELIT_HF_ECHO        "AT#SHFEC"        /* =<0|1>             */
+#define AT_CMD_TELIT_HF_NR          "AT#SHFNR"        /* =<0|1>             */
+#define AT_CMD_TELIT_HF_AGC         "AT#SHFAGC"       /* =<0|1>             */
+#define AT_CMD_TELIT_HF_MICG        "AT#HFMICG"       /* =<0-7>             */
+#define AT_CMD_TELIT_HF_SIDETONE    "AT#SHFSD"        /* =<0-15>            */
+/* Handset voice processing */
+#define AT_CMD_TELIT_HS_ECHO        "AT#SHSEC"        /* =<0|1>             */
+#define AT_CMD_TELIT_HS_NR          "AT#SHSNR"        /* =<0|1>             */
+#define AT_CMD_TELIT_HS_AGC         "AT#SHSAGC"       /* =<0|1>             */
+#define AT_CMD_TELIT_HS_MICG        "AT#HSMICG"       /* =<0-7>             */
+#define AT_CMD_TELIT_HS_SIDETONE    "AT#SHSSD"        /* =<0-15>            */
+/* Tone volumes */
+#define AT_CMD_TELIT_TSVOL          "AT#TSVOL"        /* =<class>,<0-5>     */
 
 /* ══════════════════════════════════════════════════════════════════════════
  *  Timeouts (milliseconds)

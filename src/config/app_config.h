@@ -18,6 +18,8 @@
 #ifndef APP_CONFIG_H
 #define APP_CONFIG_H
 
+#include "services/modem_api/modem_api_types.h"   /* For audio enum types    */
+
 /* ═══════════════════════════════════════════════════════════════════════════
  *  MODEM  — Telit LE910C4-EU  (4G Cat-4, Linux firmware, USB Audio)
  * ═══════════════════════════════════════════════════════════════════════════ */
@@ -51,6 +53,56 @@
 #define CFG_MODEM_BOOT_TIMEOUT_MS   60000u  /**< Wait for network after boot  */
 #define CFG_MODEM_SMS_SEND_TIMEOUT  30000u  /**< Wait for +CMGS / OK          */
 #define CFG_MODEM_SMS_READ_TIMEOUT  2000u
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ *  AUDIO CODEC  — MAX9867ETJ+ (controlled by modem via I2C + Aux-PCM)
+ * ═══════════════════════════════════════════════════════════════════════════
+ *
+ *  Hardware wiring:
+ *    LE910C4 Aux-PCM  →  MAX9867 PCM interface (BCLK, LRCLK, SDIN, SDOUT)
+ *    LE910C4 I2C      →  MAX9867 I2C interface (SCL, SDA, addr 0x18)
+ *    MAX9867 MCLK     ←  Either modem PCM_CLK or external crystal
+ *    MAX9867 MIC      ←  Electret/MEMS microphone (differential input)
+ *    MAX9867 HP OUT   →  Speaker / earpiece (differential output)
+ *
+ *  The PIC32MM has NO direct connection to the MAX9867.
+ *  All codec control is through modem AT commands over UART3.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+/** ─── Clock Source Selection ─────────────────────────────────────────────
+ *
+ *  MODEM_CODEC_CLK_MODEM:
+ *    - MCLK driven by modem's PCM_CLK output
+ *    - Simpler hardware — no crystal needed
+ *    - Clock only active when modem audio subsystem is running
+ *
+ *  MODEM_CODEC_CLK_CRYSTAL:
+ *    - MCLK driven by an external crystal oscillator
+ *    - MAX9867 always has a clock, even when modem audio is idle
+ *    - Change CFG_AUDIO_CRYSTAL_FREQ_HZ to match your oscillator
+ */
+#define CFG_AUDIO_CLK_SOURCE        MODEM_CODEC_CLK_MODEM
+/* #define CFG_AUDIO_CLK_SOURCE     MODEM_CODEC_CLK_CRYSTAL */
+
+/** External crystal frequency (only used when CLK_SOURCE = CRYSTAL).
+ *    12288000  → 12.288 MHz (exact integer for 8/16/24/32/48 kHz)
+ *    13000000  → 13 MHz     (Telit default, exact for 8/16 kHz)
+ *    19200000  → 19.2 MHz   (common in GSM platforms)                      */
+#define CFG_AUDIO_CRYSTAL_FREQ_HZ   13000000u
+
+/** ─── Audio Profile Defaults ──────────────────────────────────────────── */
+#define CFG_AUDIO_DEFAULT_PATH      MODEM_AUDIO_PATH_HANDSET
+#define CFG_AUDIO_DEFAULT_PROFILE   MODEM_AUDIO_PROFILE_HANDSFREE
+#define CFG_AUDIO_DEFAULT_SPK_VOL   70u     /**< 0–100, mapped to 0–5       */
+#define CFG_AUDIO_DEFAULT_MIC_GAIN  60u     /**< 0–100, mapped to 0–7       */
+
+/** ─── Voice Processing Defaults ───────────────────────────────────────── */
+#define CFG_AUDIO_ECHO_CANCEL       true    /**< Echo canceller on/off      */
+#define CFG_AUDIO_NOISE_REDUCE      true    /**< Noise reduction on/off     */
+#define CFG_AUDIO_AGC_ENABLE        true    /**< Auto gain control on/off   */
+
+/** ─── Audio Loopback Test ─────────────────────────────────────────────── */
+#define CFG_AUDIO_LOOPBACK_TEST     0       /**< 1 = enable loopback at boot*/
 
 /* ═══════════════════════════════════════════════════════════════════════════
  *  ESP32  — Co-processor link (binary TLV protocol over UART)
@@ -110,7 +162,7 @@
 /* ═══════════════════════════════════════════════════════════════════════════
  *  FIRMWARE IDENTIFICATION
  * ═══════════════════════════════════════════════════════════════════════════ */
-#define CFG_FW_VERSION_STRING       "PIC32MM-EDAC 2.0"
+#define CFG_FW_VERSION_STRING       "PIC32MM-EDAC 2.1"
 #define CFG_BOARD_NAME              "pic32mm_usb_curiosity"
 
 #endif /* APP_CONFIG_H */

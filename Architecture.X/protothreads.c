@@ -38,6 +38,9 @@
 #include "ff.h"
 #include "common/sd_fatfs_guard.h"
 
+/* Audio */
+#include "services/audio/audio_api.h"
+
 /* Config */
 #include "config/app_config.h"
 
@@ -73,7 +76,9 @@ void handle_sms_enable_cmd(uint8_t flag)
 /* ── Protothread control blocks ─────────────────────────────────────────── */
 
 struct pt ptSensor, ptTelit, ptEsp32, ptEth, ptCLI;
-struct pt ptEspTxTest, ptPreflight, ptSdCard;
+struct pt ptEspTxTest, ptPreflight, ptSdCard, ptAudio;
+
+volatile bool g_audio_init_done = false;
 
 void Protothreads_Init(void)
 {
@@ -85,6 +90,7 @@ void Protothreads_Init(void)
     PT_INIT(&ptCLI);
     PT_INIT(&ptPreflight);
     PT_INIT(&ptSdCard);
+    PT_INIT(&ptAudio);
 }
 
 /* ── Debug UART helpers (still needed for ESP32 proto debug output) ────── */
@@ -462,6 +468,84 @@ PT_THREAD(SdCardThread(struct pt *pt))
     LED_ON();
 
     /* Park the thread — SD work is complete */
+    while (1) {
+        PT_YIELD(pt);
+    }
+
+    PT_END(pt);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+ *  AudioThread — MAX9867 codec initialisation via modem AT commands
+ *
+ *  Hardware: LE910C4 owns both I2C and PCM to the MAX9867 codec.
+ *  PIC32MM controls audio ONLY through AT commands (audio_api.h).
+ *
+ *  Flow:
+ *    1. Wait for modem preflight to complete (SIM + network ready)
+ *    2. Run Audio_Init_Cmd() — 7-step AT sequence:
+ *         AT#PSEL, AT+CLVL, AT#HFMICG, AT#SHFEC, AT#SHFNR, AT#SHFAGC,
+ *         AT#CODECINFO
+ *    3. Query codec status (AT#CODECINFO)
+ *    4. Optionally enable loopback test (AT#SRP=2)
+ *    5. Set g_audio_init_done flag
+ *    6. Idle — audio is ready for voice calls
+ *
+ *  Clock source (crystal vs modem PCM_CLK) is configured in app_config.h.
+ *  The modem's ALSA driver handles MAX9867 register setup internally.
+ * ══════════════════════════════════════════════════════════════════════════ */
+
+PT_THREAD(AudioThread(struct pt *pt))
+{
+    static Modem_Result     audio_res;
+    static Modem_CodecInfo  codec_info;
+    static uint32_t         t_audio;
+
+    PT_BEGIN(pt);
+
+    /* ── Wait until preflight finishes (SIM ready + network registered) ── */
+    /* TelitPreflightThread must complete before we send audio AT commands  */
+    t_audio = g_ms_ticks;
+    PT_WAIT_UNTIL(pt, (g_ms_ticks - t_audio) >= 15000u);
+
+    BlockingUART3_WriteString33("Audio: Starting codec init...\r\n");
+
+    /* ── Step 1: Full audio initialisation (7-step AT sequence) ────────── */
+    Audio_Init_Cmd(NULL);   /* NULL = use defaults from app_config.h */
+    PT_WAIT_UNTIL(pt, Audio_Init_Poll(&audio_res));
+
+    if (audio_res == MODEM_OK) {
+        BlockingUART3_WriteString33("Audio: Codec init OK\r\n");
+    } else {
+        BlockingUART3_WriteString33("Audio: Codec init FAILED\r\n");
+    }
+
+    /* ── Step 2: Query codec to confirm it's alive ─────────────────────── */
+    Audio_QueryCodec_Cmd();
+    PT_WAIT_UNTIL(pt, Audio_QueryCodec_Poll(&audio_res, &codec_info));
+
+    if (audio_res == MODEM_OK && codec_info.active) {
+        BlockingUART3_WriteString33("Audio: Codec active\r\n");
+    }
+
+    /* ── Step 3 (optional): Loopback test ──────────────────────────────── */
+#if CFG_AUDIO_LOOPBACK_TEST
+    BlockingUART3_WriteString33("Audio: Loopback ON (10s)\r\n");
+    Audio_SetLoopback_Cmd(true);
+    PT_WAIT_UNTIL(pt, Audio_SetLoopback_Poll(&audio_res));
+
+    t_audio = g_ms_ticks;
+    PT_WAIT_UNTIL(pt, (g_ms_ticks - t_audio) >= 10000u);
+
+    Audio_SetLoopback_Cmd(false);
+    PT_WAIT_UNTIL(pt, Audio_SetLoopback_Poll(&audio_res));
+    BlockingUART3_WriteString33("Audio: Loopback OFF\r\n");
+#endif
+
+    g_audio_init_done = true;
+    BlockingUART3_WriteString33("Audio: Ready for voice calls\r\n");
+
+    /* ── Idle loop — audio system is ready ─────────────────────────────── */
     while (1) {
         PT_YIELD(pt);
     }

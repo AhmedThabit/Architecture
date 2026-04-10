@@ -275,54 +275,44 @@ void Modem_SetDTMFDuration_Cmd(uint8_t duration_tenths);
 bool Modem_SetDTMFDuration_Poll(Modem_Result *result);
 
 /* ╔════════════════════════════════════════════════════════════════════════╗
- * ║  10. AUDIO (modem-specific, may be unavailable on some backends)     ║
+ * ║  10. AUDIO  —  see services/audio/audio_api.h                        ║
  * ╚════════════════════════════════════════════════════════════════════════╝ */
 
 /**
- * @brief  Configure audio routing (e.g. USB audio for Telit LE910C4).
- *         AT#USBCFG=11  (Telit-specific)
+ * Audio is now handled by a dedicated service layer:
+ *   #include "services/audio/audio_api.h"
+ *
+ * The audio API controls the MAX9867 codec through the modem's
+ * internal I2C/PCM interface.  The PIC32MM sends AT commands over
+ * UART — it has NO direct connection to the codec.
+ *
+ * Key functions:
+ *   Audio_Init_Cmd(config)          — Full 7-step audio setup
+ *   Audio_SetVolume_Cmd(level)      — Speaker volume 0–100
+ *   Audio_SetMicGain_Cmd(gain)      — Mic gain 0–100
+ *   Audio_SetMute_Cmd(mute)         — Mic mute on/off
+ *   Audio_SelectProfile_Cmd(prof)   — Handset / handsfree
+ *   Audio_SetEchoCanceller_Cmd(en)  — Echo cancellation on/off
+ *   Audio_SetNoiseReduction_Cmd(en) — Noise reduction on/off
+ *   Audio_SetLoopback_Cmd(en)       — Loopback test (mic→speaker)
+ *   Audio_QueryCodec_Cmd()          — Query MAX9867 status
+ *
+ * Clock source (modem PCM_CLK vs external crystal) is configured
+ * in app_config.h via CFG_AUDIO_CLK_SOURCE.
+ *
+ * Legacy functions below are kept for backward compatibility but
+ * new code should use audio_api.h directly.
  */
+
+/** @deprecated Use Audio_ConfigUSB_Cmd() from audio_api.h */
 void Modem_ConfigAudio_Cmd(void);
 bool Modem_ConfigAudio_Poll(Modem_Result *result);
 
-/**
- * @brief  Set audio volume level.
- *         AT+CLVL=<level>
- *
- * @param  level  Volume level (0-100, mapped to modem range internally)
- */
+/** @deprecated Use Audio_SetVolume_Cmd() from audio_api.h */
 void Modem_SetVolume_Cmd(uint8_t level);
 bool Modem_SetVolume_Poll(Modem_Result *result);
 
-/**
- * @brief  Play an audio file stored on the modem's filesystem.
- *         AT#APLAY="<filename>"  (Telit-specific)
- *
- * @param  filename  Path on modem filesystem
- *
- * @note   Returns MODEM_ERROR on modems that don't support audio playback.
- */
-void Modem_PlayAudio_Cmd(const char *filename);
-bool Modem_PlayAudio_Poll(Modem_Result *result);
-
-/**
- * @brief  Send raw PCM audio data to the modem during a call.
- *         AT#ASEND=<len>  (Telit-specific)
- *
- * @param  data  PCM audio samples
- * @param  len   Number of bytes
- *
- * @note   Returns MODEM_ERROR on modems that don't support raw audio send.
- */
-void Modem_SendAudio_Cmd(const uint8_t *data, size_t len);
-bool Modem_SendAudio_Poll(Modem_Result *result);
-
-/**
- * @brief  Mute/unmute the microphone.
- *         AT+CMUT=<mode>
- *
- * @param  mute  true = mute, false = unmute
- */
+/** @deprecated Use Audio_SetMute_Cmd() from audio_api.h */
 void Modem_SetMute_Cmd(bool mute);
 bool Modem_SetMute_Poll(Modem_Result *result);
 

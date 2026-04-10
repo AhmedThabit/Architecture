@@ -18,6 +18,7 @@ extern struct pt ptEth;
 extern struct pt ptCLI;
 extern struct pt ptPreflight;
 extern struct pt ptSdCard;
+extern struct pt ptAudio;
 
 /* ── Thread function declarations ───────────────────────────────────────── */
 
@@ -29,6 +30,10 @@ PT_THREAD(EthThread(struct pt *pt));
 PT_THREAD(CliThread(struct pt *pt));
 PT_THREAD(TelitPreflightThread(struct pt *pt));
 PT_THREAD(SdCardThread(struct pt *pt));
+PT_THREAD(AudioThread(struct pt *pt));
+
+/** Audio initialisation complete flag — set by AudioThread. */
+extern volatile bool g_audio_init_done;
 
 /** Initialise all protothread control blocks.  Call once before App_Run(). */
 void Protothreads_Init(void);
