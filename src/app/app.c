@@ -31,6 +31,7 @@ void APP_Tasks(void)      { /* nothing — SdCardThread drives SD card   */ }
 /* L1 — HAL */
 #include "hal/bsp/bsp.h"
 #include "hal/spi_guard/spi_bus_guard.h"
+#include "hal/io_monitor/io_monitor.h"
 
 /* L2 — Drivers */
 #include "drivers/flash/flash_w25q32.h"
@@ -41,6 +42,7 @@ void APP_Tasks(void)      { /* nothing — SdCardThread drives SD card   */ }
 #include "services/modem_api/modem_api.h"
 #include "services/storage/storage.h"
 #include "services/esp32_proto/esp32_proto.h"
+#include "services/alarm/alarm_mgr.h"
 #include "common/schema.h"
 
 /* Protothread scheduler */
@@ -48,6 +50,7 @@ void APP_Tasks(void)      { /* nothing — SdCardThread drives SD card   */ }
 
 /* Forward declarations from protothreads.c */
 extern struct pt ptTelit, ptEsp32, ptSensor, ptEth, ptCLI, ptPreflight, ptSdCard;
+extern struct pt ptAudio, ptAlarm;
 extern void Protothreads_Init(void);
 
 PT_THREAD(TelitThread(struct pt *pt));
@@ -57,6 +60,8 @@ PT_THREAD(EthThread(struct pt *pt));
 PT_THREAD(CliThread(struct pt *pt));
 PT_THREAD(TelitPreflightThread(struct pt *pt));
 PT_THREAD(SdCardThread(struct pt *pt));
+PT_THREAD(AudioThread(struct pt *pt));
+PT_THREAD(AlarmThread(struct pt *pt));
 
 /* External ESP32 init */
 extern void ESP32_UartInit(void);
@@ -79,6 +84,7 @@ void App_Init(void)
     BSP_Initialize();
     BSP_Timer1_Init();
     SPIBus_Init();
+    IO_Init();                  /* digital I/O pins + debounce       */
 
     /* ── L2: Drivers (external chips) ───────────────────────────────── */
     Flash_Init();
@@ -115,11 +121,13 @@ void App_Run(void)
         /* Schedule active Protothreads */
         PT_SCHEDULE(Esp32Thread(&ptEsp32));
         PT_SCHEDULE(SdCardThread(&ptSdCard));
+        PT_SCHEDULE(TelitPreflightThread(&ptPreflight));
+        PT_SCHEDULE(AudioThread(&ptAudio));
+        PT_SCHEDULE(AlarmThread(&ptAlarm));
 
         /*
          * Uncomment as you bring up each subsystem:
          *
-         * PT_SCHEDULE(TelitPreflightThread(&ptPreflight));
          * PT_SCHEDULE(TelitThread(&ptTelit));
          * PT_SCHEDULE(SensorThread(&ptSensor));
          * PT_SCHEDULE(EthThread(&ptEth));

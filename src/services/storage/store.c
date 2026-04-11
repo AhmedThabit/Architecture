@@ -1,6 +1,7 @@
 #include "drivers/flash/flash_w25q32.h"
 #include "common/schema.h"
 #include <string.h>
+#include <stdio.h>
 // TODO: implement flash read/write; simple header {magic,version,len,crc}
 // store.c (or wherever these live)
 #include "phonebook_flash.h"
@@ -24,11 +25,37 @@ typedef struct {
     uint32_t crc;
 } CfgHeader;
 
-DeviceCfg g_cfg;
+DeviceCfg g_device_cfg;
 
 void Cfg_Defaults(void){
-  memset(&g_cfg,0,sizeof(g_cfg));
-  g_cfg.version = 0x00010100; // v1.1.0
+  memset(&g_device_cfg,0,sizeof(g_device_cfg));
+  g_device_cfg.version = 0x00010200; // v1.2.0 — added per-input config
+
+  /* Per-input defaults */
+  for (int i = 0; i < CFG_DIN_COUNT; i++) {
+      g_device_cfg.inputs[i].polarity        = 0;    /* NO */
+      g_device_cfg.inputs[i].latch           = 0;    /* auto-clear */
+      g_device_cfg.inputs[i].trigger_delay_ms = CFG_ALARM_TRIGGER_DELAY_MS;
+      g_device_cfg.inputs[i].clear_delay_ms   = CFG_ALARM_CLEAR_DELAY_MS;
+      g_device_cfg.inputs[i].output_map       = (uint8_t)i;  /* map to same output */
+      g_device_cfg.inputs[i].enabled          = 1;   /* enabled */
+      snprintf(g_device_cfg.inputs[i].label, sizeof(g_device_cfg.inputs[i].label),
+               "Input %d", i + 1);
+      g_device_cfg.inputs[i].audio_file[0]    = '\0'; /* no audio file */
+  }
+
+  /* Alarm notification defaults */
+  g_device_cfg.alarm.call_enabled    = 1;
+  g_device_cfg.alarm.sms_enabled     = 1;
+  g_device_cfg.alarm.max_call_retries = CFG_ALARM_MAX_CALL_RETRIES;
+  g_device_cfg.alarm.call_retry_ms   = CFG_ALARM_CALL_RETRY_MS;
+  g_device_cfg.alarm.ring_timeout_ms = CFG_ALARM_RING_TIMEOUT_MS;
+  g_device_cfg.alarm.battery_low_mv  = CFG_BATTERY_LOW_MV;
+
+  /* Legacy IO bitmask (sync with per-input) */
+  g_device_cfg.io.in_no_nc   = 0;
+  g_device_cfg.io.in_latch   = 0;
+  g_device_cfg.io.moist_thr  = 0;
 }
 
 static void Cfg_WriteHeaderAndData(const CfgHeader *hdr, const DeviceCfg *cfg)
@@ -56,15 +83,15 @@ void Cfg_Load(void)
     /* Reject the stored config if the magic, length or version don?t match.   */
     if (hdr.magic != CFG_MAGIC ||
         hdr.length != sizeof(DeviceCfg) ||
-        hdr.version != g_cfg.version) {
+        hdr.version != g_device_cfg.version) {
         return;  // leave defaults
     }
 
     /* Load the config from flash and verify its CRC.  If the CRC fails,
      * fall back to defaults. */
     Flash_Read(CFG_FLASH_ADDR + sizeof(CfgHeader),
-               (uint8_t*)&g_cfg, sizeof(g_cfg));
-    uint32_t calc = Flash_CRC32(&g_cfg, sizeof(g_cfg));
+               (uint8_t*)&g_device_cfg, sizeof(g_device_cfg));
+    uint32_t calc = Flash_CRC32(&g_device_cfg, sizeof(g_device_cfg));
     if (calc != hdr.crc) {
         Cfg_Defaults();
     }
@@ -76,9 +103,9 @@ void Cfg_Save(void)
     CfgHeader hdr;
     hdr.magic   = CFG_MAGIC;
     hdr.length  = sizeof(DeviceCfg);
-    hdr.version = g_cfg.version;
-    hdr.crc     = Flash_CRC32(&g_cfg, sizeof(g_cfg));
-    Cfg_WriteHeaderAndData(&hdr, &g_cfg);
+    hdr.version = g_device_cfg.version;
+    hdr.crc     = Flash_CRC32(&g_device_cfg, sizeof(g_device_cfg));
+    Cfg_WriteHeaderAndData(&hdr, &g_device_cfg);
 }
 
 int Cfg_Validate(void)

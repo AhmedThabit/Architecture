@@ -17,6 +17,9 @@ void SD_Service_Task(void);
 /* True once mounted */
 bool SD_Service_IsMounted(void);
 
+/* Set mounted state (call from SdCardThread after SYS_FS_Mount succeeds) */
+void SD_Service_SetMounted(bool mounted);
+
 /* Returns Harmony mount point string (e.g. "/mnt/myDrive1") */
 const char* SD_Service_MountPoint(void);
 

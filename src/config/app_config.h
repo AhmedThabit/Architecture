@@ -124,6 +124,65 @@
 #define CFG_ESP32_IDLE_TIMEOUT_MS   20u
 
 /* ═══════════════════════════════════════════════════════════════════════════
+ *  DIGITAL I/O  — 4 inputs + 4 outputs on main board
+ * ═══════════════════════════════════════════════════════════════════════════
+ *
+ *  IMPORTANT: Update these pin definitions to match the actual PCB.
+ *  These are GPIO_PIN_Rxy values from plib_gpio.h.
+ *  The current values are PLACEHOLDERS for the Curiosity board.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+/** Digital input pins (GPIO_PIN_Rxy from plib_gpio.h) */
+#define CFG_DIN1_PIN                GPIO_PIN_RB4    /**< Digital input 1      */
+#define CFG_DIN2_PIN                GPIO_PIN_RB5    /**< Digital input 2      */
+#define CFG_DIN3_PIN                GPIO_PIN_RB6    /**< Digital input 3      */
+#define CFG_DIN4_PIN                GPIO_PIN_RB7    /**< Digital input 4      */
+
+/** Digital output pins */
+#define CFG_DOUT1_PIN               GPIO_PIN_RB8    /**< Digital output 1     */
+#define CFG_DOUT2_PIN               GPIO_PIN_RB9    /**< Digital output 2     */
+#define CFG_DOUT3_PIN               GPIO_PIN_RB10   /**< Digital output 3     */
+#define CFG_DOUT4_PIN               GPIO_PIN_RB11   /**< Digital output 4     */
+
+/** Mains power detection pin (HIGH = mains present) */
+#define CFG_MAINS_DET_PIN           GPIO_PIN_RB13   /**< Mains detect input   */
+
+/** Number of main-board I/O channels */
+#define CFG_DIN_COUNT               4u
+#define CFG_DOUT_COUNT              4u
+
+/** I/O debounce period (ms) */
+#define CFG_IO_DEBOUNCE_MS          10u
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ *  ALARM SYSTEM
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+/** Alarm trigger delay — input must be stable this long before firing. */
+#define CFG_ALARM_TRIGGER_DELAY_MS  500u
+
+/** Alarm clear delay — input must be normal this long before clearing. */
+#define CFG_ALARM_CLEAR_DELAY_MS    2000u
+
+/** Maximum call attempts per alarm event before giving up. */
+#define CFG_ALARM_MAX_CALL_RETRIES  10u
+
+/** Delay between call attempts (ms). */
+#define CFG_ALARM_CALL_RETRY_MS     15000u
+
+/** Ring timeout — move to next number if no answer (ms). */
+#define CFG_ALARM_RING_TIMEOUT_MS   30000u
+
+/** Alarm scan interval (ms). */
+#define CFG_ALARM_SCAN_MS           100u
+
+/** Battery low threshold (mV). 12V SLA → ~10.8V = low. */
+#define CFG_BATTERY_LOW_MV          10800u
+
+/** Battery critical threshold (mV). */
+#define CFG_BATTERY_CRITICAL_MV     10200u
+
+/* ═══════════════════════════════════════════════════════════════════════════
  *  SPI BUS  — Shared between SD card and W25Q32 flash
  * ═══════════════════════════════════════════════════════════════════════════ */
 #define CFG_SPI_SD_INIT_HZ          400000u

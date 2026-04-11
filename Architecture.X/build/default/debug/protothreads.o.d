@@ -62,7 +62,9 @@ build/default/debug/protothreads.o: protothreads.c ../src/common/pt.h \
  ../src/services/esp32_proto/esp32_proto.h \
  ../src/services/storage/store.h ../src/common/schema.h \
  ../src/common/sd_fatfs_guard.h ../src/services/audio/audio_api.h \
- ../src/config/default/user.h
+ ../src/services/sd_service/sd_service.h \
+ ../src/services/sd_service/sd_file_mgr.h \
+ ../src/services/alarm/alarm_mgr.h ../src/config/default/user.h
 
 ../src/common/pt.h:
 
@@ -207,5 +209,11 @@ protothreads.h:
 ../src/common/sd_fatfs_guard.h:
 
 ../src/services/audio/audio_api.h:
+
+../src/services/sd_service/sd_service.h:
+
+../src/services/sd_service/sd_file_mgr.h:
+
+../src/services/alarm/alarm_mgr.h:
 
 ../src/config/default/user.h:

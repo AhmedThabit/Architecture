@@ -38,8 +38,12 @@
 #include "ff.h"
 #include "common/sd_fatfs_guard.h"
 
-/* Audio */
+/* Audio & SD */
 #include "services/audio/audio_api.h"
+#include "services/sd_service/sd_service.h"
+#include "services/sd_service/sd_file_mgr.h"
+#include "services/alarm/alarm_mgr.h"
+#include "common/schema.h"
 
 /* Config */
 #include "config/app_config.h"
@@ -76,7 +80,7 @@ void handle_sms_enable_cmd(uint8_t flag)
 /* ── Protothread control blocks ─────────────────────────────────────────── */
 
 struct pt ptSensor, ptTelit, ptEsp32, ptEth, ptCLI;
-struct pt ptEspTxTest, ptPreflight, ptSdCard, ptAudio;
+struct pt ptEspTxTest, ptPreflight, ptSdCard, ptAudio, ptAlarm;
 
 volatile bool g_audio_init_done = false;
 
@@ -91,6 +95,7 @@ void Protothreads_Init(void)
     PT_INIT(&ptPreflight);
     PT_INIT(&ptSdCard);
     PT_INIT(&ptAudio);
+    PT_INIT(&ptAlarm);
 }
 
 /* ── Debug UART helpers (still needed for ESP32 proto debug output) ────── */
@@ -164,6 +169,194 @@ PT_THREAD(TelitPreflightThread(struct pt *pt))
     /* 5. Configure SMS subsystem (text mode, charset, notify, storage) */
     Modem_ConfigSMS_Cmd();
     PT_WAIT_UNTIL(pt, Modem_ConfigSMS_Poll(&res));
+
+    PT_END(pt);
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+ *  AlarmThread — Alarm detection + notification sequencer
+ *
+ *  This is the CORE PRODUCT LOGIC thread.  It:
+ *    1. Periodically debounces inputs and runs AlarmMgr_Task()
+ *    2. When an alarm triggers, sequences through the phonebook:
+ *         - Dial number N
+ *         - Wait for answer (or timeout)
+ *         - If answered: play voice message, hangup
+ *         - If no answer: advance to next number
+ *    3. After call attempts: sends SMS to all programmed numbers
+ *    4. Handles battery low and mains failure SMS alerts
+ *
+ *  Uses modem_api.h for all AT operations — modem-agnostic.
+ * ════════════════════════════════════════════════════════════════════════ */
+
+PT_THREAD(AlarmThread(struct pt *pt))
+{
+    static uint32_t         t_alarm;
+    static uint32_t         t_debounce;
+    static Modem_Result     alarm_res;
+    static Modem_CallStatus call_status;
+    static int              dial_idx;
+    static char             sms_buf[160];
+    static int              sms_idx;
+
+    PT_BEGIN(pt);
+
+    /* Wait for modem preflight + audio init to finish */
+    t_alarm = g_ms_ticks;
+    PT_WAIT_UNTIL(pt, (g_ms_ticks - t_alarm) >= 20000u);
+
+    AlarmMgr_Init();
+    BlockingUART3_WriteString33("Alarm: Manager started\r\n");
+
+    t_debounce = g_ms_ticks;
+
+    /* ======== Main alarm loop ======== */
+    while (1) {
+
+        /* ---- Debounce inputs every CFG_IO_DEBOUNCE_MS ---- */
+        if ((g_ms_ticks - t_debounce) >= CFG_IO_DEBOUNCE_MS) {
+            IO_DebounceInputs();
+            t_debounce = g_ms_ticks;
+        }
+
+        /* ---- Run alarm scan every CFG_ALARM_SCAN_MS ---- */
+        t_alarm = g_ms_ticks;
+        AlarmMgr_Task();
+        PT_WAIT_UNTIL(pt, (g_ms_ticks - t_alarm) >= CFG_ALARM_SCAN_MS);
+
+        /* ---- Check if a new alarm needs notification ---- */
+        if (!AlarmMgr_NeedNotify()) {
+            continue;
+        }
+
+        BlockingUART3_WriteString33("Alarm: TRIGGERED \u2014 starting notification\r\n");
+        AlarmMgr_SetNotifyState(NOTIFY_START_CALL);
+
+        /* ======== Notification sequence: call each number ======== */
+        while (AlarmMgr_GetNotifyState() != NOTIFY_DONE &&
+               AlarmMgr_GetNotifyState() != NOTIFY_IDLE) {
+
+            dial_idx = AlarmMgr_GetNextDialIndex();
+
+            if (dial_idx < 0 || AlarmMgr_GetNotifyState() == NOTIFY_DONE) {
+                /* All numbers exhausted or max retries */
+                break;
+            }
+
+            /* ---- Dial ---- */
+            BlockingUART3_WriteString33("Alarm: Dialing slot ");
+            /* (slot number debug) */
+
+            Modem_Dial_Cmd(g_device_cfg.phonebook.numbers[dial_idx]);
+            AlarmMgr_SetNotifyState(NOTIFY_WAIT_DIAL);
+            PT_WAIT_UNTIL(pt, Modem_Dial_Poll(&alarm_res));
+
+            if (alarm_res != MODEM_OK) {
+                BlockingUART3_WriteString33("Alarm: Dial failed\r\n");
+                AlarmMgr_AdvanceDialIndex();
+
+                /* Inter-call delay */
+                t_alarm = g_ms_ticks;
+                PT_WAIT_UNTIL(pt, (g_ms_ticks - t_alarm) >= CFG_ALARM_CALL_RETRY_MS);
+                continue;
+            }
+
+            /* ---- Wait for call to be answered or timeout ---- */
+            AlarmMgr_SetNotifyState(NOTIFY_WAIT_RING);
+            t_alarm = g_ms_ticks;
+
+            while ((g_ms_ticks - t_alarm) < CFG_ALARM_RING_TIMEOUT_MS) {
+                Modem_QueryCallStatus_Cmd();
+                PT_WAIT_UNTIL(pt, Modem_QueryCallStatus_Poll(&alarm_res, &call_status));
+
+                if (call_status == MODEM_CALL_ACTIVE) {
+                    break;  /* Call answered! */
+                }
+                if (call_status == MODEM_CALL_DISCONNECTED ||
+                    call_status == MODEM_CALL_IDLE) {
+                    break;  /* Call ended (busy/rejected) */
+                }
+
+                /* Poll again after 1 second */
+                t_alarm = g_ms_ticks;
+                PT_WAIT_UNTIL(pt, (g_ms_ticks - t_alarm) >= 1000u);
+                t_alarm -= 1000u; /* Don't reset overall timeout */
+            }
+
+            if (call_status == MODEM_CALL_ACTIVE) {
+                /* ---- Call answered \u2014 play voice message ---- */
+                AlarmMgr_SetNotifyState(NOTIFY_IN_CALL);
+                BlockingUART3_WriteString33("Alarm: Call answered\r\n");
+
+                /* TODO: Play voice recording from SD card
+                 *   - Read WAV file from SD
+                 *   - Stream via AT#APLAY or AT#ASEND
+                 *   - For now, hold the call for a few seconds
+                 */
+                t_alarm = g_ms_ticks;
+                PT_WAIT_UNTIL(pt, (g_ms_ticks - t_alarm) >= 5000u);
+
+                /* ---- Hangup ---- */
+                AlarmMgr_SetNotifyState(NOTIFY_HANGUP);
+                Modem_Hangup_Cmd();
+                PT_WAIT_UNTIL(pt, Modem_Hangup_Poll(&alarm_res));
+
+                BlockingUART3_WriteString33("Alarm: Call complete\r\n");
+
+                /* Call was answered \u2014 alarm acknowledged, stop calling */
+                break;
+
+            } else {
+                /* No answer or busy \u2014 hangup and try next number */
+                Modem_Hangup_Cmd();
+                PT_WAIT_UNTIL(pt, Modem_Hangup_Poll(&alarm_res));
+
+                AlarmMgr_AdvanceDialIndex();
+                BlockingUART3_WriteString33("Alarm: No answer, next number\r\n");
+
+                /* Inter-call delay */
+                t_alarm = g_ms_ticks;
+                PT_WAIT_UNTIL(pt, (g_ms_ticks - t_alarm) >= CFG_ALARM_CALL_RETRY_MS);
+            }
+
+            /* Check max retries */
+            if (AlarmMgr_GetNextDialIndex() < 0) {
+                break;
+            }
+        }
+
+        /* ======== Send SMS to all programmed numbers ======== */
+        AlarmMgr_SetNotifyState(NOTIFY_SEND_SMS);
+        AlarmMgr_GetAlarmSmsText(sms_buf, sizeof(sms_buf));
+
+        for (sms_idx = 0; sms_idx < CFG_PHONEBOOK_MAX_ENTRIES; sms_idx++) {
+            if (g_device_cfg.phonebook.numbers[sms_idx][0] == '\0') continue;
+
+            BlockingUART3_WriteString33("Alarm: Sending SMS...\r\n");
+
+            Modem_SendSMS_Cmd(g_device_cfg.phonebook.numbers[sms_idx], sms_buf);
+            AlarmMgr_SetNotifyState(NOTIFY_WAIT_SMS);
+            PT_WAIT_UNTIL(pt, Modem_SendSMS_Poll(&alarm_res));
+
+            if (alarm_res == MODEM_OK) {
+                BlockingUART3_WriteString33("Alarm: SMS sent OK\r\n");
+            } else {
+                BlockingUART3_WriteString33("Alarm: SMS failed\r\n");
+            }
+
+            /* Small delay between SMS messages */
+            t_alarm = g_ms_ticks;
+            PT_WAIT_UNTIL(pt, (g_ms_ticks - t_alarm) >= 2000u);
+        }
+
+        /* ======== Notification complete ======== */
+        AlarmMgr_NotifyComplete();
+        BlockingUART3_WriteString33("Alarm: Notification complete\r\n");
+
+        /* Wait a bit before resuming alarm scanning */
+        t_alarm = g_ms_ticks;
+        PT_WAIT_UNTIL(pt, (g_ms_ticks - t_alarm) >= 5000u);
+    }
 
     PT_END(pt);
 }
@@ -369,106 +562,42 @@ static uint8_t s_sd_buf[SD_BUF_LEN];
 
 PT_THREAD(SdCardThread(struct pt *pt))
 {
-    static SYS_FS_HANDLE s_fh_src;
-    static SYS_FS_HANDLE s_fh_dst;
-    static int32_t       s_n_read;
-
     PT_BEGIN(pt);
 
     LED_OFF();
-
     BlockingUART3_WriteString33("SD: mounting...\r\n");
 
-    /* ── Step 1: Mount (retry until Harmony driver is ready) ────────── */
+    /* Mount (retry until Harmony driver is ready) */
     while (SYS_FS_Mount(SD_DEV_NAME, SD_MOUNT_NAME, FAT, 0, NULL) != 0) {
         PT_YIELD(pt);
     }
     BlockingUART3_WriteString33("SD: mounted\r\n");
 
-    /* ── Step 2: Unmount + remount (proves driver stability) ────────── */
-    while (SYS_FS_Unmount(SD_MOUNT_NAME) != 0) {
-        PT_YIELD(pt);
-    }
+    /* Unmount + remount (proves driver stability) */
+    while (SYS_FS_Unmount(SD_MOUNT_NAME) != 0) { PT_YIELD(pt); }
     BlockingUART3_WriteString33("SD: unmounted\r\n");
-
     while (SYS_FS_Mount(SD_DEV_NAME, SD_MOUNT_NAME, FAT, 0, NULL) != 0) {
         PT_YIELD(pt);
     }
     BlockingUART3_WriteString33("SD: remounted\r\n");
 
-    /* ── Step 3: Set current drive ──────────────────────────────────── */
+    /* Set current drive */
     if (SYS_FS_CurrentDriveSet(SD_MOUNT_NAME) == SYS_FS_RES_FAILURE) {
         BlockingUART3_WriteString33("SD: drive set FAIL\r\n");
         PT_EXIT(pt);
     }
+    BlockingUART3_WriteString33("SD: drive set OK\r\n");
 
-    /* ── Step 4: Open source file ───────────────────────────────────── */
-    s_fh_src = SYS_FS_FileOpen(SD_FILE_NAME, SYS_FS_FILE_OPEN_READ);
-    if (s_fh_src == SYS_FS_HANDLE_INVALID) {
-        BlockingUART3_WriteString33("SD: open src FAIL\r\n");
-        PT_EXIT(pt);
-    }
-    BlockingUART3_WriteString33("SD: src open OK\r\n");
-
-    /* ── Step 5: Create directory ───────────────────────────────────── */
-    if (SYS_FS_DirectoryMake(SD_DIR_NAME) == SYS_FS_RES_FAILURE) {
-        /* Not a fatal error — directory may already exist */
-        BlockingUART3_WriteString33("SD: mkdir skip (may exist)\r\n");
-    } else {
-        BlockingUART3_WriteString33("SD: mkdir OK\r\n");
-    }
-
-    /* ── Step 6: Open destination file ──────────────────────────────── */
-    s_fh_dst = SYS_FS_FileOpen(SD_DIR_NAME "/" SD_FILE_NAME,
-                                SYS_FS_FILE_OPEN_WRITE);
-    if (s_fh_dst == SYS_FS_HANDLE_INVALID) {
-        BlockingUART3_WriteString33("SD: open dst FAIL\r\n");
-        SYS_FS_FileClose(s_fh_src);
-        PT_EXIT(pt);
-    }
-    BlockingUART3_WriteString33("SD: dst open OK\r\n");
-
-    /* ── Step 7: Copy in chunks until EOF ───────────────────────────── */
-    while (1) {
-        s_n_read = SYS_FS_FileRead(s_fh_src, (void *)s_sd_buf, SD_BUF_LEN);
-
-        if (s_n_read == -1) {
-            BlockingUART3_WriteString33("SD: read ERR\r\n");
-            SYS_FS_FileClose(s_fh_src);
-            SYS_FS_FileClose(s_fh_dst);
-            PT_EXIT(pt);
-        }
-
-        if (s_n_read > 0) {
-            if (SYS_FS_FileWrite(s_fh_dst, (const void *)s_sd_buf,
-                                 s_n_read) == -1) {
-                BlockingUART3_WriteString33("SD: write ERR\r\n");
-                SYS_FS_FileClose(s_fh_src);
-                SYS_FS_FileClose(s_fh_dst);
-                PT_EXIT(pt);
-            }
-        }
-
-        /* Check for end of file */
-        if (SYS_FS_FileEOF(s_fh_src) == 1) {
-            break;
-        }
-
-        /* Yield after each chunk so other threads keep running */
-        PT_YIELD(pt);
-    }
-
-    /* ── Step 8: Close both files ──────────────────────────────────── */
-    SYS_FS_FileClose(s_fh_src);
-    SYS_FS_FileClose(s_fh_dst);
-
-    BlockingUART3_WriteString33("SD: copy DONE\r\n");
-
-    /* ── Step 9: LED ON = success ──────────────────────────────────── */
+    /* Mark SD as mounted — file manager can now work */
+    SD_Service_SetMounted(true);
+    BlockingUART3_WriteString33("SD: ready for file manager\r\n");
     LED_ON();
 
-    /* Park the thread — SD work is complete */
+    /* Park — service file manager requests from the app */
     while (1) {
+        if (FileMgr_HasPending()) {
+            FileMgr_Process();
+        }
         PT_YIELD(pt);
     }
 

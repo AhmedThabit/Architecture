@@ -9,9 +9,12 @@
 #include "peripheral/uart/plib_uart_common.h"   // UART_SERIAL_SETUP
 #include "common/schema.h"        // <-- Add this line
 #include "services/storage/store.h"         // or wherever phonebook_* is declared
+#include "hal/io_monitor/io_monitor.h"
+#include "services/alarm/alarm_mgr.h"
+#include "services/sd_service/sd_file_mgr.h"
+#include "services/sd_service/sd_service.h"
 // extern time base (from your Timer1 tick)
 extern volatile uint32_t g_ms_ticks;
-extern DeviceCfg g_cfg; // if you need it for other things
 
 // declare UART3_WriteString33 prototype or include the header
 void UART3_WriteString33(const char *str); // forward declaration
@@ -124,6 +127,33 @@ enum {
     T_PHONEBOOK_SET = 0x40, // slot + number (variable length)
     T_PHONEBOOK_LIST = 0x41, // no payload
     T_PHONEBOOK_DEF = 0x42, // one-byte slot index
+};
+
+/* Input configuration tags (per-input, slot byte first) */
+enum {
+    T_INPUT_CFG_GET  = 0x50, /**< GET: slot(1) -> returns full config    */
+    T_INPUT_CFG_SET  = 0x51, /**< SET: slot(1) + fields                 */
+    T_INPUT_POLARITY = 0x52, /**< u8: 0=NO, 1=NC                        */
+    T_INPUT_LATCH    = 0x53, /**< u8: 0=auto-clear, 1=latched            */
+    T_INPUT_TRIG_DLY = 0x54, /**< u16 LE: trigger delay ms               */
+    T_INPUT_CLR_DLY  = 0x55, /**< u16 LE: clear delay ms                 */
+    T_INPUT_OUT_MAP  = 0x56, /**< u8: output 0..3, 0xFF=none             */
+    T_INPUT_ENABLED  = 0x57, /**< u8: 0=disabled, 1=enabled              */
+    T_INPUT_LABEL    = 0x58, /**< string: up to 15 chars                 */
+    T_INPUT_AUDIO    = 0x59, /**< string: SD filename up to 23 chars     */
+};
+
+/* Live scan result tags */
+enum {
+    T_SCAN_RESULT    = 0x60, /**< GET: returns all scan data             */
+    T_SCAN_DEBOUNCED = 0x61, /**< u8: debounced input mask               */
+    T_SCAN_RAW       = 0x62, /**< u8: raw input mask                     */
+    T_SCAN_ALARM_FLAGS=0x63, /**< u8: active AlarmFlags bitmask          */
+    T_SCAN_IN_STATE  = 0x64, /**< 4 bytes: per-input alarm state 0..5    */
+    T_SCAN_OUTPUTS   = 0x65, /**< u8: current output mask                */
+    T_SCAN_BATT_MV   = 0x66, /**< u16 LE: battery millivolts             */
+    T_SCAN_MAINS     = 0x67, /**< u8: 1=present, 0=fail                  */
+    T_SCAN_MOIST     = 0x68, /**< u16 LE: moisture tenths %              */
 };
 extern void handle_sms_enable_cmd(uint8_t flag); // implemented in protothreads.c
 extern uint8_t sms_get_enabled(void);
@@ -273,7 +303,61 @@ static bool tlv_get_reply(uint8_t tag, uint8_t* out, size_t cap, size_t* idx) {
             return true;
         }
         default:
-            /* Unknown tag? ignore gracefully */
+            /* ── Input config GET: returns all fields for one input ── */
+            if (tag == T_INPUT_CFG_GET) {
+                /* Caller sends T_INPUT_CFG_GET with len=1, value=slot */
+                /* We return the full config for that slot */
+                /* Note: actual slot comes from the TLV value byte,
+                   but in GET the tag+len is enough to trigger a full dump
+                   of all 4 inputs */
+                for (uint8_t ch = 0; ch < CFG_DIN_COUNT; ch++) {
+                    const InputChannelCfg *ic = &g_device_cfg.inputs[ch];
+                    if (!put_tlv(out, cap, idx, T_INPUT_POLARITY, &(uint8_t){(ic->polarity & 0x0F) | (ch << 4)}, 1)) return false;
+                    if (!put_tlv(out, cap, idx, T_INPUT_LATCH, &(uint8_t){(ic->latch & 0x0F) | (ch << 4)}, 1)) return false;
+                    /* Encode: high nibble = slot, TLV value = config.
+                       Simpler approach: pack slot + all fields in one TLV */
+                    uint8_t cfg_block[32];
+                    size_t bi = 0;
+                    cfg_block[bi++] = ch;                         /* slot */
+                    cfg_block[bi++] = ic->polarity;
+                    cfg_block[bi++] = ic->latch;
+                    cfg_block[bi++] = (uint8_t)(ic->trigger_delay_ms & 0xFF);
+                    cfg_block[bi++] = (uint8_t)(ic->trigger_delay_ms >> 8);
+                    cfg_block[bi++] = (uint8_t)(ic->clear_delay_ms & 0xFF);
+                    cfg_block[bi++] = (uint8_t)(ic->clear_delay_ms >> 8);
+                    cfg_block[bi++] = ic->output_map;
+                    cfg_block[bi++] = ic->enabled;
+                    /* label (up to 15 chars + null) */
+                    size_t llen = strnlen(ic->label, 15);
+                    cfg_block[bi++] = (uint8_t)llen;
+                    memcpy(&cfg_block[bi], ic->label, llen);
+                    bi += llen;
+                    if (!put_tlv(out, cap, idx, T_INPUT_CFG_GET, cfg_block, (uint8_t)bi)) return false;
+                }
+                return true;
+            }
+
+            /* ── Live scan result: full snapshot ── */
+            if (tag == T_SCAN_RESULT) {
+                uint8_t deb = IO_GetDebouncedInputs();
+                uint8_t raw = IO_GetInputsRaw();
+                uint8_t af  = AlarmMgr_GetActiveAlarms();
+                uint8_t outs = IO_GetOutputsMask();
+                uint16_t batt = IO_GetBatteryMV();
+                uint8_t mains = IO_IsMainsPowerPresent() ? 1 : 0;
+                uint16_t moist = IO_GetMoistPct10();
+
+                if (!put_tlv(out, cap, idx, T_SCAN_DEBOUNCED, &deb, 1)) return false;
+                if (!put_tlv(out, cap, idx, T_SCAN_RAW, &raw, 1)) return false;
+                if (!put_tlv(out, cap, idx, T_SCAN_ALARM_FLAGS, &af, 1)) return false;
+                if (!put_tlv(out, cap, idx, T_SCAN_OUTPUTS, &outs, 1)) return false;
+                if (!put_tlv_u16(out, cap, idx, T_SCAN_BATT_MV, batt)) return false;
+                if (!put_tlv(out, cap, idx, T_SCAN_MAINS, &mains, 1)) return false;
+                if (!put_tlv_u16(out, cap, idx, T_SCAN_MOIST, moist)) return false;
+                return true;
+            }
+
+            /* Unknown tag: ignore gracefully */
             return true;
     }
 }
@@ -647,6 +731,101 @@ static bool tlv_apply(const uint8_t* p, size_t plen, uint8_t* st_out) {
             return ok;
         }
 
+        /* ── Input configuration SET ────────────────────────────────── */
+        case T_INPUT_CFG_SET:
+        {
+            /* Format: [slot(1)] [sub-TLVs...]
+             * Sub-TLVs inside the value:
+             *   T_INPUT_POLARITY(1), T_INPUT_LATCH(1),
+             *   T_INPUT_TRIG_DLY(2 LE), T_INPUT_CLR_DLY(2 LE),
+             *   T_INPUT_OUT_MAP(1), T_INPUT_ENABLED(1),
+             *   T_INPUT_LABEL(n), T_INPUT_AUDIO(n)
+             */
+            if (len < 1) { *st_out = ST_BAD_TLV; return false; }
+            uint8_t slot = p[2];
+            if (slot >= CFG_DIN_COUNT) { *st_out = ST_BAD_TLV; return false; }
+
+            InputChannelCfg *ic = &g_device_cfg.inputs[slot];
+            const uint8_t *sub = &p[3];
+            size_t srem = (size_t)(len - 1);
+
+            while (srem >= 2) {
+                uint8_t stag = sub[0];
+                uint8_t slen = sub[1];
+                if (srem < (size_t)(2 + slen)) break;
+                const uint8_t *sv = &sub[2];
+
+                switch (stag) {
+                    case T_INPUT_POLARITY: if (slen==1) ic->polarity = sv[0]; break;
+                    case T_INPUT_LATCH:    if (slen==1) ic->latch    = sv[0]; break;
+                    case T_INPUT_TRIG_DLY: if (slen==2) ic->trigger_delay_ms = sv[0] | ((uint16_t)sv[1]<<8); break;
+                    case T_INPUT_CLR_DLY:  if (slen==2) ic->clear_delay_ms   = sv[0] | ((uint16_t)sv[1]<<8); break;
+                    case T_INPUT_OUT_MAP:  if (slen==1) ic->output_map = sv[0]; break;
+                    case T_INPUT_ENABLED:  if (slen==1) ic->enabled   = sv[0]; break;
+                    case T_INPUT_LABEL: {
+                        size_t clen = slen < 15 ? slen : 15;
+                        memcpy(ic->label, sv, clen);
+                        ic->label[clen] = '\0';
+                        break;
+                    }
+                    case T_INPUT_AUDIO: {
+                        size_t clen = slen < 23 ? slen : 23;
+                        memcpy(ic->audio_file, sv, clen);
+                        ic->audio_file[clen] = '\0';
+                        break;
+                    }
+                    default: break;
+                }
+                sub  += 2 + slen;
+                srem -= 2 + slen;
+            }
+
+            /* Sync legacy bitmask from per-input config */
+            g_device_cfg.io.in_no_nc = 0;
+            g_device_cfg.io.in_latch = 0;
+            for (uint8_t ch = 0; ch < CFG_DIN_COUNT; ch++) {
+                if (g_device_cfg.inputs[ch].polarity) g_device_cfg.io.in_no_nc |= (1u << ch);
+                if (g_device_cfg.inputs[ch].latch)    g_device_cfg.io.in_latch |= (1u << ch);
+            }
+
+            Cfg_Save();
+            *st_out = ST_OK;
+            return true;
+        }
+
+        /* ── SD card file operations ───────────────────────────────── */
+        case T_FILE_DELETE:
+        {
+            if (len < 1) { *st_out = ST_BAD_TLV; return false; }
+            FileMgr_Post(T_FILE_DELETE, &p[2], len);
+            *st_out = 0xFF; /* signal: suppress immediate reply */
+            return true;
+        }
+
+        case T_FILE_RENAME:
+        {
+            if (len < 3) { *st_out = ST_BAD_TLV; return false; }
+            FileMgr_Post(T_FILE_RENAME, &p[2], len);
+            *st_out = 0xFF;
+            return true;
+        }
+
+        case T_FILE_MKDIR:
+        {
+            if (len < 1) { *st_out = ST_BAD_TLV; return false; }
+            FileMgr_Post(T_FILE_MKDIR, &p[2], len);
+            *st_out = 0xFF;
+            return true;
+        }
+
+        case 0x76: /* T_FILE_CREATE */
+        {
+            if (len < 1) { *st_out = ST_BAD_TLV; return false; }
+            FileMgr_Post(T_FILE_CREATE, &p[2], len);
+            *st_out = 0xFF;
+            return true;
+        }
+
         default:
             *st_out = ST_BAD_TLV;
             return false;
@@ -718,6 +897,13 @@ void Esp_HandleFrame(const uint8_t* payload, size_t len) {
 
                 uint8_t st_each = ST_OK;
                 bool ok = tlv_apply(q, 2 + l, &st_each);
+                if (st_each == 0xFF) {
+                    /* File operation posted — suppress entire SET reply */
+                    q += 2 + l;
+                    rem -= 2 + l;
+                    ri = 0;
+                    goto skip_reply;
+                }
                 if (!ok && status == ST_OK) status = st_each;
 
                 q += 2 + l;
@@ -797,9 +983,28 @@ void Esp_HandleFrame(const uint8_t* payload, size_t len) {
                     status = ST_BAD_TLV;
                     break;
                 }
-                if (!tlv_get_reply(tag, rsp, sizeof (rsp), &ri)) {
-                    status = ST_BAD_LEN;
-                    break;
+
+                /* File operations: post to queue, SdCardThread processes */
+                if ((tag == T_FILE_LIST || tag == T_FILE_INFO) && l > 0) {
+                    FileMgr_Post(tag, &q[2], l);
+                    q += 2 + l;
+                    rem -= 2 + l;
+                    /* Don't send normal GET reply — FileMgr_Process sends its own */
+                    rsp[1] = status;
+                    /* Return empty frame so Esp_HandleFrame doesn't confuse app */
+                    ri = 0;  /* suppress reply entirely */
+                    goto skip_reply;
+                } else if (tag == T_FILE_LIST && l == 0) {
+                    FileMgr_Post(T_FILE_LIST, (const uint8_t *)"/", 1);
+                    q += 2 + l;
+                    rem -= 2 + l;
+                    ri = 0;
+                    goto skip_reply;
+                } else {
+                    if (!tlv_get_reply(tag, rsp, sizeof (rsp), &ri)) {
+                        status = ST_BAD_LEN;
+                        break;
+                    }
                 }
                 q += 2 + l;
                 rem -= 2 + l;
@@ -816,6 +1021,9 @@ void Esp_HandleFrame(const uint8_t* payload, size_t len) {
     }
 
     rsp[1] = status;
-    ESP32_SendFrame(rsp, ri);
+    if (ri > 0) {
+        ESP32_SendFrame(rsp, ri);
+    }
+    skip_reply: ;
 }
 

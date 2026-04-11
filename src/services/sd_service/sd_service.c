@@ -55,6 +55,11 @@ bool SD_Service_IsMounted(void)
     return g_sd_mounted;
 }
 
+void SD_Service_SetMounted(bool mounted)
+{
+    g_sd_mounted = mounted;
+}
+
 const char* SD_Service_MountPoint(void)
 {
     return SD_MOUNT_NAME;
