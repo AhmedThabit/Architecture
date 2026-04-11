@@ -35,6 +35,7 @@
 #define T_FILE_INFO     0x75
 #define T_FILE_CREATE   0x76
 #define T_FILE_STATUS   0x77
+#define T_FILE_STORAGE  0x78    /**< GET: SD card total/used/free in KB     */
 
 /* Status codes */
 #define FMGR_OK          0x00

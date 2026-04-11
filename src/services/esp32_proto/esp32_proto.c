@@ -989,13 +989,16 @@ void Esp_HandleFrame(const uint8_t* payload, size_t len) {
                     FileMgr_Post(tag, &q[2], l);
                     q += 2 + l;
                     rem -= 2 + l;
-                    /* Don't send normal GET reply — FileMgr_Process sends its own */
-                    rsp[1] = status;
-                    /* Return empty frame so Esp_HandleFrame doesn't confuse app */
-                    ri = 0;  /* suppress reply entirely */
+                    ri = 0;
                     goto skip_reply;
                 } else if (tag == T_FILE_LIST && l == 0) {
                     FileMgr_Post(T_FILE_LIST, (const uint8_t *)"/", 1);
+                    q += 2 + l;
+                    rem -= 2 + l;
+                    ri = 0;
+                    goto skip_reply;
+                } else if (tag == T_FILE_STORAGE) {
+                    FileMgr_Post(T_FILE_STORAGE, NULL, 0);
                     q += 2 + l;
                     rem -= 2 + l;
                     ri = 0;

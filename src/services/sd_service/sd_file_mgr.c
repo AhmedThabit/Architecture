@@ -14,6 +14,9 @@
 #include "sd_service.h"
 #include "definitions.h"
 
+/* FatFS direct access for f_getfree */
+#include "ff.h"
+
 #include <string.h>
 #include <stdio.h>
 
@@ -322,6 +325,70 @@ void FileMgr_Process(void)
         } else {
             put_status(s_rsp, FM_RSP_MAX, &ri, FMGR_NOT_FOUND, "Not found");
         }
+        break;
+    }
+
+    /* ── Storage info (total / free / used in KB) ─────────────────────── */
+    case T_FILE_STORAGE:
+    {
+        BlockingUART3_WriteString33("FM: storage query\r\n");
+
+        uint32_t totalKB = 0, freeKB = 0;
+        uint32_t totalClusters = 0, freeClusters = 0;
+        uint32_t sectorPerCluster = 0, bytesPerSector = 0;
+
+        /* Use SYS_FS_DriveSectorGet to get cluster/sector info */
+        if (SYS_FS_DrivePartition(FM_MOUNT_NAME, NULL, NULL) == SYS_FS_RES_FAILURE) {
+            /* fallback: can't query */
+        }
+
+        /* Get total and free clusters via FatFS f_getfree */
+        /* SYS_FS doesn't expose f_getfree directly, but we can
+           use SYS_FS_DriveSectorGet for sector size */
+
+        /* Harmony 3 approach: use the underlying FatFS directly */
+        {
+            FATFS *fs = NULL;
+            DWORD fre_clust;
+            FRESULT fres = f_getfree("0:", &fre_clust, &fs);
+            if (fres == FR_OK && fs != NULL) {
+                /* Calculate sizes in KB */
+                uint32_t secPerClust = fs->csize;
+                uint32_t totalSectors = (fs->n_fatent - 2) * secPerClust;
+                uint32_t freeSectors  = fre_clust * secPerClust;
+                /* Sectors are 512 bytes */
+                totalKB = totalSectors / 2;
+                freeKB  = freeSectors / 2;
+            } else {
+                BlockingUART3_WriteString33("FM: f_getfree FAIL\r\n");
+            }
+        }
+
+        uint32_t usedKB = (totalKB > freeKB) ? (totalKB - freeKB) : 0;
+
+        char dbg[64];
+        snprintf(dbg, sizeof(dbg), "FM: total=%luKB free=%luKB used=%luKB\r\n",
+                 (unsigned long)totalKB, (unsigned long)freeKB, (unsigned long)usedKB);
+        BlockingUART3_WriteString33(dbg);
+
+        /* Response: T_FILE_STORAGE len=12 [totalKB(4) freeKB(4) usedKB(4)] */
+        if (ri + 14 <= FM_RSP_MAX) {
+            s_rsp[ri++] = T_FILE_STORAGE;
+            s_rsp[ri++] = 12;
+            s_rsp[ri++] = (uint8_t)(totalKB & 0xFF);
+            s_rsp[ri++] = (uint8_t)((totalKB >> 8) & 0xFF);
+            s_rsp[ri++] = (uint8_t)((totalKB >> 16) & 0xFF);
+            s_rsp[ri++] = (uint8_t)((totalKB >> 24) & 0xFF);
+            s_rsp[ri++] = (uint8_t)(freeKB & 0xFF);
+            s_rsp[ri++] = (uint8_t)((freeKB >> 8) & 0xFF);
+            s_rsp[ri++] = (uint8_t)((freeKB >> 16) & 0xFF);
+            s_rsp[ri++] = (uint8_t)((freeKB >> 24) & 0xFF);
+            s_rsp[ri++] = (uint8_t)(usedKB & 0xFF);
+            s_rsp[ri++] = (uint8_t)((usedKB >> 8) & 0xFF);
+            s_rsp[ri++] = (uint8_t)((usedKB >> 16) & 0xFF);
+            s_rsp[ri++] = (uint8_t)((usedKB >> 24) & 0xFF);
+        }
+        put_status(s_rsp, FM_RSP_MAX, &ri, FMGR_OK, "OK");
         break;
     }
 
