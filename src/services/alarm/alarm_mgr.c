@@ -1,6 +1,6 @@
 /**
  * @file    alarm_mgr.c
- * @brief   Alarm manager — monitors inputs, manages alarm state & notifications.
+ * @brief   Alarm manager -- monitors inputs, manages alarm state & notifications.
  *
  * @details Implements per-input alarm detection with configurable debounce,
  *          trigger delay, clear delay, latch, and output mapping.
@@ -24,9 +24,9 @@
 #include <string.h>
 #include <stdio.h>
 
-/* ══════════════════════════════════════════════════════════════════════════
+/* --------------------------------------------------------------------------
  *  Per-input alarm state
- * ══════════════════════════════════════════════════════════════════════════ */
+ * -------------------------------------------------------------------------- */
 
 typedef enum {
     INPUT_ALARM_IDLE = 0,
@@ -42,9 +42,9 @@ typedef struct {
     uint32_t         timer;
 } InputAlarm;
 
-/* ══════════════════════════════════════════════════════════════════════════
+/* --------------------------------------------------------------------------
  *  Module state
- * ══════════════════════════════════════════════════════════════════════════ */
+ * -------------------------------------------------------------------------- */
 
 static InputAlarm   s_input_alarms[CFG_DIN_COUNT];
 static bool         s_moisture_alarm;
@@ -60,9 +60,9 @@ static NotifyState  s_notify_state = NOTIFY_IDLE;
 static int          s_dial_index   = 0;
 static uint8_t      s_dial_attempts = 0;
 
-/* ══════════════════════════════════════════════════════════════════════════
+/* --------------------------------------------------------------------------
  *  Initialisation
- * ══════════════════════════════════════════════════════════════════════════ */
+ * -------------------------------------------------------------------------- */
 
 void AlarmMgr_Init(void)
 {
@@ -79,9 +79,9 @@ void AlarmMgr_Init(void)
     s_dial_attempts  = 0;
 }
 
-/* ══════════════════════════════════════════════════════════════════════════
+/* --------------------------------------------------------------------------
  *  Periodic scan
- * ══════════════════════════════════════════════════════════════════════════ */
+ * -------------------------------------------------------------------------- */
 
 void AlarmMgr_Task(void)
 {
@@ -89,20 +89,33 @@ void AlarmMgr_Task(void)
     uint8_t  inputs = IO_GetDebouncedInputs();
     uint8_t  new_flags = 0;
 
-    /* ── Digital input alarm detection (per-input config) ───────────── */
-    for (uint8_t i = 0; i < CFG_DIN_COUNT; i++) {
-        const InputChannelCfg *icfg = &g_device_cfg.inputs[i];
+    /* -- Digital input alarm detection (per-channel config) --------------- */
+    for (uint8_t i = 0; i < CFG_IO_COUNT; i++) {
+        const IOChannelCfg *icfg = &g_device_cfg.inputs[i];
         InputAlarm *ia = &s_input_alarms[i];
-        bool active = (inputs >> i) & 0x01;
 
-        /* Skip disabled inputs */
-        if (!icfg->enabled) {
+        /* Skip channels that are not digital inputs */
+        uint8_t func = icfg->function;
+        bool is_digital_input = (func == IO_FUNC_DIG_NO || func == IO_FUNC_DIG_NC);
+        bool is_analog_input  = (func == IO_FUNC_ANA_20MA || func == IO_FUNC_ANA_10V || func == IO_FUNC_ANA_1V);
+
+        if (!icfg->enabled || func == IO_FUNC_OFF ||
+            func == IO_FUNC_OUT_OFF || func == IO_FUNC_OUT_ON) {
+            /* Channel is disabled or output -- clear any alarm state */
             if (ia->state != INPUT_ALARM_IDLE) {
                 ia->state = INPUT_ALARM_IDLE;
                 if (icfg->output_map < CFG_DOUT_COUNT)
                     IO_ClearOutput(icfg->output_map);
             }
             continue;
+        }
+
+        bool active = false;
+        if (is_digital_input) {
+            active = (inputs >> i) & 0x01;
+        } else if (is_analog_input) {
+            /* TODO: analogue alarm comparison against set/reset points */
+            active = false;
         }
 
         /* Per-input delays */
@@ -167,7 +180,7 @@ void AlarmMgr_Task(void)
         }
     }
 
-    /* ── Moisture alarm ─────────────────────────────────────────────── */
+    /* -- Moisture alarm ------------------------------------------------ */
     if (IO_GetMoistPct10() >= g_device_cfg.io.moist_thr &&
         g_device_cfg.io.moist_thr > 0) {
         if (!s_moisture_alarm) {
@@ -179,7 +192,7 @@ void AlarmMgr_Task(void)
     }
     if (s_moisture_alarm) new_flags |= ALARM_MOISTURE;
 
-    /* ── Battery monitoring ─────────────────────────────────────────── */
+    /* -- Battery monitoring -------------------------------------------- */
     uint16_t batt_mv = IO_GetBatteryMV();
     uint16_t batt_thr = g_device_cfg.alarm.battery_low_mv;
     if (batt_thr == 0) batt_thr = CFG_BATTERY_LOW_MV;
@@ -194,7 +207,7 @@ void AlarmMgr_Task(void)
     }
     if (s_battery_low) new_flags |= ALARM_BATTERY_LOW;
 
-    /* ── Mains power monitoring ─────────────────────────────────────── */
+    /* -- Mains power monitoring ---------------------------------------- */
     bool mains_now = IO_IsMainsPowerPresent();
     if (s_prev_mains && !mains_now) {
         s_mains_fail = true;
@@ -206,7 +219,7 @@ void AlarmMgr_Task(void)
     s_prev_mains = mains_now;
     if (s_mains_fail) new_flags |= ALARM_MAINS_FAIL;
 
-    /* ── Check for new alarms that need notification ────────────────── */
+    /* -- Check for new alarms that need notification ------------------- */
     uint8_t newly_triggered = new_flags & ~s_active_flags;
     if (newly_triggered && s_notify_state == NOTIFY_IDLE) {
         s_need_notify  = true;
@@ -224,9 +237,9 @@ void AlarmMgr_Task(void)
     s_active_flags = new_flags;
 }
 
-/* ══════════════════════════════════════════════════════════════════════════
+/* --------------------------------------------------------------------------
  *  Query functions
- * ══════════════════════════════════════════════════════════════════════════ */
+ * -------------------------------------------------------------------------- */
 
 uint8_t AlarmMgr_GetActiveAlarms(void)
 {
@@ -275,9 +288,9 @@ void AlarmMgr_Acknowledge(AlarmFlags flag)
     }
 }
 
-/* ══════════════════════════════════════════════════════════════════════════
+/* --------------------------------------------------------------------------
  *  Notification state machine accessors
- * ══════════════════════════════════════════════════════════════════════════ */
+ * -------------------------------------------------------------------------- */
 
 bool AlarmMgr_NeedNotify(void)     { return s_need_notify; }
 NotifyState AlarmMgr_GetNotifyState(void)  { return s_notify_state; }

@@ -17,22 +17,62 @@
 #include <stdbool.h>
 #include "config/app_config.h"
 
-/* ── Per-input alarm configuration ──────────────────────────────────────── */
+/* -- I/O channel function types (matches EDAC 700 + output modes) -------- */
 
-/** Per-input configuration — one entry per digital input channel. */
+typedef enum {
+    IO_FUNC_OFF         = 0,    /**< Disabled / removed for servicing      */
+    IO_FUNC_DIG_NO      = 1,    /**< Digital input -- Normally Open        */
+    IO_FUNC_DIG_NC      = 2,    /**< Digital input -- Normally Closed      */
+    IO_FUNC_ANA_20MA    = 3,    /**< Analogue input -- 4-20mA loop         */
+    IO_FUNC_ANA_10V     = 4,    /**< Analogue input -- 0-10V DC            */
+    IO_FUNC_ANA_1V      = 5,    /**< Analogue input -- 0-1V DC             */
+    IO_FUNC_OUT_OFF     = 6,    /**< Digital output -- OFF on reset        */
+    IO_FUNC_OUT_ON      = 7,    /**< Digital output -- ON on reset         */
+} IOFunction;
+
+/* -- Analogue trigger types (matches EDAC 700) --------------------------- */
+
+typedef enum {
+    ANA_TRIG_WHEN_HIGH  = 0,    /**< Alarm when above set point            */
+    ANA_TRIG_WHEN_LOW   = 1,    /**< Alarm when below set point            */
+    ANA_TRIG_OUTSIDE    = 2,    /**< Alarm when outside set/reset range    */
+    ANA_TRIG_BETWEEN    = 3,    /**< Alarm when between set/reset range    */
+} AnaTrigType;
+
+/* -- Analogue configuration (only used when function is ANA_*) ----------- */
+
 typedef struct {
-    uint8_t  polarity;          /**< 0 = Normally Open, 1 = Normally Closed*/
+    float    low_raw;           /**< Sensor low value (mA or V)            */
+    float    high_raw;          /**< Sensor high value (mA or V)           */
+    float    low_eng;           /**< Low engineering units                 */
+    float    high_eng;          /**< High engineering units                */
+    float    offset;            /**< Calibration offset in eng units       */
+    float    set_point;         /**< High alarm threshold (eng units)      */
+    float    reset_point;       /**< Low alarm / reset threshold           */
+    uint8_t  trig_type;         /**< AnaTrigType enum value                */
+    uint8_t  decimal_places;    /**< Display precision (0..4)              */
+    uint8_t  reserved[2];       /**< Padding for alignment                 */
+} AnalogCfg;
+
+/* -- Per-channel I/O configuration --------------------------------------- */
+
+typedef struct {
+    uint8_t  function;          /**< IOFunction enum value                 */
     uint8_t  latch;             /**< 0 = auto-clear, 1 = latched           */
     uint16_t trigger_delay_ms;  /**< Delay before alarm fires (ms)         */
     uint16_t clear_delay_ms;    /**< Delay before alarm clears (ms)        */
-    uint8_t  output_map;        /**< Output to activate on alarm (0..3,    *
-                                 *   0xFF = none)                          */
+    uint8_t  output_map;        /**< Output ch to activate on alarm        *
+                                 *   (0..3, 0xFF = none)                   */
     uint8_t  enabled;           /**< 0 = disabled, 1 = enabled             */
-    char     label[16];         /**< User-readable label, e.g. "Front Door"*/
+    char     label[16];         /**< User-readable label                   */
     char     audio_file[24];    /**< SD card filename for voice message    */
-} InputChannelCfg;
+    AnalogCfg analog;           /**< Analogue config (ignored if digital)  */
+} IOChannelCfg;
 
-/* ── Legacy I/O configuration (kept for backward compat) ────────────────── */
+/* Keep backward-compat alias */
+typedef IOChannelCfg InputChannelCfg;
+
+/* -- Legacy I/O configuration (kept for backward compat) ----------------- */
 
 typedef struct {
     uint8_t  in_no_nc;          /**< Bit 0..3: 0=NO, 1=NC per input       */
@@ -40,7 +80,7 @@ typedef struct {
     uint16_t moist_thr;         /**< Moisture threshold (0..1000 tenths%)  */
 } InputCfg;
 
-/* ── Other sub-structures ───────────────────────────────────────────────── */
+/* -- Other sub-structures ------------------------------------------------ */
 
 typedef struct {
     char    pin[8];             /**< Optional SMS admin PIN                */
@@ -49,7 +89,7 @@ typedef struct {
 
 typedef struct {
     char    numbers[CFG_PHONEBOOK_MAX_ENTRIES][CFG_PHONEBOOK_NUM_LEN];
-    uint8_t default_index;      /**< 0..15 — default slot for outgoing    */
+    uint8_t default_index;      /**< 0..15 -- default slot for outgoing   */
 } PhonebookCfg;
 
 /** Alarm notification preferences. */
@@ -63,32 +103,25 @@ typedef struct {
     uint8_t  reserved[3];       /**< Padding for future use                */
 } AlarmNotifyCfg;
 
-/* ── Top-level configuration ────────────────────────────────────────────── */
+/* -- Top-level configuration --------------------------------------------- */
 
 typedef struct {
     GlobalCfg           global;
     InputCfg            io;             /**< Legacy bitmask config         */
-    InputChannelCfg     inputs[CFG_DIN_COUNT]; /**< Per-input config       */
+    IOChannelCfg        inputs[CFG_IO_COUNT]; /**< Per-channel I/O config  */
     AlarmNotifyCfg      alarm;          /**< Alarm notification prefs      */
     PhonebookCfg        phonebook;
     uint32_t            crc;            /**< CRC32 over all preceding      */
     uint32_t            version;        /**< Config version counter        */
 } DeviceCfg;
 
-/* ── Global instance and API ────────────────────────────────────────────── */
+/* -- Global instance and API --------------------------------------------- */
 
 extern DeviceCfg g_device_cfg;
 
-/** Load configuration from flash into g_device_cfg. */
-void Cfg_Load(void);
-
-/** Save g_device_cfg to flash. */
-void Cfg_Save(void);
-
-/** Reset g_device_cfg to factory defaults. */
-void Cfg_Defaults(void);
-
-/** Validate CRC of the current configuration.  Returns 0 if valid. */
-int  Cfg_Validate(void);
+void Cfg_Load(void);        /**< Load configuration from flash.           */
+void Cfg_Save(void);        /**< Save g_device_cfg to flash.              */
+void Cfg_Defaults(void);    /**< Reset g_device_cfg to factory defaults.  */
+int  Cfg_Validate(void);    /**< Validate CRC.  Returns 0 if valid.      */
 
 #endif /* SCHEMA_H */

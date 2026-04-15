@@ -1,6 +1,6 @@
 /**
  * @file    alarm_mgr.h
- * @brief   Alarm manager — monitors inputs, sequences notifications.
+ * @brief   Alarm manager -- monitors inputs, sequences notifications.
  *
  * @details The alarm manager is the core product logic for the EDAC 8000.
  *          It monitors digital inputs (debounced), detects alarm conditions,
@@ -9,7 +9,7 @@
  *            1. Activate mapped output relay (siren/light)
  *            2. Dial phone numbers in sequence from the phonebook
  *            3. Play a voice message from the SD card during the call
- *            4. If no answer → dial next number, retry up to max attempts
+ *            4. If no answer -> dial next number, retry up to max attempts
  *            5. Send SMS to all programmed numbers with alarm text
  *            6. Send battery/mains alerts independently
  *
@@ -30,7 +30,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-/* ── Alarm event types ──────────────────────────────────────────────────── */
+/* -- Alarm event types --------------------------------------------------- */
 
 typedef enum {
     ALARM_NONE           = 0,
@@ -58,82 +58,47 @@ typedef enum {
     NOTIFY_DONE,            /**< All numbers tried, notification complete  */
 } NotifyState;
 
-/* ── Public API ─────────────────────────────────────────────────────────── */
+/* -- Public API ---------------------------------------------------------- */
 
-/**
- * @brief  Initialise the alarm manager.  Call once at startup.
- */
+/** Initialise the alarm manager.  Call once at startup. */
 void AlarmMgr_Init(void);
 
-/**
- * @brief  Periodic alarm scan — checks debounced inputs, moisture,
- *         battery, and mains.  Call every CFG_ALARM_SCAN_MS from
- *         the AlarmThread.
- *
- *         Applies trigger delay before firing and clear delay before
- *         resetting.  Handles latch logic per input.
- */
+/** Periodic alarm scan -- checks debounced inputs, moisture,
+ *  battery, and mains.  Call every CFG_ALARM_SCAN_MS from AlarmThread. */
 void AlarmMgr_Task(void);
 
-/**
- * @brief  Get the current active alarm flags (bitmask of AlarmFlags).
- */
+/** Get the current active alarm flags (bitmask of AlarmFlags). */
 uint8_t AlarmMgr_GetActiveAlarms(void);
 
-/**
- * @brief  Legacy compatibility — returns first active alarm code.
- *         0 = none, 1 = moisture, 2..5 = input 1..4, 6 = battery, 7 = mains
- */
+/** Legacy compatibility -- returns first active alarm code.
+ *  0=none, 1=moisture, 2..5=input 1..4, 6=battery, 7=mains */
 uint8_t AlarmMgr_GetCode(void);
 
-/**
- * @brief  Acknowledge/reset all alarms.  Clears latched alarms and
- *         stops any active notification sequence.
- */
+/** Acknowledge/reset all alarms.  Clears latched alarms. */
 void AlarmMgr_Reset(void);
 
-/**
- * @brief  Acknowledge a specific alarm by flag.
- */
+/** Acknowledge a specific alarm by flag. */
 void AlarmMgr_Acknowledge(AlarmFlags flag);
 
-/**
- * @brief  Check if the notification state machine needs to run.
- * @return true if there is an unserviced alarm waiting for notification.
- */
+/** Check if the notification state machine needs to run. */
 bool AlarmMgr_NeedNotify(void);
 
-/**
- * @brief  Get the current notification state (for the AlarmThread).
- */
+/** Get the current notification state (for the AlarmThread). */
 NotifyState AlarmMgr_GetNotifyState(void);
 
-/**
- * @brief  Set the notification state (driven by AlarmThread).
- */
+/** Set the notification state (driven by AlarmThread). */
 void AlarmMgr_SetNotifyState(NotifyState state);
 
-/**
- * @brief  Get the phone number index to dial next (0..15).
- *         Returns -1 if all numbers have been tried.
- */
+/** Get the phone number index to dial next (0..15).  Returns -1 if done. */
 int AlarmMgr_GetNextDialIndex(void);
 
-/**
- * @brief  Advance to the next phone number in the call list.
- */
+/** Advance to the next phone number in the call list. */
 void AlarmMgr_AdvanceDialIndex(void);
 
-/**
- * @brief  Get the alarm SMS text for the current alarm event.
- * @param  out     Buffer to fill with message text
- * @param  outLen  Size of the buffer
- */
+/** Get the alarm SMS text for the current alarm event. */
 void AlarmMgr_GetAlarmSmsText(char *out, size_t outLen);
 
-/**
- * @brief  Mark notification as complete for the current alarm event.
- */
+/** Mark notification as complete for the current alarm event. */
 void AlarmMgr_NotifyComplete(void);
 
 #endif /* ALARM_MGR_H */

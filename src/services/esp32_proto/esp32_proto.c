@@ -7,22 +7,53 @@
 #include "drivers/esp32/esp32_comm.h"                         // ESP32_SendFrame(...)
 #include "peripheral/uart/plib_uart1.h"         // UART1_SerialSetup, etc.
 #include "peripheral/uart/plib_uart_common.h"   // UART_SERIAL_SETUP
-#include "common/schema.h"        // <-- Add this line
-#include "services/storage/store.h"         // or wherever phonebook_* is declared
+#include "common/schema.h"
+#include "services/storage/store.h"
 #include "hal/io_monitor/io_monitor.h"
 #include "services/alarm/alarm_mgr.h"
 #include "services/sd_service/sd_file_mgr.h"
 #include "services/sd_service/sd_service.h"
+#include "common/debug.h"
 // extern time base (from your Timer1 tick)
 extern volatile uint32_t g_ms_ticks;
 
-// declare UART3_WriteString33 prototype or include the header
+/* -- BLE debug log (tag 0x7F) -------------------------------------------- */
+#define T_DBG_LOG   0x7F
+
+void Debug_SendBle(const char *msg)
+{
+    if (msg == NULL) return;
+    size_t mlen = strlen(msg);
+    if (mlen == 0 || mlen > 120) return;
+
+    /* Frame: [0x81][0x00][0x7F][len][msg...] */
+    uint8_t frame[128];
+    size_t fi = 0;
+    frame[fi++] = 0x81;         /* reply opcode (unsolicited) */
+    frame[fi++] = 0x00;         /* status OK */
+    frame[fi++] = T_DBG_LOG;
+    frame[fi++] = (uint8_t)mlen;
+    memcpy(&frame[fi], msg, mlen);
+    fi += mlen;
+
+    ESP32_SendFrame(frame, fi);
+}
+
+// UART3 debug output -- guarded by CFG_DBG_UART3 flag
 void UART3_WriteString33(const char *str); // forward declaration
+
+static void dbg_uart3(const char *str) {
+#if CFG_DBG_UART3
+    UART3_WriteString33(str);
+#else
+    (void)str;
+#endif
+}
 
 static void uart3_write_hex(uint8_t byte) {
     const char hex[] = "0123456789ABCDEF";
     char out[3] = {hex[byte >> 4], hex[byte & 0x0F], 0};
-    UART3_WriteString33(out);
+    dbg_uart3(out);
 }
 
 /* -------------------- Protocol definitions -------------------- */
@@ -120,7 +151,6 @@ static inline uint32_t PBCLK_Hz(void) {
 }
 
 /* -------------------- TLV helpers -------------------- */
-// at top of file
 
 enum {
     T_SMS_EN = 0x20,
@@ -129,70 +159,67 @@ enum {
     T_PHONEBOOK_DEF = 0x42, // one-byte slot index
 };
 
-/* Input configuration tags (per-input, slot byte first) */
+/* Input configuration tags (per-channel, slot byte first) */
 enum {
-    T_INPUT_CFG_GET  = 0x50, /**< GET: slot(1) -> returns full config    */
-    T_INPUT_CFG_SET  = 0x51, /**< SET: slot(1) + fields                 */
-    T_INPUT_POLARITY = 0x52, /**< u8: 0=NO, 1=NC                        */
-    T_INPUT_LATCH    = 0x53, /**< u8: 0=auto-clear, 1=latched            */
-    T_INPUT_TRIG_DLY = 0x54, /**< u16 LE: trigger delay ms               */
-    T_INPUT_CLR_DLY  = 0x55, /**< u16 LE: clear delay ms                 */
-    T_INPUT_OUT_MAP  = 0x56, /**< u8: output 0..3, 0xFF=none             */
-    T_INPUT_ENABLED  = 0x57, /**< u8: 0=disabled, 1=enabled              */
-    T_INPUT_LABEL    = 0x58, /**< string: up to 15 chars                 */
-    T_INPUT_AUDIO    = 0x59, /**< string: SD filename up to 23 chars     */
+    T_INPUT_CFG_GET  = 0x50,
+    T_INPUT_CFG_SET  = 0x51,
+    T_INPUT_POLARITY = 0x52, /**< DEPRECATED -- use T_INPUT_FUNCTION      */
+    T_INPUT_LATCH    = 0x53,
+    T_INPUT_TRIG_DLY = 0x54,
+    T_INPUT_CLR_DLY  = 0x55,
+    T_INPUT_OUT_MAP  = 0x56,
+    T_INPUT_ENABLED  = 0x57,
+    T_INPUT_LABEL    = 0x58,
+    T_INPUT_AUDIO    = 0x59,
+    T_INPUT_FUNCTION = 0x5A, /**< u8: IOFunction enum (0..7)              */
+    T_INPUT_ANA_CFG  = 0x5B, /**< Analogue config block (36 bytes)        */
 };
 
 /* Live scan result tags */
 enum {
-    T_SCAN_RESULT    = 0x60, /**< GET: returns all scan data             */
-    T_SCAN_DEBOUNCED = 0x61, /**< u8: debounced input mask               */
-    T_SCAN_RAW       = 0x62, /**< u8: raw input mask                     */
-    T_SCAN_ALARM_FLAGS=0x63, /**< u8: active AlarmFlags bitmask          */
-    T_SCAN_IN_STATE  = 0x64, /**< 4 bytes: per-input alarm state 0..5    */
-    T_SCAN_OUTPUTS   = 0x65, /**< u8: current output mask                */
-    T_SCAN_BATT_MV   = 0x66, /**< u16 LE: battery millivolts             */
-    T_SCAN_MAINS     = 0x67, /**< u8: 1=present, 0=fail                  */
-    T_SCAN_MOIST     = 0x68, /**< u16 LE: moisture tenths %              */
+    T_SCAN_RESULT    = 0x60,
+    T_SCAN_DEBOUNCED = 0x61,
+    T_SCAN_RAW       = 0x62,
+    T_SCAN_ALARM_FLAGS=0x63,
+    T_SCAN_IN_STATE  = 0x64,
+    T_SCAN_OUTPUTS   = 0x65,
+    T_SCAN_BATT_MV   = 0x66,
+    T_SCAN_MAINS     = 0x67,
+    T_SCAN_MOIST     = 0x68,
 };
-extern void handle_sms_enable_cmd(uint8_t flag); // implemented in protothreads.c
+extern void handle_sms_enable_cmd(uint8_t flag);
 extern uint8_t sms_get_enabled(void);
 
 void send_phonebook_list(void) {
     uint8_t rsp[320];
     size_t idx = 0;
 
-    UART3_WriteString33("send_phonebook_list() called\r\n");
+    dbg_uart3("send_phonebook_list() called\r\n");
 
-    // Reply opcode: reply to OPC_SET (0x02) -> 0x82
     rsp[idx++] = OPC_SET | 0x80;
-    rsp[idx++] = ST_OK; // status placeholder
+    rsp[idx++] = ST_OK;
 
     for (uint8_t slot = 0; slot < 16; slot++) {
-        const char *num = phonebook_get_number(slot); // [flash] version
+        const char *num = phonebook_get_number(slot);
         if (num) {
             size_t len = strlen(num);
 
-            UART3_WriteString33(" adding TLV for slot=");
+            dbg_uart3(" adding TLV for slot=");
             uart3_write_hex(slot);
-            UART3_WriteString33(" num=\"");
+            dbg_uart3(" num=\"");
             for (size_t i = 0; i < len; i++) {
-
-                UART3_WriteString33((char[]) {
-                    num[i], 0
-                });
+                dbg_uart3((char[]) { num[i], 0 });
             }
-            UART3_WriteString33("\"\r\n");
+            dbg_uart3("\"\r\n");
 
-            // Check space: tag(1) + len(1) + slot(1) + digits(len)
             if (idx + 2 + 1 + len > sizeof (rsp)) {
-                UART3_WriteString33(" buffer full, breaking\r\n");
+                dbg_uart3(" buffer full, breaking\r\n");
                 break;
             }
 
-            rsp[idx++] = T_PHONEBOOK_SET; // 0x40
-            rsp[idx++] = (uint8_t) (1 + len); // length = slot + digits
-            rsp[idx++] = slot; // slot index
+            rsp[idx++] = T_PHONEBOOK_SET;
+            rsp[idx++] = (uint8_t) (1 + len);
+            rsp[idx++] = slot;
             memcpy(&rsp[idx], num, len);
             idx += len;
         }
@@ -200,23 +227,23 @@ void send_phonebook_list(void) {
 
     uint8_t def = phonebook_get_default();
     if (def < 16 && idx + 3 <= sizeof (rsp)) {
-        UART3_WriteString33(" adding default TLV, def=");
+        dbg_uart3(" adding default TLV, def=");
         uart3_write_hex(def);
-        UART3_WriteString33("\r\n");
+        dbg_uart3("\r\n");
 
-        rsp[idx++] = T_PHONEBOOK_DEF; // 0x42
-        rsp[idx++] = 1; // length = 1 byte
-        rsp[idx++] = def; // default index
+        rsp[idx++] = T_PHONEBOOK_DEF;
+        rsp[idx++] = 1;
+        rsp[idx++] = def;
     } else {
-        UART3_WriteString33(" default TLV skipped (def>=16 or no space)\r\n");
+        dbg_uart3(" default TLV skipped (def>=16 or no space)\r\n");
     }
 
-    UART3_WriteString33("send_phonebook_list: final frame bytes = ");
+    dbg_uart3("send_phonebook_list: final frame bytes = ");
     for (size_t i = 0; i < idx; i++) {
         uart3_write_hex(rsp[i]);
-        UART3_WriteString33(" ");
+        dbg_uart3(" ");
     }
-    UART3_WriteString33("\r\n");
+    dbg_uart3("\r\n");
 
     ESP32_SendFrame(rsp, idx);
 }
@@ -282,7 +309,7 @@ static bool tlv_get_reply(uint8_t tag, uint8_t* out, size_t cap, size_t* idx) {
             uint8_t v = sms_get_enabled();
             return put_tlv(out, cap, idx, T_SMS_EN, &v, 1);
         }
-            /* New aggregate tag: pack all 0x30..0x37 in one shot */
+        /* Aggregate tag: pack all 0x30..0x37 in one shot */
         case T_INPUTS:
         {
             uint8_t in = HAL_get_inputs();
@@ -303,23 +330,14 @@ static bool tlv_get_reply(uint8_t tag, uint8_t* out, size_t cap, size_t* idx) {
             return true;
         }
         default:
-            /* ── Input config GET: returns all fields for one input ── */
+            /* -- Input config GET: returns all fields for all channels -- */
             if (tag == T_INPUT_CFG_GET) {
-                /* Caller sends T_INPUT_CFG_GET with len=1, value=slot */
-                /* We return the full config for that slot */
-                /* Note: actual slot comes from the TLV value byte,
-                   but in GET the tag+len is enough to trigger a full dump
-                   of all 4 inputs */
-                for (uint8_t ch = 0; ch < CFG_DIN_COUNT; ch++) {
-                    const InputChannelCfg *ic = &g_device_cfg.inputs[ch];
-                    if (!put_tlv(out, cap, idx, T_INPUT_POLARITY, &(uint8_t){(ic->polarity & 0x0F) | (ch << 4)}, 1)) return false;
-                    if (!put_tlv(out, cap, idx, T_INPUT_LATCH, &(uint8_t){(ic->latch & 0x0F) | (ch << 4)}, 1)) return false;
-                    /* Encode: high nibble = slot, TLV value = config.
-                       Simpler approach: pack slot + all fields in one TLV */
-                    uint8_t cfg_block[32];
+                for (uint8_t ch = 0; ch < CFG_IO_COUNT; ch++) {
+                    const IOChannelCfg *ic = &g_device_cfg.inputs[ch];
+                    uint8_t cfg_block[64];
                     size_t bi = 0;
                     cfg_block[bi++] = ch;                         /* slot */
-                    cfg_block[bi++] = ic->polarity;
+                    cfg_block[bi++] = ic->function;               /* IOFunction */
                     cfg_block[bi++] = ic->latch;
                     cfg_block[bi++] = (uint8_t)(ic->trigger_delay_ms & 0xFF);
                     cfg_block[bi++] = (uint8_t)(ic->trigger_delay_ms >> 8);
@@ -327,17 +345,20 @@ static bool tlv_get_reply(uint8_t tag, uint8_t* out, size_t cap, size_t* idx) {
                     cfg_block[bi++] = (uint8_t)(ic->clear_delay_ms >> 8);
                     cfg_block[bi++] = ic->output_map;
                     cfg_block[bi++] = ic->enabled;
-                    /* label (up to 15 chars + null) */
+                    /* label (up to 15 chars) */
                     size_t llen = strnlen(ic->label, 15);
                     cfg_block[bi++] = (uint8_t)llen;
                     memcpy(&cfg_block[bi], ic->label, llen);
                     bi += llen;
+                    /* Analogue config (36 bytes) -- always send, app ignores if digital */
+                    memcpy(&cfg_block[bi], &ic->analog, sizeof(AnalogCfg));
+                    bi += sizeof(AnalogCfg);
                     if (!put_tlv(out, cap, idx, T_INPUT_CFG_GET, cfg_block, (uint8_t)bi)) return false;
                 }
                 return true;
             }
 
-            /* ── Live scan result: full snapshot ── */
+            /* -- Live scan result: full snapshot -- */
             if (tag == T_SCAN_RESULT) {
                 uint8_t deb = IO_GetDebouncedInputs();
                 uint8_t raw = IO_GetInputsRaw();
@@ -362,252 +383,6 @@ static bool tlv_get_reply(uint8_t tag, uint8_t* out, size_t cap, size_t* idx) {
     }
 }
 
-///* Apply TLVs for SET command */
-//static bool tlv_apply(const uint8_t* p, size_t plen, uint8_t* st_out) {
-//    if (plen < 2) {
-//        *st_out = ST_BAD_TLV;
-//        return false;
-//    }
-//    uint8_t tag = p[0], len = p[1];
-//    if (plen < (size_t) (2 + len)) {
-//        *st_out = ST_BAD_TLV;
-//        return false;
-//    }
-//
-//    switch (tag) {
-//        case T_LED_STATE:
-//            if (len != 1) {
-//                *st_out = ST_BAD_TLV;
-//                return false;
-//            }
-//            led_set(p[2] ? true : false);
-//            *st_out = ST_OK;
-//            return true;
-//        case T_SMS_EN:
-//            if (len != 1) {
-//                *st_out = ST_BAD_TLV;
-//                return false;
-//            }
-//            handle_sms_enable_cmd(p[2] ? 1u : 0u);
-//            *st_out = ST_OK;
-//            return true;
-//        case T_PHONEBOOK_SET:
-//        {
-//            /* p[2] = slot (0..15); p+3..p+len-1 = ASCII number */
-//            if (len < 2) {
-//                *st_out = ST_BAD_TLV;
-//                return false;
-//            }
-//            uint8_t slot = p[2];
-//            if (slot >= 16) {
-//                *st_out = ST_BAD_TLV;
-//                return false;
-//            }
-//
-//            // --- DEBUG: print incoming SET TLV ---
-//            UART3_WriteString33("T_PHONEBOOK_SET TLV received: slot=");
-//            uart3_write_hex(slot);
-//            UART3_WriteString33(" len=");
-//            uart3_write_hex(len);
-//            UART3_WriteString33(" data=\"");
-//            for (uint8_t i = 0; i < (uint8_t) (len - 1); i++) {
-//                char c = (char) p[3 + i];
-//                // crude: send each char
-//
-//                UART3_WriteString33((char[]) {
-//                    c, 0
-//                });
-//            }
-//            UART3_WriteString33("\"\r\n");
-//            // -------------------------------------
-//
-//            /* copy number (ensure zero-termination and max 23 chars) */
-//            char num[24] = {0};
-//            size_t copylen = len - 1;
-//            if (copylen > 23) copylen = 23;
-//            memcpy(num, &p[3], copylen);
-//            phonebook_set_number(slot, num);
-//
-//            UART3_WriteString33("phonebook_set_number done\r\n");
-//
-//            *st_out = ST_OK;
-//            return true;
-//        }
-//        case T_PHONEBOOK_LIST:
-//        {
-//            //debug
-//            UART3_WriteString33("T_PHONEBOOK_LIST received, calling send_phonebook_list()\r\n");
-//            /* no payload; respond to app with a TLV listing the numbers */
-//            send_phonebook_list();
-//            *st_out = ST_OK;
-//            return true;
-//        }
-//        case T_PHONEBOOK_DEF:
-//        {
-//            if (len != 1) {
-//                *st_out = ST_BAD_TLV;
-//                return false;
-//            }
-//            uint8_t slot = p[2];
-//            if (slot >= 16) {
-//                *st_out = ST_BAD_TLV;
-//                return false;
-//            }
-//            phonebook_set_default(slot);
-//            *st_out = ST_OK;
-//            return true;
-//        }
-//
-//        case T_UART1_BAUD:
-//        {
-//            if (len != 4) {
-//                *st_out = ST_BAD_TLV;
-//                return false;
-//            }
-//            uint32_t baud = (uint32_t) p[2]
-//                    | ((uint32_t) p[3] << 8)
-//                    | ((uint32_t) p[4] << 16)
-//                    | ((uint32_t) p[5] << 24);
-//            if (baud < 1200 || baud > 921600) {
-//                *st_out = ST_APPLY_FAIL;
-//                return false;
-//            }
-//            UART_SERIAL_SETUP s = {.baudRate = baud, .dataWidth = UART_DATA_8_BIT,
-//                .parity = UART_PARITY_NONE, .stopBits = UART_STOP_1_BIT};
-//            bool ok = UART1_SerialSetup(&s, PBCLK_Hz()*2);
-//            *st_out = ok ? ST_OK : ST_APPLY_FAIL;
-//            return ok;
-//        }
-//        default:
-//            *st_out = ST_BAD_TLV;
-//            return false;
-//    }
-//}
-//
-///* Main handler for each received payload from ESP32 */
-//void Esp_HandleFrame(const uint8_t* payload, size_t len) {
-//    //Debug
-//    UART3_WriteString33("ESP->PIC32 FRAME RECEIVED: ");
-//    for (int i = 0; i < len; i++) {
-//        uart3_write_hex(payload[i]);
-//        UART3_WriteString33(" ");
-//    }
-//    UART3_WriteString33("\r\n");
-//
-//    //Debug
-//
-//    if (len == 0) return;
-//    uint8_t op = payload[0];
-//    const uint8_t* q = payload + 1;
-//    size_t rem = (len > 0) ? (len - 1) : 0;
-//
-//    uint8_t rsp[320];
-//    size_t ri = 0;
-//    uint8_t status = ST_OK;
-//    uint8_t rop = op | 0x80; // reply opcode
-//
-//    rsp[ri++] = rop;
-//    rsp[ri++] = ST_OK; // placeholder
-//
-//    switch (op) {
-//        case OPC_PING:
-//            break; // no TLVs
-//        case OPC_ECHO:
-//            if (rem <= 255) {
-//                if (!put_tlv(rsp, sizeof (rsp), &ri, 0xEE, q, (uint8_t) rem)) status = ST_BAD_LEN;
-//            } else status = ST_BAD_LEN;
-//            break;
-//        case OPC_SET:
-//        {
-//            // Check for ALARMCTL sub-command
-//            if (rem >= 1 && q[0] == SUB_ALARMCTL) {
-//                q++;
-//                rem--;
-//                bool did = false;
-//                while (rem >= 2) {
-//                    uint8_t l = q[1];
-//                    if (rem < (size_t) (2 + l)) {
-//                        status = ST_BAD_TLV;
-//                        break;
-//                    }
-//                    if (q[0] == T_ALARM_RESET && l == 1 && q[2] == 1) {
-//                        HAL_reset_alarm();
-//                        did = true;
-//                    }
-//                    rem -= (2 + l);
-//                    q += (2 + l);
-//                }
-//                if (status == ST_OK && did) {
-//                    uint8_t one = 1;
-//                    (void) put_tlv(rsp, sizeof (rsp), &ri, T_ACK, &one, 1); // A0 01 01
-//                } else if (status == ST_OK && !did) {
-//                    status = ST_BAD_TLV;
-//                }
-//                break;
-//            }
-//
-//            // Skip SUB_PHONEBOOK (0x22) if present
-//            //            if (rem >= 1 && q[0] == 0x22) {
-//            //                q++;
-//            //                rem--;
-//            //            }
-//
-//            // Legacy SET: treat TLVs directly
-//            uint8_t last_led = 0xFF;
-//            uint8_t last_sms = 0xFF;
-//
-//            while (rem >= 2) {
-//                uint8_t l = q[1];
-//                if (rem < (size_t) (2 + l)) {
-//                    status = ST_BAD_TLV;
-//                    break;
-//                }
-//
-//                if (q[0] == T_LED_STATE && l == 1) last_led = q[2];
-//                if (q[0] == T_SMS_EN && l == 1) last_sms = q[2];
-//
-//                uint8_t st_each = ST_OK;
-//                bool ok = tlv_apply(q, 2 + l, &st_each);
-//                if (!ok && status == ST_OK) status = st_each;
-//                q += 2 + l;
-//                rem -= 2 + l;
-//            }
-//            if (status == ST_OK) {
-//                if (last_led != 0xFF) (void)put_tlv(rsp, sizeof rsp, &ri, T_ACK, &last_led, 1);
-//                if (last_sms != 0xFF) (void)put_tlv(rsp, sizeof rsp, &ri, T_ACK, &last_sms, 1);
-//            }
-//            break;
-//        }
-//        case OPC_GET:
-//        {
-//            while (rem >= 2) {
-//                uint8_t tag = q[0], l = q[1];
-//                if (rem < (size_t) (2 + l)) {
-//                    status = ST_BAD_TLV;
-//                    break;
-//                }
-//                if (!tlv_get_reply(tag, rsp, sizeof (rsp), &ri)) {
-//                    status = ST_BAD_LEN;
-//                    break;
-//                }
-//                q += 2 + l;
-//                rem -= 2 + l;
-//            }
-//            if (rem != 0 && status == ST_OK) status = ST_BAD_TLV;
-//            break;
-//        }
-//        default:
-//            status = ST_UNKNOWN_OP;
-//            break;
-//    }
-//    rsp[1] = status;
-//    ESP32_SendFrame(rsp, ri);
-//}
-
-
-
-//Test replacment
-
 /* Apply TLVs for SET command */
 static bool tlv_apply(const uint8_t* p, size_t plen, uint8_t* st_out) {
     if (plen < 2) {
@@ -622,69 +397,47 @@ static bool tlv_apply(const uint8_t* p, size_t plen, uint8_t* st_out) {
 
     switch (tag) {
         case T_LED_STATE:
-            if (len != 1) {
-                *st_out = ST_BAD_TLV;
-                return false;
-            }
+            if (len != 1) { *st_out = ST_BAD_TLV; return false; }
             led_set(p[2] ? true : false);
             *st_out = ST_OK;
             return true;
 
         case T_SMS_EN:
-            if (len != 1) {
-                *st_out = ST_BAD_TLV;
-                return false;
-            }
+            if (len != 1) { *st_out = ST_BAD_TLV; return false; }
             handle_sms_enable_cmd(p[2] ? 1u : 0u);
             *st_out = ST_OK;
             return true;
 
         case T_PHONEBOOK_SET:
         {
-            /* p[2] = slot (0..15); p+3..p+len-1 = ASCII number */
-            if (len < 2) {
-                *st_out = ST_BAD_TLV;
-                return false;
-            }
+            if (len < 2) { *st_out = ST_BAD_TLV; return false; }
             uint8_t slot = p[2];
-            if (slot >= 16) {
-                *st_out = ST_BAD_TLV;
-                return false;
-            }
+            if (slot >= 16) { *st_out = ST_BAD_TLV; return false; }
 
-            // --- DEBUG: print incoming SET TLV ---
-            UART3_WriteString33("T_PHONEBOOK_SET TLV received: slot=");
+            dbg_uart3("T_PHONEBOOK_SET TLV received: slot=");
             uart3_write_hex(slot);
-            UART3_WriteString33(" len=");
+            dbg_uart3(" len=");
             uart3_write_hex(len);
-            UART3_WriteString33(" data=\"");
+            dbg_uart3(" data=\"");
             for (uint8_t i = 0; i < (uint8_t) (len - 1); i++) {
                 char c = (char) p[3 + i];
-
-                UART3_WriteString33((char[]) {
-                    c, 0});
+                dbg_uart3((char[]) { c, 0 });
             }
-            UART3_WriteString33("\"\r\n");
-            // -------------------------------------
+            dbg_uart3("\"\r\n");
 
-            /* copy number (ensure zero-termination and max 23 chars) */
             char num[24] = {0};
             size_t copylen = len - 1;
             if (copylen > 23) copylen = 23;
             memcpy(num, &p[3], copylen);
-
             phonebook_set_number(slot, num);
-
-            UART3_WriteString33("phonebook_set_number done\r\n");
-
+            dbg_uart3("phonebook_set_number done\r\n");
             *st_out = ST_OK;
             return true;
         }
 
         case T_PHONEBOOK_LIST:
         {
-            UART3_WriteString33("T_PHONEBOOK_LIST received, calling send_phonebook_list()\r\n");
-            /* no payload; respond to app with a TLV listing the numbers */
+            dbg_uart3("T_PHONEBOOK_LIST received, calling send_phonebook_list()\r\n");
             send_phonebook_list();
             *st_out = ST_OK;
             return true;
@@ -692,15 +445,9 @@ static bool tlv_apply(const uint8_t* p, size_t plen, uint8_t* st_out) {
 
         case T_PHONEBOOK_DEF:
         {
-            if (len != 1) {
-                *st_out = ST_BAD_TLV;
-                return false;
-            }
+            if (len != 1) { *st_out = ST_BAD_TLV; return false; }
             uint8_t slot = p[2];
-            if (slot >= 16) {
-                *st_out = ST_BAD_TLV;
-                return false;
-            }
+            if (slot >= 16) { *st_out = ST_BAD_TLV; return false; }
             phonebook_set_default(slot);
             *st_out = ST_OK;
             return true;
@@ -708,10 +455,7 @@ static bool tlv_apply(const uint8_t* p, size_t plen, uint8_t* st_out) {
 
         case T_UART1_BAUD:
         {
-            if (len != 4) {
-                *st_out = ST_BAD_TLV;
-                return false;
-            }
+            if (len != 4) { *st_out = ST_BAD_TLV; return false; }
             uint32_t baud = (uint32_t) p[2]
                     | ((uint32_t) p[3] << 8)
                     | ((uint32_t) p[4] << 16)
@@ -731,21 +475,14 @@ static bool tlv_apply(const uint8_t* p, size_t plen, uint8_t* st_out) {
             return ok;
         }
 
-        /* ── Input configuration SET ────────────────────────────────── */
+        /* -- Input configuration SET ---------------------------------- */
         case T_INPUT_CFG_SET:
         {
-            /* Format: [slot(1)] [sub-TLVs...]
-             * Sub-TLVs inside the value:
-             *   T_INPUT_POLARITY(1), T_INPUT_LATCH(1),
-             *   T_INPUT_TRIG_DLY(2 LE), T_INPUT_CLR_DLY(2 LE),
-             *   T_INPUT_OUT_MAP(1), T_INPUT_ENABLED(1),
-             *   T_INPUT_LABEL(n), T_INPUT_AUDIO(n)
-             */
             if (len < 1) { *st_out = ST_BAD_TLV; return false; }
             uint8_t slot = p[2];
-            if (slot >= CFG_DIN_COUNT) { *st_out = ST_BAD_TLV; return false; }
+            if (slot >= CFG_IO_COUNT) { *st_out = ST_BAD_TLV; return false; }
 
-            InputChannelCfg *ic = &g_device_cfg.inputs[slot];
+            IOChannelCfg *ic = &g_device_cfg.inputs[slot];
             const uint8_t *sub = &p[3];
             size_t srem = (size_t)(len - 1);
 
@@ -756,7 +493,10 @@ static bool tlv_apply(const uint8_t* p, size_t plen, uint8_t* st_out) {
                 const uint8_t *sv = &sub[2];
 
                 switch (stag) {
-                    case T_INPUT_POLARITY: if (slen==1) ic->polarity = sv[0]; break;
+                    case T_INPUT_FUNCTION: if (slen==1) ic->function = sv[0]; break;
+                    case T_INPUT_POLARITY: /* legacy -- map to function */
+                        if (slen==1) ic->function = sv[0] ? IO_FUNC_DIG_NC : IO_FUNC_DIG_NO;
+                        break;
                     case T_INPUT_LATCH:    if (slen==1) ic->latch    = sv[0]; break;
                     case T_INPUT_TRIG_DLY: if (slen==2) ic->trigger_delay_ms = sv[0] | ((uint16_t)sv[1]<<8); break;
                     case T_INPUT_CLR_DLY:  if (slen==2) ic->clear_delay_ms   = sv[0] | ((uint16_t)sv[1]<<8); break;
@@ -774,26 +514,37 @@ static bool tlv_apply(const uint8_t* p, size_t plen, uint8_t* st_out) {
                         ic->audio_file[clen] = '\0';
                         break;
                     }
+                    case T_INPUT_ANA_CFG: {
+                        if (slen == sizeof(AnalogCfg)) {
+                            memcpy(&ic->analog, sv, sizeof(AnalogCfg));
+                        }
+                        break;
+                    }
                     default: break;
                 }
                 sub  += 2 + slen;
                 srem -= 2 + slen;
             }
 
-            /* Sync legacy bitmask from per-input config */
+            /* Sync legacy bitmask from per-channel config */
             g_device_cfg.io.in_no_nc = 0;
             g_device_cfg.io.in_latch = 0;
-            for (uint8_t ch = 0; ch < CFG_DIN_COUNT; ch++) {
-                if (g_device_cfg.inputs[ch].polarity) g_device_cfg.io.in_no_nc |= (1u << ch);
-                if (g_device_cfg.inputs[ch].latch)    g_device_cfg.io.in_latch |= (1u << ch);
+            for (uint8_t ch = 0; ch < CFG_IO_COUNT; ch++) {
+                if (g_device_cfg.inputs[ch].function == IO_FUNC_DIG_NC)
+                    g_device_cfg.io.in_no_nc |= (1u << ch);
+                if (g_device_cfg.inputs[ch].latch)
+                    g_device_cfg.io.in_latch |= (1u << ch);
             }
+
+            /* Reconfigure GPIO direction for changed channel */
+            IO_ReconfigureChannel(slot);
 
             Cfg_Save();
             *st_out = ST_OK;
             return true;
         }
 
-        /* ── SD card file operations ───────────────────────────────── */
+        /* -- SD card file operations ---------------------------------- */
         case T_FILE_DELETE:
         {
             if (len < 1) { *st_out = ST_BAD_TLV; return false; }
@@ -832,20 +583,15 @@ static bool tlv_apply(const uint8_t* p, size_t plen, uint8_t* st_out) {
     }
 }
 
-
-
-
-//Test
-
 /* Main handler for each received payload from ESP32 */
 void Esp_HandleFrame(const uint8_t* payload, size_t len) {
-    // Debug: print raw frame
-    UART3_WriteString33("ESP->PIC32 FRAME RECEIVED: ");
+    /* Debug: print raw frame */
+    dbg_uart3("ESP->PIC32 FRAME RECEIVED: ");
     for (size_t i = 0; i < len; i++) {
         uart3_write_hex(payload[i]);
-        UART3_WriteString33(" ");
+        dbg_uart3(" ");
     }
-    UART3_WriteString33("\r\n");
+    dbg_uart3("\r\n");
 
     if (len == 0) return;
 
@@ -863,7 +609,6 @@ void Esp_HandleFrame(const uint8_t* payload, size_t len) {
 
     switch (op) {
         case OPC_PING:
-            // No TLVs, just reply with opcode + status = OK
             break;
 
         case OPC_ECHO:
@@ -876,12 +621,8 @@ void Esp_HandleFrame(const uint8_t* payload, size_t len) {
             }
             break;
 
-
         case OPC_SET:
         {
-            // ? TEMP: Disable ALARMCTL subcommand because 0x40 is used by phonebook.
-            // We treat all TLVs in the payload directly via tlv_apply().
-
             uint8_t last_led = 0xFF;
             uint8_t last_sms = 0xFF;
 
@@ -898,7 +639,7 @@ void Esp_HandleFrame(const uint8_t* payload, size_t len) {
                 uint8_t st_each = ST_OK;
                 bool ok = tlv_apply(q, 2 + l, &st_each);
                 if (st_each == 0xFF) {
-                    /* File operation posted — suppress entire SET reply */
+                    /* File operation posted -- suppress entire SET reply */
                     q += 2 + l;
                     rem -= 2 + l;
                     ri = 0;
@@ -916,64 +657,6 @@ void Esp_HandleFrame(const uint8_t* payload, size_t len) {
             }
             break;
         }
-
-            //        case OPC_SET:
-            //        {
-            //            // Check for ALARMCTL sub-command
-            //            if (rem >= 1 && q[0] == SUB_ALARMCTL) {
-            //                q++;
-            //                rem--;
-            //                bool did = false;
-            //                while (rem >= 2) {
-            //                    uint8_t l = q[1];
-            //                    if (rem < (size_t)(2 + l)) {
-            //                        status = ST_BAD_TLV;
-            //                        break;
-            //                    }
-            //                    if (q[0] == T_ALARM_RESET && l == 1 && q[2] == 1) {
-            //                        HAL_reset_alarm();
-            //                        did = true;
-            //                    }
-            //                    rem -= (2 + l);
-            //                    q   += (2 + l);
-            //                }
-            //                if (status == ST_OK && did) {
-            //                    uint8_t one = 1;
-            //                    (void)put_tlv(rsp, sizeof(rsp), &ri, T_ACK, &one, 1); // A0 01 01
-            //                } else if (status == ST_OK && !did) {
-            //                    status = ST_BAD_TLV;
-            //                }
-            //                break;
-            //            }
-            //
-            //            // Legacy SET: treat TLVs directly
-            //            uint8_t last_led = 0xFF;
-            //            uint8_t last_sms = 0xFF;
-            //
-            //            while (rem >= 2) {
-            //                uint8_t l = q[1];
-            //                if (rem < (size_t)(2 + l)) {
-            //                    status = ST_BAD_TLV;
-            //                    break;
-            //                }
-            //
-            //                if (q[0] == T_LED_STATE && l == 1) last_led = q[2];
-            //                if (q[0] == T_SMS_EN   && l == 1) last_sms = q[2];
-            //
-            //                uint8_t st_each = ST_OK;
-            //                bool ok = tlv_apply(q, 2 + l, &st_each);
-            //                if (!ok && status == ST_OK) status = st_each;
-            //
-            //                q   += 2 + l;
-            //                rem -= 2 + l;
-            //            }
-            //
-            //            if (status == ST_OK) {
-            //                if (last_led != 0xFF) (void)put_tlv(rsp, sizeof(rsp), &ri, T_ACK, &last_led, 1);
-            //                if (last_sms != 0xFF) (void)put_tlv(rsp, sizeof(rsp), &ri, T_ACK, &last_sms, 1);
-            //            }
-            //            break;
-            //        }
 
         case OPC_GET:
         {
@@ -1029,4 +712,3 @@ void Esp_HandleFrame(const uint8_t* payload, size_t len) {
     }
     skip_reply: ;
 }
-

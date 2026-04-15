@@ -109,4 +109,29 @@ uint16_t IO_GetBatteryMV(void);
  */
 bool IO_IsMainsPowerPresent(void);
 
+/* -- Runtime reconfiguration --------------------------------------------- */
+
+/**
+ * @brief  Reconfigure a single channel GPIO direction at runtime.
+ *         Call after changing IOChannelCfg.function via the mobile app.
+ * @param  ch  Channel 0..3
+ */
+void IO_ReconfigureChannel(uint8_t ch);
+
+/* -- Analogue input readings --------------------------------------------- */
+
+/**
+ * @brief  Read the raw 12-bit ADC value for an analogue channel.
+ * @param  ch  Channel 0..3 (must be configured as ANA_*)
+ * @return 0..4095, or 0 if channel is not analogue.
+ */
+uint16_t IO_GetAnalogRaw(uint8_t ch);
+
+/**
+ * @brief  Read an analogue channel in calibrated engineering units.
+ * @param  ch  Channel 0..3
+ * @return Calibrated value using the channel's AnalogCfg.
+ */
+float IO_GetAnalogEng(uint8_t ch);
+
 #endif /* IO_MONITOR_H */

@@ -29,19 +29,30 @@ DeviceCfg g_device_cfg;
 
 void Cfg_Defaults(void){
   memset(&g_device_cfg,0,sizeof(g_device_cfg));
-  g_device_cfg.version = 0x00010200; // v1.2.0 — added per-input config
+  g_device_cfg.version = 0x00020000; // v2.0.0 -- universal I/O with analogue
 
-  /* Per-input defaults */
-  for (int i = 0; i < CFG_DIN_COUNT; i++) {
-      g_device_cfg.inputs[i].polarity        = 0;    /* NO */
-      g_device_cfg.inputs[i].latch           = 0;    /* auto-clear */
+  /* Per-channel I/O defaults -- all start as digital NO inputs */
+  for (int i = 0; i < CFG_IO_COUNT; i++) {
+      g_device_cfg.inputs[i].function         = IO_FUNC_DIG_NO;
+      g_device_cfg.inputs[i].latch            = 0;    /* auto-clear */
       g_device_cfg.inputs[i].trigger_delay_ms = CFG_ALARM_TRIGGER_DELAY_MS;
       g_device_cfg.inputs[i].clear_delay_ms   = CFG_ALARM_CLEAR_DELAY_MS;
-      g_device_cfg.inputs[i].output_map       = (uint8_t)i;  /* map to same output */
-      g_device_cfg.inputs[i].enabled          = 1;   /* enabled */
+      g_device_cfg.inputs[i].output_map       = 0xFF; /* no output mapped */
+      g_device_cfg.inputs[i].enabled          = 1;    /* enabled */
       snprintf(g_device_cfg.inputs[i].label, sizeof(g_device_cfg.inputs[i].label),
-               "Input %d", i + 1);
-      g_device_cfg.inputs[i].audio_file[0]    = '\0'; /* no audio file */
+               "CH %d", i + 1);
+      g_device_cfg.inputs[i].audio_file[0]    = '\0';
+
+      /* Analogue defaults (used when function is ANA_*) */
+      g_device_cfg.inputs[i].analog.low_raw       = 4.0f;    /* 4 mA */
+      g_device_cfg.inputs[i].analog.high_raw      = 20.0f;   /* 20 mA */
+      g_device_cfg.inputs[i].analog.low_eng       = 0.0f;
+      g_device_cfg.inputs[i].analog.high_eng      = 100.0f;
+      g_device_cfg.inputs[i].analog.offset         = 0.0f;
+      g_device_cfg.inputs[i].analog.set_point      = 80.0f;
+      g_device_cfg.inputs[i].analog.reset_point    = 20.0f;
+      g_device_cfg.inputs[i].analog.trig_type      = ANA_TRIG_WHEN_HIGH;
+      g_device_cfg.inputs[i].analog.decimal_places = 1;
   }
 
   /* Alarm notification defaults */
