@@ -38,6 +38,9 @@
           <itemPath>C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/config/default/osal/osal_impl_basic.h</itemPath>
         </logicalFolder>
         <logicalFolder name="peripheral" displayName="peripheral" projectFiles="true">
+          <logicalFolder name="adc" displayName="adc" projectFiles="true">
+            <itemPath>C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/config/default/peripheral/adc/plib_adc.h</itemPath>
+          </logicalFolder>
           <logicalFolder name="clk" displayName="clk" projectFiles="true">
             <itemPath>C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/config/default/peripheral/clk/plib_clk.h</itemPath>
           </logicalFolder>
@@ -246,6 +249,9 @@
         <logicalFolder name="osal" displayName="osal" projectFiles="true">
         </logicalFolder>
         <logicalFolder name="peripheral" displayName="peripheral" projectFiles="true">
+          <logicalFolder name="adc" displayName="adc" projectFiles="true">
+            <itemPath>C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/config/default/peripheral/adc/plib_adc.c</itemPath>
+          </logicalFolder>
           <logicalFolder name="clk" displayName="clk" projectFiles="true">
             <itemPath>C:/Users/ahmed.thabit/Desktop/Minesh/ArchitectureFolder/src/config/default/peripheral/clk/plib_clk.c</itemPath>
           </logicalFolder>
