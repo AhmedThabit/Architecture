@@ -81,31 +81,50 @@ static void Cfg_WriteHeaderAndData(const CfgHeader *hdr, const DeviceCfg *cfg)
 
 void Cfg_Load(void)
 {
-    //Flash_Init();
-//test comment
-    /* Initialise g_cfg to defaults.  This sets g_cfg.version to the current
-     * firmware version (0x00010100) before we validate the header.  Without
-     * this, g_cfg.version is zero on power?up and the version check fails.   */
+    extern void Debug_SendBle(const char *msg);
+    char dbg[80];
+
+    /* Initialise g_cfg to defaults first */
     Cfg_Defaults();
 
     CfgHeader hdr;
     Flash_Read(CFG_FLASH_ADDR, (uint8_t*)&hdr, sizeof(hdr));
 
-    /* Reject the stored config if the magic, length or version don?t match.   */
-    if (hdr.magic != CFG_MAGIC ||
-        hdr.length != sizeof(DeviceCfg) ||
-        hdr.version != g_device_cfg.version) {
-        return;  // leave defaults
+    snprintf(dbg, sizeof(dbg), "Cfg_Load: read magic=0x%08lX len=%lu ver=0x%08lX",
+             (unsigned long)hdr.magic, (unsigned long)hdr.length, (unsigned long)hdr.version);
+    Debug_SendBle(dbg);
+
+    /* Reject the stored config if the magic, length or version don't match. */
+    if (hdr.magic != CFG_MAGIC) {
+        Debug_SendBle("Cfg_Load: bad magic, using defaults");
+        return;
+    }
+    if (hdr.length != sizeof(DeviceCfg)) {
+        snprintf(dbg, sizeof(dbg), "Cfg_Load: len mismatch (got %lu, want %u)",
+                 (unsigned long)hdr.length, (unsigned)sizeof(DeviceCfg));
+        Debug_SendBle(dbg);
+        return;
+    }
+    if (hdr.version != g_device_cfg.version) {
+        snprintf(dbg, sizeof(dbg), "Cfg_Load: ver mismatch (got 0x%08lX want 0x%08lX)",
+                 (unsigned long)hdr.version, (unsigned long)g_device_cfg.version);
+        Debug_SendBle(dbg);
+        return;
     }
 
-    /* Load the config from flash and verify its CRC.  If the CRC fails,
-     * fall back to defaults. */
+    /* Load the config from flash and verify its CRC. */
     Flash_Read(CFG_FLASH_ADDR + sizeof(CfgHeader),
                (uint8_t*)&g_device_cfg, sizeof(g_device_cfg));
     uint32_t calc = Flash_CRC32(&g_device_cfg, sizeof(g_device_cfg));
     if (calc != hdr.crc) {
+        snprintf(dbg, sizeof(dbg), "Cfg_Load: CRC fail (calc=0x%08lX want=0x%08lX)",
+                 (unsigned long)calc, (unsigned long)hdr.crc);
+        Debug_SendBle(dbg);
         Cfg_Defaults();
+        return;
     }
+
+    Debug_SendBle("Cfg_Load: OK -- loaded from flash");
 }
 
 
@@ -116,7 +135,22 @@ void Cfg_Save(void)
     hdr.length  = sizeof(DeviceCfg);
     hdr.version = g_device_cfg.version;
     hdr.crc     = Flash_CRC32(&g_device_cfg, sizeof(g_device_cfg));
+
+    /* Diagnostic logging via BLE */
+    extern void Debug_SendBle(const char *msg);
+    char dbg[80];
+    snprintf(dbg, sizeof(dbg), "Cfg_Save: len=%u ver=0x%08lX crc=0x%08lX",
+             (unsigned)sizeof(DeviceCfg), (unsigned long)hdr.version, (unsigned long)hdr.crc);
+    Debug_SendBle(dbg);
+
     Cfg_WriteHeaderAndData(&hdr, &g_device_cfg);
+
+    /* Verify by reading back */
+    CfgHeader readback;
+    Flash_Read(CFG_FLASH_ADDR, (uint8_t*)&readback, sizeof(readback));
+    snprintf(dbg, sizeof(dbg), "Cfg_Save VERIFY: magic=0x%08lX len=%lu ver=0x%08lX",
+             (unsigned long)readback.magic, (unsigned long)readback.length, (unsigned long)readback.version);
+    Debug_SendBle(dbg);
 }
 
 int Cfg_Validate(void)

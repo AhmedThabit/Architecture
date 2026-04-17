@@ -2,6 +2,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "device.h"                             // for LATx/TRISx if you use LED
 #include "drivers/esp32/esp32_comm.h"                         // ESP32_SendFrame(...)
@@ -186,6 +187,7 @@ enum {
     T_SCAN_BATT_MV   = 0x66,
     T_SCAN_MAINS     = 0x67,
     T_SCAN_MOIST     = 0x68,
+    T_SCAN_ANA_LIVE  = 0x69, /**< per-channel: slot, function, eng_value(float)  */
 };
 extern void handle_sms_enable_cmd(uint8_t flag);
 extern uint8_t sms_get_enabled(void);
@@ -334,7 +336,7 @@ static bool tlv_get_reply(uint8_t tag, uint8_t* out, size_t cap, size_t* idx) {
             if (tag == T_INPUT_CFG_GET) {
                 for (uint8_t ch = 0; ch < CFG_IO_COUNT; ch++) {
                     const IOChannelCfg *ic = &g_device_cfg.inputs[ch];
-                    uint8_t cfg_block[64];
+                    uint8_t cfg_block[96];
                     size_t bi = 0;
                     cfg_block[bi++] = ch;                         /* slot */
                     cfg_block[bi++] = ic->function;               /* IOFunction */
@@ -350,10 +352,18 @@ static bool tlv_get_reply(uint8_t tag, uint8_t* out, size_t cap, size_t* idx) {
                     cfg_block[bi++] = (uint8_t)llen;
                     memcpy(&cfg_block[bi], ic->label, llen);
                     bi += llen;
-                    /* Analogue config (36 bytes) -- always send, app ignores if digital */
-                    memcpy(&cfg_block[bi], &ic->analog, sizeof(AnalogCfg));
-                    bi += sizeof(AnalogCfg);
-                    if (!put_tlv(out, cap, idx, T_INPUT_CFG_GET, cfg_block, (uint8_t)bi)) return false;
+                    /* has_ana flag: 1 if analogue config follows, else 0 */
+                    bool is_ana = (ic->function == IO_FUNC_ANA_20MA ||
+                                   ic->function == IO_FUNC_ANA_10V  ||
+                                   ic->function == IO_FUNC_ANA_1V);
+                    cfg_block[bi++] = is_ana ? 1 : 0;
+                    if (is_ana) {
+                        memcpy(&cfg_block[bi], &ic->analog, sizeof(AnalogCfg));
+                        bi += sizeof(AnalogCfg);
+                    }
+                    if (!put_tlv(out, cap, idx, T_INPUT_CFG_GET, cfg_block, (uint8_t)bi)) {
+                        return false;
+                    }
                 }
                 return true;
             }
@@ -375,6 +385,30 @@ static bool tlv_get_reply(uint8_t tag, uint8_t* out, size_t cap, size_t* idx) {
                 if (!put_tlv_u16(out, cap, idx, T_SCAN_BATT_MV, batt)) return false;
                 if (!put_tlv(out, cap, idx, T_SCAN_MAINS, &mains, 1)) return false;
                 if (!put_tlv_u16(out, cap, idx, T_SCAN_MOIST, moist)) return false;
+
+                /* Per-channel live analogue readings */
+                for (uint8_t ch = 0; ch < CFG_IO_COUNT; ch++) {
+                    uint8_t func = g_device_cfg.inputs[ch].function;
+                    bool is_ana = (func == IO_FUNC_ANA_20MA ||
+                                   func == IO_FUNC_ANA_10V  ||
+                                   func == IO_FUNC_ANA_1V);
+                    if (!is_ana) continue;
+
+                    float eng = IO_GetAnalogEng(ch);
+
+                    /* Pack: slot(1) + function(1) + eng(4 LE float) = 6 bytes */
+                    uint8_t blk[6];
+                    blk[0] = ch;
+                    blk[1] = func;
+                    /* Little-endian float copy */
+                    union { float f; uint8_t b[4]; } u;
+                    u.f = eng;
+                    blk[2] = u.b[0];
+                    blk[3] = u.b[1];
+                    blk[4] = u.b[2];
+                    blk[5] = u.b[3];
+                    if (!put_tlv(out, cap, idx, T_SCAN_ANA_LIVE, blk, 6)) return false;
+                }
                 return true;
             }
 

@@ -49,7 +49,7 @@ static uint8_t s_debounce_idx = 0;
 static uint8_t s_debounced_mask = 0;
 
 /* --------------------------------------------------------------------------
- *  ADC helper -- blocking single-channel read
+ *  ADC helper -- blocking single-channel read with timeout (safe)
  * -------------------------------------------------------------------------- */
 
 static uint16_t adc_read_channel(ADC_INPUT_POSITIVE ch)
@@ -62,8 +62,15 @@ static uint16_t adc_read_channel(ADC_INPUT_POSITIVE ch)
 
     ADC_ConversionStart();
 
-    /* Wait for conversion complete */
-    while (!ADC_ResultIsReady()) {}
+    /* Wait for conversion complete WITH TIMEOUT to prevent system hang */
+    volatile uint32_t timeout = 100000;
+    while (!ADC_ResultIsReady() && timeout > 0) {
+        timeout--;
+    }
+    if (timeout == 0) {
+        /* ADC failed -- return 0 instead of hanging the system */
+        return 0;
+    }
 
     return (uint16_t)(ADC_ResultGet(ADC_RESULT_BUFFER_0) & 0x0FFF);
 }
@@ -243,24 +250,27 @@ float IO_GetAnalogEng(uint8_t ch)
     const AnalogCfg *acfg = &cfg->analog;
     uint8_t func = cfg->function;
 
+    /* Only read ADC if channel is configured as analogue.
+     * This prevents accidentally reading ADC on digital/output channels. */
+    if (func != IO_FUNC_ANA_1V && func != IO_FUNC_ANA_10V && func != IO_FUNC_ANA_20MA) {
+        return 0.0f;
+    }
+
     /* Determine the ADC full-scale for the input type */
     float adc_raw = (float)adc_read_channel(s_adc_channels[ch]);
     float sensor_value = 0.0f;
 
-    /* Map ADC count (0-4095) to sensor range (low_raw..high_raw) */
+    /* Map ADC count (0-4095) to sensor range */
     float adc_max = 4095.0f;
 
     switch (func) {
         case IO_FUNC_ANA_1V:
-            /* 0-1V maps to 0-4095 */
             sensor_value = (adc_raw / adc_max) * 1.0f;
             break;
         case IO_FUNC_ANA_10V:
-            /* 0-10V maps to 0-4095 (with voltage divider) */
             sensor_value = (adc_raw / adc_max) * 10.0f;
             break;
         case IO_FUNC_ANA_20MA:
-            /* 4-20mA maps to 0-4095 (with sense resistor) */
             sensor_value = (adc_raw / adc_max) * 20.0f;
             break;
         default:
@@ -271,7 +281,8 @@ float IO_GetAnalogEng(uint8_t ch)
     float range_raw = acfg->high_raw - acfg->low_raw;
     float range_eng = acfg->high_eng - acfg->low_eng;
 
-    if (range_raw == 0.0f) return acfg->offset;
+    /* Guard against bad calibration values (would cause divide-by-zero) */
+    if (range_raw < 0.0001f && range_raw > -0.0001f) return acfg->offset;
 
     float slope = range_eng / range_raw;
     float eng = acfg->low_eng + slope * (sensor_value - acfg->low_raw) + acfg->offset;
