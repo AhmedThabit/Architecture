@@ -84,7 +84,8 @@ void App_Init(void)
     BSP_Initialize();
     BSP_Timer1_Init();
     SPIBus_Init();
-    IO_Init();                  /* digital I/O pins + debounce       */
+    /* IO_Init() is called AFTER Cfg_Load() so it can apply the persisted
+     * channel functions (input/output/analogue) saved in flash. */
 
     /* ── L2: Drivers (external chips) ───────────────────────────────── */
     Flash_Init();
@@ -95,6 +96,11 @@ void App_Init(void)
     /* ── L3: Services (business logic using drivers) ────────────────── */
     PhonebookFlash_Init();
     Cfg_Load();
+
+    /* Now configure GPIO pins according to the loaded config.
+     * This ensures channels saved as Output (Off/On) actually drive their
+     * pins to the correct level on boot, not just after the user re-saves. */
+    IO_Init();
 
     /* ── L4: Application (scheduler) ────────────────────────────────── */
     Protothreads_Init();

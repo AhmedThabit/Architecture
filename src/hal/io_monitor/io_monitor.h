@@ -109,6 +109,27 @@ uint16_t IO_GetBatteryMV(void);
  */
 bool IO_IsMainsPowerPresent(void);
 
+/**
+ * @brief  Check if battery is OK (BATTFAIL pin HIGH).
+ * @return true if battery is OK, false on fault.
+ */
+bool IO_IsBatteryOK(void);
+
+/* -- Raw pin state (for debugging / floating-pin diagnostics) ------------- */
+
+/**
+ * @brief  Read raw level of a single I/O pin, regardless of channel function.
+ * @param  ch  Channel 0..3
+ * @return true if pin reads HIGH, false if LOW.
+ */
+bool IO_GetPinRaw(uint8_t ch);
+
+/**
+ * @brief  Read raw levels of all 4 I/O pins as a bitmask.
+ * @return bit i = 1 if pin for CHi is HIGH (regardless of configured function).
+ */
+uint8_t IO_GetAllPinsRaw(void);
+
 /* -- Runtime reconfiguration --------------------------------------------- */
 
 /**

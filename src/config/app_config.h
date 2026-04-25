@@ -186,8 +186,13 @@
 #define CFG_DOUT3_PIN               CFG_IO3_PIN
 #define CFG_DOUT4_PIN               CFG_IO4_PIN
 
-/** Mains power detection pin (HIGH = mains present) */
-#define CFG_MAINS_DET_PIN           GPIO_PIN_RB13   /**< Mains detect input   */
+/** Mains power detection pin (HIGH = mains present, pulled-up on PCB).
+ *  Per schematic: MAINFAIL signal -> RB14 (pin 2). */
+#define CFG_MAINS_DET_PIN           GPIO_PIN_RB14   /**< Mains detect input   */
+
+/** Battery fail detection pin (HIGH = battery OK, pulled-up on PCB).
+ *  Per schematic: BATTFAIL signal -> RA14 (pin 59). */
+#define CFG_BATTFAIL_PIN            GPIO_PIN_RA14   /**< Battery fail input   */
 
 /** I/O debounce period (ms) */
 #define CFG_IO_DEBOUNCE_MS          10u

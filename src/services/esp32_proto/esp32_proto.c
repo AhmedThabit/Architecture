@@ -188,6 +188,8 @@ enum {
     T_SCAN_MAINS     = 0x67,
     T_SCAN_MOIST     = 0x68,
     T_SCAN_ANA_LIVE  = 0x69, /**< per-channel: slot, function, eng_value(float)  */
+    T_SCAN_RAW_PINS  = 0x6A, /**< raw GPIO levels of all 4 IO pins (bitmask)    */
+    T_SCAN_BATT_OK   = 0x6B, /**< 1 if BATTFAIL pin reads HIGH (battery OK)     */
 };
 extern void handle_sms_enable_cmd(uint8_t flag);
 extern uint8_t sms_get_enabled(void);
@@ -376,13 +378,17 @@ static bool tlv_get_reply(uint8_t tag, uint8_t* out, size_t cap, size_t* idx) {
                 uint8_t outs = IO_GetOutputsMask();
                 uint16_t batt = IO_GetBatteryMV();
                 uint8_t mains = IO_IsMainsPowerPresent() ? 1 : 0;
+                uint8_t batt_ok = IO_IsBatteryOK() ? 1 : 0;
                 uint16_t moist = IO_GetMoistPct10();
+                uint8_t raw_pins = IO_GetAllPinsRaw();
 
                 if (!put_tlv(out, cap, idx, T_SCAN_DEBOUNCED, &deb, 1)) return false;
                 if (!put_tlv(out, cap, idx, T_SCAN_RAW, &raw, 1)) return false;
+                if (!put_tlv(out, cap, idx, T_SCAN_RAW_PINS, &raw_pins, 1)) return false;
                 if (!put_tlv(out, cap, idx, T_SCAN_ALARM_FLAGS, &af, 1)) return false;
                 if (!put_tlv(out, cap, idx, T_SCAN_OUTPUTS, &outs, 1)) return false;
                 if (!put_tlv_u16(out, cap, idx, T_SCAN_BATT_MV, batt)) return false;
+                if (!put_tlv(out, cap, idx, T_SCAN_BATT_OK, &batt_ok, 1)) return false;
                 if (!put_tlv(out, cap, idx, T_SCAN_MAINS, &mains, 1)) return false;
                 if (!put_tlv_u16(out, cap, idx, T_SCAN_MOIST, moist)) return false;
 

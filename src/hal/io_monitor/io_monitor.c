@@ -15,6 +15,7 @@
 #include "common/schema.h"
 #include "config/default/peripheral/gpio/plib_gpio.h"
 #include "config/default/peripheral/adc/plib_adc.h"
+#include <xc.h>     /* for ANSELA / ANSELB register access */
 
 /* --------------------------------------------------------------------------
  *  Pin tables -- built from app_config.h macros
@@ -33,6 +34,55 @@ static const ADC_INPUT_POSITIVE s_adc_channels[CFG_IO_COUNT] = {
     CFG_IO3_ADC_CH,
     CFG_IO4_ADC_CH,
 };
+
+/* --------------------------------------------------------------------------
+ *  ANSEL bit positions for each I/O pin -- needed to switch between
+ *  analog and digital mode at runtime. PIC32MM has separate ANSELA/ANSELB
+ *  registers; bit number matches the pin number within the port.
+ *
+ *  RA13 -> ANSELA bit 13   (AN16)
+ *  RA12 -> ANSELA bit 12   (AN17)
+ *  RA11 -> ANSELA bit 11   (AN18)
+ *  RB15 -> ANSELB bit 15   (AN10)
+ * -------------------------------------------------------------------------- */
+
+typedef enum { PORT_A = 0, PORT_B = 1 } PortLetter;
+
+typedef struct {
+    PortLetter port;
+    uint8_t    bit;
+} PinAnsel;
+
+static const PinAnsel s_io_ansel[CFG_IO_COUNT] = {
+    { PORT_A, 13 },   /* CH1 / RA13 / AN16 */
+    { PORT_A, 12 },   /* CH2 / RA12 / AN17 */
+    { PORT_A, 11 },   /* CH3 / RA11 / AN18 */
+    { PORT_B, 15 },   /* CH4 / RB15 / AN10 */
+};
+
+/** Force a pin into digital mode (clear its ANSELx bit). */
+static void pin_set_digital(uint8_t ch)
+{
+    if (ch >= CFG_IO_COUNT) return;
+    uint16_t mask = (uint16_t)(1u << s_io_ansel[ch].bit);
+    if (s_io_ansel[ch].port == PORT_A) {
+        ANSELACLR = mask;
+    } else {
+        ANSELBCLR = mask;
+    }
+}
+
+/** Force a pin into analog mode (set its ANSELx bit). */
+static void pin_set_analog(uint8_t ch)
+{
+    if (ch >= CFG_IO_COUNT) return;
+    uint16_t mask = (uint16_t)(1u << s_io_ansel[ch].bit);
+    if (s_io_ansel[ch].port == PORT_A) {
+        ANSELASET = mask;
+    } else {
+        ANSELBSET = mask;
+    }
+}
 
 /* Legacy aliases for code that still uses s_input_pins / s_output_pins */
 #define s_input_pins  s_io_pins
@@ -85,46 +135,21 @@ void IO_Init(void)
     ADC_Initialize();
     ADC_Enable();
 
-    /* Configure each channel based on its function in the config */
+    /* Configure each channel based on its function in the config.
+     * IMPORTANT: the universal I/O pins (RA13/RA12/RA11/RB15) all have
+     * ADC capability and default to analog mode. To use them as digital
+     * I/O we MUST clear their ANSELx bit -- otherwise GPIO_PinRead always
+     * returns 0 and GPIO_PinSet/Clear has no effect on the actual pin. */
     for (uint8_t i = 0; i < CFG_IO_COUNT; i++) {
-        uint8_t func = g_device_cfg.inputs[i].function;
-
-        switch (func) {
-            case IO_FUNC_DIG_NO:
-            case IO_FUNC_DIG_NC:
-                /* Digital input mode */
-                GPIO_PinInputEnable(s_io_pins[i]);
-                break;
-
-            case IO_FUNC_ANA_20MA:
-            case IO_FUNC_ANA_10V:
-            case IO_FUNC_ANA_1V:
-                /* Analogue input mode -- pin stays as analog (MCC configured) */
-                GPIO_PinInputEnable(s_io_pins[i]);
-                break;
-
-            case IO_FUNC_OUT_OFF:
-                /* Digital output, start OFF */
-                GPIO_PinOutputEnable(s_io_pins[i]);
-                GPIO_PinClear(s_io_pins[i]);
-                break;
-
-            case IO_FUNC_OUT_ON:
-                /* Digital output, start ON */
-                GPIO_PinOutputEnable(s_io_pins[i]);
-                GPIO_PinSet(s_io_pins[i]);
-                break;
-
-            case IO_FUNC_OFF:
-            default:
-                /* Disabled -- set as input (high-Z) */
-                GPIO_PinInputEnable(s_io_pins[i]);
-                break;
-        }
+        IO_ReconfigureChannel(i);
     }
 
-    /* Configure mains detect pin as input */
+    /* MAINS_DET (RB14) and BATTFAIL (RA14) are also ADC-capable pins on
+     * the PIC32MM and default to analog. Force them digital too. */
+    ANSELBCLR = (1u << 14);   /* RB14 = AN9 */
+    ANSELACLR = (1u << 14);   /* RA14 */
     GPIO_PinInputEnable(CFG_MAINS_DET_PIN);
+    GPIO_PinInputEnable(CFG_BATTFAIL_PIN);
 
     /* Clear debounce history */
     for (uint8_t i = 0; i < DEBOUNCE_SAMPLES; i++) {
@@ -146,23 +171,56 @@ void IO_ReconfigureChannel(uint8_t ch)
     switch (func) {
         case IO_FUNC_DIG_NO:
         case IO_FUNC_DIG_NC:
+            /* Digital input -- ANSELx bit must be CLEARED for GPIO_PinRead
+             * to return real values. This is the bug that was making CH1/CH2/CH3
+             * stuck LOW: the pins were still in analog mode. */
+            pin_set_digital(ch);
+            GPIO_PinInputEnable(s_io_pins[ch]);
+            break;
         case IO_FUNC_ANA_20MA:
         case IO_FUNC_ANA_10V:
         case IO_FUNC_ANA_1V:
+            /* Analogue input -- ANSELx bit must be SET so the ADC can read */
+            pin_set_analog(ch);
             GPIO_PinInputEnable(s_io_pins[ch]);
             break;
         case IO_FUNC_OUT_OFF:
+            pin_set_digital(ch);
             GPIO_PinOutputEnable(s_io_pins[ch]);
             GPIO_PinClear(s_io_pins[ch]);
             break;
         case IO_FUNC_OUT_ON:
+            pin_set_digital(ch);
             GPIO_PinOutputEnable(s_io_pins[ch]);
             GPIO_PinSet(s_io_pins[ch]);
             break;
+        case IO_FUNC_OFF:
         default:
+            /* Disabled -- still keep digital so raw-pin diagnostic works */
+            pin_set_digital(ch);
             GPIO_PinInputEnable(s_io_pins[ch]);
             break;
     }
+}
+
+/* --------------------------------------------------------------------------
+ *  Raw pin state -- reads physical pin regardless of channel function.
+ *  Useful for debugging/testing to see if a pin is floating or noisy.
+ * -------------------------------------------------------------------------- */
+
+bool IO_GetPinRaw(uint8_t ch)
+{
+    if (ch >= CFG_IO_COUNT) return false;
+    return GPIO_PinRead(s_io_pins[ch]);
+}
+
+uint8_t IO_GetAllPinsRaw(void)
+{
+    uint8_t mask = 0;
+    for (uint8_t i = 0; i < CFG_IO_COUNT; i++) {
+        if (GPIO_PinRead(s_io_pins[i])) mask |= (1u << i);
+    }
+    return mask;
 }
 
 /* --------------------------------------------------------------------------
@@ -185,15 +243,36 @@ uint8_t IO_GetInputsRaw(void)
 
 uint8_t IO_GetInputsMask(void)
 {
+    /* Industrial convention with PCB pull-ups:
+     *   NO contact (Normally Open):
+     *      - idle:    contact open  -> pin reads HIGH (pulled up) -> NOT alarm
+     *      - alarm:   contact closes to GND -> pin reads LOW       -> ALARM
+     *      So 'active' = pin LOW. We invert the raw bit.
+     *
+     *   NC contact (Normally Closed):
+     *      - idle:    contact closed to GND -> pin reads LOW       -> NOT alarm
+     *      - alarm:   contact opens -> pin reads HIGH (pulled up)  -> ALARM
+     *      So 'active' = pin HIGH. Use the raw bit directly.
+     */
     uint8_t raw = IO_GetInputsRaw();
-    /* Build NC inversion mask from per-channel function type */
-    uint8_t inv = 0;
+    uint8_t result = 0;
+
     for (uint8_t i = 0; i < CFG_IO_COUNT; i++) {
-        if (g_device_cfg.inputs[i].function == IO_FUNC_DIG_NC) {
-            inv |= (1u << i);
+        uint8_t func = g_device_cfg.inputs[i].function;
+        bool pin_high = (raw >> i) & 0x01;
+        bool active = false;
+
+        if (func == IO_FUNC_DIG_NO) {
+            /* NO: alarm when pin goes LOW (contact closes to GND) */
+            active = !pin_high;
+        } else if (func == IO_FUNC_DIG_NC) {
+            /* NC: alarm when pin goes HIGH (contact opens, pull-up wins) */
+            active = pin_high;
         }
+
+        if (active) result |= (1u << i);
     }
-    return (raw ^ inv) & 0x0F;
+    return result & 0x0F;
 }
 
 bool IO_GetInput(uint8_t ch)
@@ -352,8 +431,19 @@ uint16_t IO_GetMoistPct10(void)
 
 uint16_t IO_GetBatteryMV(void)
 {
-    /* TODO: assign a dedicated ADC channel for battery voltage divider */
-    return 12600;   /* placeholder */
+    /* Battery voltage divider not yet implemented -- but BATTFAIL pin
+     * does indicate low battery: HIGH = OK, LOW = battery fault.
+     * For now, return a synthetic value based on the digital fail signal. */
+    if (GPIO_PinRead(CFG_BATTFAIL_PIN)) {
+        return 12600;   /* battery OK -- placeholder voltage */
+    } else {
+        return 9800;    /* battery FAIL -- below threshold */
+    }
+}
+
+bool IO_IsBatteryOK(void)
+{
+    return GPIO_PinRead(CFG_BATTFAIL_PIN);
 }
 
 bool IO_IsMainsPowerPresent(void)
